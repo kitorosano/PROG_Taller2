@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unnamed" type="com.poratu.idea.plugins.tomcat" nameIsGenerated="true">
+    <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
+    <predefined_log_file enabled="true" id="Tomcat Access Log" />
+    <predefined_log_file id="Tomcat Catalina Log" />
+    <predefined_log_file id="Tomcat Manager Log" />
+    <predefined_log_file id="Tomcat Host Manager Log" />
+    <option name="contextPath" value="/PROG_Taller2" />
+    <option name="docBase" value="$PROJECT_DIR$/src/main/webapp" />
+    <option name="envOptions">
+      <map />
+    </option>
+    <option name="port" value="8081" />
+    <option name="tomcatInfo">
+      <TomcatInfo>
+        <option name="name" value="Apache Tomcat/10.0.23" />
+        <option name="path" value="$PROJECT_DIR$/../../../../../../apache-tomcat-10.0.23" />
+        <option name="version" value="10.0.23.0" />
+      </TomcatInfo>
+    </option>
+    <option name="vmOptions" value="-DDB_URL=jdbc:mysql://localhost:3306/prog_taller1 -DDB_USER=root -DDB_PASS=usbw" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
