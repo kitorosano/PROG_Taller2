@@ -109,13 +109,12 @@ public class AltaUsuario extends HttpServlet {
       fabrica.getIUsuario().altaUsuario(usuario);
 
       // Redireccionar a la pantalla de login
-      response.sendRedirect("login");
+      response.sendRedirect("login"); // redirijir a un servlet (por url)
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
-      System.out.println(e.getStackTrace());
       // Error al crear el usuario
       request.setAttribute("error", "Error al crear el usuario");
-      dispatchPage("/alta-usuario.jsp", request, response);
+      dispatchPage("/alta-usuario.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
     }
   }
 
