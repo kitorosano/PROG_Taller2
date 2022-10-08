@@ -12,6 +12,7 @@
     </head>
     <body>
         <h1>Detalle usuario</h1>
+        <h2>${nickname}</h2>
 
         <a href="index.jsp">Volver</a>
     </body>
