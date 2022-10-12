@@ -28,7 +28,7 @@ public class AltaUsuario extends HttpServlet {
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    dispatchPage("/registro.jsp", request, response);
+    dispatchPage("/pages/registro.jsp", request, response);
   }
   
   @Override
@@ -52,7 +52,7 @@ public class AltaUsuario extends HttpServlet {
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, nombre, apellido, correo, fechaNac_str, contrasenia, contrasenia2)) {
       request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-      dispatchPage("/registro.jsp", request, response);
+      dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
 
@@ -65,25 +65,25 @@ public class AltaUsuario extends HttpServlet {
     //error para cuando el nickname posee un formato de correo
     if(esFormatoCorreo(nickname)){
       request.setAttribute("error", "El nickname no puede tener el formato de correo");
-      dispatchPage("/registro.jsp", request, response);
+      dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
     //error para cuando el correo NO posea un formato de correo
     if(!esFormatoCorreo(correo)){
       request.setAttribute("error", "Formato de correo invalido");
-      dispatchPage("/registro.jsp", request, response);
+      dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
     // Error contraseñas no machean
     if(!contrasenasIguales(contrasenia, contrasenia2)){
       request.setAttribute("error", "Las contraseñas no coinciden");
-      dispatchPage("/registro.jsp", request, response);
+      dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
     //La fecha no es valida porque no nacio mañana
     if(!fechaValida(fechaNac)){
       request.setAttribute("error", "La fecha no es valida");
-      dispatchPage("/registro.jsp", request, response);
+      dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
 
@@ -92,7 +92,7 @@ public class AltaUsuario extends HttpServlet {
     if(tipo == "Artista"){
       if(camposVaciosArtista(descripcion, biografia, url)){
         request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-        dispatchPage("/registro.jsp", request, response);
+        dispatchPage("/pages/registro.jsp", request, response);
         return;
       }
       if (!esFormatoUrl(url)){
@@ -114,7 +114,7 @@ public class AltaUsuario extends HttpServlet {
       System.out.println(e.getMessage());
       // Error al crear el usuario
       request.setAttribute("error", "Error al crear el usuario");
-      dispatchPage("/registro.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+      dispatchPage("/pages/registro.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
     }
   }
 

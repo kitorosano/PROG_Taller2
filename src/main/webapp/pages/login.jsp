@@ -15,6 +15,7 @@
         <title>Login</title>
     </head>
     <body>
+    <a href="registro">Registrarse</a>
 
     <form id="idform" name="myform" method="POST" action="login">
         <div style="display: flex; flex-direction: column; align-items: flex-start">

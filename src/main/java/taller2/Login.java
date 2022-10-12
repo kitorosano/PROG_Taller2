@@ -38,7 +38,7 @@ public class Login extends HttpServlet {
       return;
     }
   
-    dispatchPage("/login.jsp", request, response);
+    dispatchPage("/pages/login.jsp", request, response);
   }
   
   @Override
@@ -50,7 +50,7 @@ public class Login extends HttpServlet {
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, contrasenia)) {
       request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-      dispatchPage("/login.jsp", request, response);
+      dispatchPage("/pages/login.jsp", request, response);
       return;
     }
     
@@ -68,14 +68,14 @@ public class Login extends HttpServlet {
     //error cuando el usuario no existe
     if(usuario == null) {
       request.setAttribute("error", "El usuario no existe");
-      dispatchPage("/login.jsp", request, response);
+      dispatchPage("/pages/login.jsp", request, response);
       return;
     }
     
     //error cuando la contraseña es incorrecta
     if(!usuario.getContrasena().equals(contrasenia)) {
       request.setAttribute("error", "La contraseña es incorrecta");
-      dispatchPage("/login.jsp", request, response);
+      dispatchPage("/pages/login.jsp", request, response);
       return;
     }
     

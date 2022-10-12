@@ -32,7 +32,7 @@
     <% } %>
     </tbody>
 </table>
-<a href="../../home.jsp">Volver</a>
+<a href="../home.jsp">Volver</a>
 
 <script>
     let nom = document.getElementById("nickname");

@@ -34,7 +34,7 @@ public class Home extends HttpServlet {
             return;
         }
         
-        dispatchPage("/home.jsp", request, response);
+        dispatchPage("/pages/home.jsp", request, response);
     }
     
     @Override
