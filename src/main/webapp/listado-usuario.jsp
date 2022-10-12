@@ -6,10 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import ="main.java.taller1.Logica.Fabrica"  %>
-<%@ page import="jdk.nashorn.internal.runtime.regexp.JoniRegExp" %>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
-<%@page import="java.util.HashMap"%>
 <%@ page import="java.util.Map" %>
 
 <html>
@@ -27,12 +24,11 @@
     </thead>
     <tbody>
     <%
-        Map<String,Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        Map<String,Usuario> usuarios= (Map<String, Usuario>) request.getAttribute("usuarios");
         for (Usuario elem : usuarios.values()) {
     %>
     <tr>
         <th onClick="location.href='detalle-usuario?nickname=<%=elem.getNickname()%>'"> <%=elem.getNickname()%> </th>
-
     </tr>
 
     <%

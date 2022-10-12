@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectaculo;
+import main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 import sun.misc.Request;
@@ -28,23 +29,18 @@ public class DetalleUsuario extends HttpServlet {
     Usuario usu=usuarios.get(nickname);
 
     if(usu instanceof Artista){
-      request.setAttribute("nickname", nickname);
-      request.setAttribute("nombre",usu.getNombre());
-      request.setAttribute("apellido",usu.getApellido());
-      request.setAttribute("correo",usu.getCorreo());
-      request.setAttribute("biografia",(((Artista) usu).getBiografia()));
-      request.setAttribute("fechaNac",usu.getFechaNacimiento());
-
-      RequestDispatcher view = request.getRequestDispatcher("/detalle-artista.jsp");
+      Map <String, Espectaculo> espectaculos=Fabrica.getInstance().getIUsuario().obtenerEspectaculosArtista(usu.getNickname());
+      request.setAttribute("tipo","Artista");
+      request.setAttribute("datos",usu);
+      request.setAttribute("espectaculos",espectaculos);
+      RequestDispatcher view = request.getRequestDispatcher("/detalle-usuario.jsp");
       view.forward(request, response);
     }else{
-      request.setAttribute("nickname", nickname);
-      request.setAttribute("nombre",usu.getNombre());
-      request.setAttribute("apellido",usu.getApellido());
-      request.setAttribute("correo",usu.getCorreo());
-      request.setAttribute("fechaNac",usu.getFechaNacimiento());
-
-      RequestDispatcher view = request.getRequestDispatcher("/detalle-espectador.jsp");
+      Map<String, EspectadorRegistradoAFuncion> funciones=Fabrica.getInstance().getIUsuario().obtenerFuncionesRegistradasDelEspectador(usu.getNickname());
+      request.setAttribute("tipo","Espectador");
+      request.setAttribute("datos",usu);
+      request.setAttribute("funciones",funciones);
+      RequestDispatcher view = request.getRequestDispatcher("/detalle-usuario.jsp");
       view.forward(request, response);
     }
   }
