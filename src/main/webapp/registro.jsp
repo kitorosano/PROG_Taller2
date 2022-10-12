@@ -26,7 +26,7 @@
     </head>
     <body>
         <h1>Alta usuario</h1>
-        <a href="index.jsp">Volver</a>
+        <a href="home.jsp">Volver</a>
         <form id="idform" name="myform" method="POST" action="registro">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <label>Espectador</label>

@@ -5,11 +5,14 @@
         <title>JSP - Hello World</title>
     </head>
     <body>
-        <h1><%= "Hello World!" %>
+        <h1><%= "Hello World!" + session.getAttribute("nickname") %>
         </h1>
         <br/>
         <a href="registro">Alta Usuario</a>
         <a href="listado-usuario">Listado Usuario</a>
         <a href="detalle-usuario">Detalle Usuario</a>
+        <form action="home" method="post">
+            <button type="submit" > Cerrar Sesion</button>
+        </form>
     </body>
 </html>

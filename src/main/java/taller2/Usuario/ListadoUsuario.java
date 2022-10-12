@@ -1,11 +1,13 @@
-package taller2;
+package taller2.Usuario;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet(name = "ListadoUsuario", value = "/listado-usuario")
 public class ListadoUsuario extends HttpServlet {
@@ -19,6 +21,8 @@ public class ListadoUsuario extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html");
     RequestDispatcher view = request.getRequestDispatcher("/listado-usuario.jsp");
+    Map<String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+    request.setAttribute("usuarios", usuarios);
     view.forward(request, response);
   }
   

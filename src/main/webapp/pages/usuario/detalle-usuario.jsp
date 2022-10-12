@@ -14,6 +14,6 @@
         <h1>Detalle usuario</h1>
         <h2>${nickname}</h2>
 
-        <a href="index.jsp">Volver</a>
+        <a href="../../home.jsp">Volver</a>
     </body>
 </html>
