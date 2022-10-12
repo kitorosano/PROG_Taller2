@@ -23,7 +23,8 @@
     </tr>
     </thead>
     <tbody>
-    <%  Map<String,Usuario> usuarios = (Map<String, Usuario>) request.getAttribute("usuarios");
+    <%
+        Map<String,Usuario> usuarios= (Map<String, Usuario>) request.getAttribute("usuarios");
         for (Usuario elem : usuarios.values()) {
     %>
     <tr>
