@@ -30,7 +30,6 @@
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
         <h1>Alta de espectaculo</h1>
-<%--nombre,descripción, duración, espectadores mínimos, espectadores máximos, URL asociada, costo, imagen(opcional))--%>
             <form id="idform" name="formEspectaculo" method="POST" action="alta-espectaculo">
                 <div style="display: flex; flex-direction: column; align-items: flex-start">
                     <div id="camposComunes" style="display: flex; flex-direction: column; align-items: flex-start">
@@ -45,14 +44,27 @@
                         %>
                         </select>
                         <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                        <input type="textarea" name="descripcion" placeholder="*Descripcion..." maxlength="100" value="<%= descripcion%>">
-                        <input type="number" name="duracion" placeholder="*Duracion..." value="<%= duracion%>">
-                        <input type="number" name="espMinimos" placeholder="*Espectadores Minimos..." value="<%= especMinimos%>">
-                        <input type="number" name="espMaximos" placeholder="*Espectadores Maximos..." value="<%= especMaximos%>">
+                        <textarea name="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
+                        <input type="number" min="0" name="duracion" placeholder="*Duracion..." value="<%= duracion%>">
+                        <input type="number" min="0" name="espMinimos" placeholder="*Espectadores Minimos..." value="<%= especMinimos%>">
+                        <input type="number" min="0" name="espMaximos" placeholder="*Espectadores Maximos..." value="<%= especMaximos%>">
                         <input type="url" name="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
-                        <input type="number" name="costo" placeholder="*Costo de entrada..." value="<%= costo%>">
+                        <input type="number" min="0" name="costo" placeholder="*Costo de entrada..." value="<%= costo%>">
                         <input type="file" name="imagen">
-                        <%--TODO: AGREGAR SELECTOR DE CATEOGRIAS--%>
+
+                        <div id="select-categorias">
+                            Categorias<select name="categorias"  id="categorias">
+                                <%
+                            for (Plataforma elem : plataformas.values()) {
+                                %>
+                            <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                                <%
+                            }
+                            %>
+                        </select>
+                            <button type="button" onclick="AgregarCategoria()">Agregar</button>
+                            <ul id="Categorias-list"></ul>
+                        </div>
                     </div>
                     <button type="button" onclick="enviarForm()">Registrarse!</button>
                 </div>
@@ -113,6 +125,35 @@
                     } else {
                         alert("EL FORMULARIO NO SE ENVIO POR INVALIDO")
                     }
+                }
+
+                function AgregarCategoria(){
+                    //obtengo el valor del selector
+                    let categoria = $("select[name='categorias']").val();
+                    //obtengo el objeto lista
+                    let listaElegidas= document.getElementById("Categorias-list");
+                    let liCategoria= document.createElement("li");
+                    //creo un input invisible para pasar el valor de la categoria
+                    let inputEnviar= document.createElement("input");
+                    liCategoria.innerHTML=categoria;
+                    inputEnviar.type="hidden";
+                    inputEnviar.value=categoria;
+                    inputEnviar.name="catElegidas";
+                    liCategoria.setAttribute("class",'cat-elegidas');
+                    liCategoria.setAttribute("onclick","cargarlista(this)");
+                    liCategoria.appendChild(inputEnviar);
+                    listaElegidas.appendChild(liCategoria);
+                    //Borro la categoria del select
+                    $('#categorias option[value="'+categoria+'"]').remove();
+                }
+
+                function cargarlista(element){
+                    let selectCat=document.getElementById("categorias");
+                    let option= document.createElement("option");
+                    option.text=element.textContent;
+                    option.value=element.textContent;
+                    selectCat.appendChild(option);
+                    element.remove();
                 }
             </script>
 

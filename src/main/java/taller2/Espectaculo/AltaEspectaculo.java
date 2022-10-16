@@ -47,6 +47,7 @@ public class AltaEspectaculo extends HttpServlet {
         String url = request.getParameter("url");
         String costostr = request.getParameter("costo");
         String imagen = request.getParameter("imagen");
+        String[] categorias = request.getParameterValues("catElegidas");
         request.setAttribute("plataformas",fabrica.getIEspectaculo().obtenerPlataformas());
         //String nombArtista=(String)request.getSession().getAttribute("nickname");
         String nombArtista = "Kanlam";
