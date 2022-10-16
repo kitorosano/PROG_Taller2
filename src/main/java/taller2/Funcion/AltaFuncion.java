@@ -3,8 +3,10 @@ package taller2.Funcion;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectaculo;
 import main.java.taller1.Logica.Clases.Funcion;
+import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "AltaFuncion", value = "/alta-funcion")
@@ -34,7 +38,16 @@ public class AltaFuncion extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String artista="Kanlam";
         Map<String, Espectaculo> espectaculos = fabrica.getIUsuario().obtenerEspectaculosArtista(artista);
+        Map <String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        List<String> artistas=new ArrayList<String>() {
+        };
+        for(Usuario u:usuarios.values()){
+            if(u instanceof Artista){
+                artistas.add(u.getNickname());
+            }
+        }
         request.setAttribute("espectaculos", espectaculos);
+        request.setAttribute("artistas",artistas);
         dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
     }
 

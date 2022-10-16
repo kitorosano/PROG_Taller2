@@ -1,6 +1,7 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -34,6 +35,20 @@
             <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>">
             <input type="time" name="horaInicio">
             <input type="file" name="imagen">
+          </div>
+          <div id="artistas-list">
+            <p>Artistas a invitar</p>
+            <select multiple name="listArtistas" id="listArtistas">
+              <%
+                List<String> artistas= (List<String>) request.getAttribute("artistas");
+                for(String artista: artistas){
+              %>
+              <option value="<%=artista%>"><%=artista%></option>
+              <%
+                }
+              %>
+            </select>
+            <button type="button" onclick="AgregarArtista()">Invitar artista</button>
           </div>
           <button type="button" onclick="enviarForm()">Registrar!</button>
         </div>
@@ -75,6 +90,10 @@
           } else {
             alert("EL FORMULARIO NO SE ENVIO POR INVALIDO")
           }
+        }
+
+        function AgregarArtista(){
+
         }
       </script>
     <%--                AGREGAR COMPONENTES ACA--%>
