@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @WebServlet(name = "AltaFuncion", value = "/alta-funcion")
 public class AltaFuncion extends HttpServlet {
@@ -38,14 +39,7 @@ public class AltaFuncion extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String artista="Kanlam";
         Map<String, Espectaculo> espectaculos = fabrica.getIUsuario().obtenerEspectaculosArtista(artista);
-        Map <String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
-        List<String> artistas=new ArrayList<String>() {
-        };
-        for(Usuario u:usuarios.values()){
-            if(u instanceof Artista){
-                artistas.add(u.getNickname());
-            }
-        }
+        List<String> artistas=obtenerArtistas(artista);
         request.setAttribute("espectaculos", espectaculos);
         request.setAttribute("artistas",artistas);
         dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
@@ -59,8 +53,17 @@ public class AltaFuncion extends HttpServlet {
         String hora = request.getParameter("horaInicio");
         String imagen = request.getParameter("imagen");
         String artista="Kanlam";
+        String[] artistasInvitados = request.getParameterValues("artInvitado");
         Map<String, Espectaculo> espectaculos = fabrica.getIUsuario().obtenerEspectaculosArtista(artista);
+        List<String> artistas=obtenerArtistas(artista);
+        if(artistasInvitados!=null){
+            for(String invitado:artistasInvitados){
+                artistas.remove(invitado);
+            }
+        }
+        request.setAttribute("artistas",artistas);
         request.setAttribute("espectaculos", espectaculos);
+
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
@@ -96,7 +99,7 @@ public class AltaFuncion extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrefunc, Espectaculo esp) {      //Devuelve true si hay error
-        Map<String, Funcion> funciones = fabrica.getIEspectaculo().obtenerFuncionesDeEspectaculo(esp.getNombre(),esp.getPlataforma().getNombre());
+        Map<String, Funcion> funciones = fabrica.getIEspectaculo().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         for (Funcion fun : funciones.values()) {
             if (fun.getNombre().equals(nombrefunc)) {
                 return true;
@@ -126,6 +129,18 @@ public class AltaFuncion extends HttpServlet {
             System.out.println("ERROR EN LA HORA");
             return true;
         }
+    }
+
+    private List<String> obtenerArtistas(String artista){
+        Map <String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        List<String> artistas=new ArrayList<String>() {
+        };
+        for(Usuario u:usuarios.values()){
+            if(u instanceof Artista && !artista.equals(u.getNickname())){
+                artistas.add(u.getNickname());
+            }
+        }
+        return artistas;
     }
 
 }

@@ -3,6 +3,18 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%  //Traer datos precargados del request anterior
+  String nombrespectaculo = request.getParameter("espectaculo");
+  String nombrefuncion= request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";
+  String fecha = request.getParameter("fechaInicio") instanceof String ? request.getParameter("fechaInicio") : "";
+  String hora = request.getParameter("horaInicio") instanceof String ? request.getParameter("horaInicio") : "";
+  String imagen = request.getParameter("imagen") instanceof String ? request.getParameter("imagen") : "";
+  String[] artistasInvitados = request.getParameterValues("artInvitado");
+  Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+  List<String> artistas= (List<String>) request.getAttribute("artistas");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +35,6 @@
           <div id="camposComunes" style="display: flex; flex-direction: column; align-items: flex-start">
             Espectaculo<select name="espectaculo" >
             <%
-              Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
               for (Espectaculo elem : espectaculos.values()) {
             %>
             <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
@@ -31,16 +42,16 @@
               }
             %>
           </select>
-            <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30">
-            <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>">
-            <input type="time" name="horaInicio">
+            <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%=nombrefuncion%>">
+            <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>" value="<%=fecha%>">
+            <input type="time" name="horaInicio" value="<%=hora%>" >
             <input type="file" name="imagen">
           </div>
           <div id="artistas-list">
             <p>Artistas a invitar</p>
             <select multiple name="listArtistas" id="listArtistas">
               <%
-                List<String> artistas= (List<String>) request.getAttribute("artistas");
+
                 for(String artista: artistas){
               %>
               <option value="<%=artista%>"><%=artista%></option>
@@ -48,8 +59,22 @@
                 }
               %>
             </select>
-            <button type="button" onclick="AgregarArtista()">Invitar artista</button>
+            <button type="button" onclick="agregarArtista()">Invitar artista</button>
           </div>
+
+
+          <select multiple name="artistasInvitados" id="artistasInvitados">
+            <%
+              if(artistasInvitados!=null){
+                for(String nombInvitado:artistasInvitados){
+            %>
+            <option value="<%=nombInvitado%>"><%=nombInvitado%></option>
+            <%
+                }
+              }
+            %>
+          </select>
+          <button type="button" onclick="eliminarArtista()">Quitar artista</button>
           <button type="button" onclick="enviarForm()">Registrar!</button>
         </div>
       </form>
@@ -68,6 +93,8 @@
       <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
       <script>
+
+        <%--CUANDO EL DOCUMENTO TERMINE DE CARGAR QUE TOME TODOS LOS VALORES DE LA LISTA INVITADOS Y LES AGREGUE UN INPUT DE HIJO--%>
         function enviarForm() {
           //Obtener inputs con jquery
           let espectaculo = $("input[name='espectaculo']").val();
@@ -75,6 +102,7 @@
           let fecha = $("input[name='fechaInicio']").val();
           let hora = $("input[name='horaInicio']").val();
           let imagen = $("input[name='imagen']").val();
+          let invitadosSelector = document.getElementById("artistasInvitados");
 
           let formularioValido = true;
 
@@ -84,6 +112,15 @@
             formularioValido = false;
           }
 
+          //Agrego un input invisible para cada elemento del select de invitados
+          $("#artistasInvitados option").each(function() {
+            let inputEnviar=document.createElement("input");
+            inputEnviar.type="hidden";
+            inputEnviar.value=this.value;
+            inputEnviar.name="artInvitado";
+            this.appendChild(inputEnviar);
+          });
+
           //Enviar formulario con jquery
           if (formularioValido) {
             document.getElementById("idform").submit();
@@ -92,8 +129,27 @@
           }
         }
 
-        function AgregarArtista(){
+        function agregarArtista(){
+            //obtengo el valor del selector
+            let artista = $("select[name='listArtistas']").val();
+            //obtengo el objeto lista
+            let artistasInvitados= document.getElementById("artistasInvitados");
+            let invitado= document.createElement("option");
+            invitado.text=artista;
+            invitado.value=artista;
+            artistasInvitados.appendChild(invitado);
+            //Borro la categoria del select
+            $('#listArtistas option[value="'+artista+'"]').remove();
+        }
 
+        function eliminarArtista(){
+          let artista = $("select[name='artistasInvitados']").val();
+          let artistas=document.getElementById("listArtistas");
+          let invitado=document.createElement("option");
+          invitado.text=artista;
+          invitado.value=artista;
+          artistas.appendChild(invitado);
+          $('#artistasInvitados option[value="'+artista+'"]').remove();
         }
       </script>
     <%--                AGREGAR COMPONENTES ACA--%>
