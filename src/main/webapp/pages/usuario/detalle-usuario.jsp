@@ -8,7 +8,7 @@
     <head>
         <title>Detalle usuario</title>
         <style><%@ include file="/pages/global.css" %></style>
-        <style><%@ include file="/pages/detalle-usuario.css" %></style>
+        <style><%@ include file="/pages/detalles.css" %></style>
     </head>
     <body>
     <%@ include file="/pages/header.jsp" %>
@@ -21,15 +21,40 @@
 
 
                 <%-- AGREGAR COMPONENTES ACA--%>
-
-            <h1 class="title">Detalle usuario</h1>
+            <%
+                if(usu instanceof Artista){
+            %>
+                <h1 class="title">Detalle de artista</h1>
+            <%
+                }else{
+            %>
+                <h1 class="title">Detalle de espectador</h1>
+            <%
+                }
+            %>
+                    <img src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg" alt="Foto de perfil" class="img_perfil">
+            <div class="first-data">
+                <h2><%=usu.getNombre()+" "+usu.getApellido()%></h2>
+                <h4><%=usu.getNickname()+" / "+usu.getCorreo()%></h4>
+            </div>
             <div class="tabs">
                 <div class="menu">
-                    <p data-target="#datos_generales">Datos Generales</p>
-                    <p data-target="#espectaculos">Espectaculos</p>
-                    <p data-target="#descripcion">Descripcion</p>
-                    <p data-target="#biografia">Biorgrafia</p>
-                    <p data-target="#Funciones">Biorgrafia</p>
+                    <p data-target="#datos_generales" class="active">Datos Generales</p>
+                    <%
+                        if(usu instanceof Artista){
+                    %>
+                        <p data-target="#espectaculos">Espectaculos</p>
+                        <p data-target="#descripcion">Descripcion</p>
+                        <p data-target="#biografia">Biografia</p>
+                    <%
+                        }
+                        else{
+                    %>
+                        <p data-target="#func" >Funciones</p>
+                        <p data-target="#paquetes">Paquetes adquiridos</p>
+                    <%
+                        }
+                    %>
                 </div>
 
                 <div class="content">
@@ -45,20 +70,26 @@
                         <%
                             if(usu instanceof Artista){
                         %>
-
-                                <h4>SioWeb:<%=((Artista) usu).getSitioWeb()%></h4>
+                        <h4>SioWeb:<%=((Artista) usu).getSitioWeb()%></h4>
+                        <%
+                            }
+                        %>
 
                     </div>
 
+                    <%
+                        if(usu instanceof Artista){
+                    %>
                     <div data-content id="espectaculos">
-                        <table class="table">
+                        <table >
                             <tbody>
                             <%
+                                //queda esperar a que este el estado de aceptado o cancelado para e filtro
                                 Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
                                 for (Espectaculo elem : espectaculos.values()) {
                             %>
                             <tr>
-                                <th> <%=elem.getNombre()%> </th>
+                                <th onClick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'"> <%=elem.getNombre()%> </th>
                             </tr>
                             <%
                                 }
@@ -76,24 +107,33 @@
                         <h4>Biografia:<%=((Artista) usu).getBiografia()%></h4>
                     </div>
                     <%
-                        }else{
+                        }
+                        else{
                     %>
 
-                    <div data-content id="funciones">
-                        <table class="table">
+                    <div data-content id="func" >
+                        <table class="table" >
                             <tbody>
                             <%
                                 Map<String, EspectadorRegistradoAFuncion> funciones =(Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones");
                                 for (EspectadorRegistradoAFuncion elem : funciones.values()) {
                             %>
                             <tr>
+
                                 <th> <%=elem.getFuncion().getNombre()%> </th>
+
+
                             </tr>
                             <%
+
                                 }
                             %>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div data-content id="paquetes">
+                        aca van los paquetes comprados
                     </div>
 
                     <%
@@ -101,10 +141,7 @@
                     %>
                 </div>
             </div>
-            <div class="table">
 
-
-            </div>
                     <a href="/pages/home.jsp" class="back">Volver</a>
         </div>
 
@@ -113,18 +150,27 @@
     </section>
 
     <script>
-        const targets = document.querySelectorAll('[data-target]')
+        var targets = document.querySelectorAll('[data-target]')
         const content = document.querySelectorAll('[data-content]')
 
-        targets.forEach(target => {
+        targets.forEach(target  => {
+            console.log(target);
+
             target.addEventListener('click', () => {
                 content.forEach(c => {
                     c.classList.remove('active')
                 })
+                targets.forEach(ts =>{
+                  ts.classList.remove('active')
+                })
+                console.log(target.classList);
                 const t = document.querySelector(target.dataset.target)
                 t.classList.add('active')
+                target.classList.add('active')
+                console.log(target.classList);
             })
         })
+
 
     </script>
     </body>
