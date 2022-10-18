@@ -40,7 +40,13 @@
             <select name="categorias" id="categorias">
             </select>
             <button type="button" onclick="enviarForm()">Buscar</button>
+
           </form>
+
+          <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
+            <button type="button" onclick="resetearForm()">Resetear</button>
+          </form>
+
 
         </div>
         <div>
@@ -61,35 +67,64 @@
 
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   <script>
+
+    //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
-      crearTabla();
+      <%if (request.getAttribute("totalEspectaculos") != null){%>
+      crearTablaTotal();
+    <%}else{%>
+      crearTablaConsulta();
+      <%}%>
     });
-    <% if (request.getAttribute("espectaculos") != null){
-    Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
-    System.out.println(espectaculos.size());
-    %>
-      function crearTabla(){
+
+    function enviarForm(){
+      $("#formEspectaculos").first().submit();
+    }
+    function resetearForm(){
+      $("#resetEspectaculos").first().submit();
+    }
+
+    //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" NO SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOGET()
+    <% if (request.getAttribute("totalEspectaculos") != null){ %>
+      function crearTablaTotal(){
+        <%Map<String, Espectaculo> totalEspectaculos = (Map<String, Espectaculo>) request.getAttribute("totalEspectaculos");%>
+
         let tabla = document.getElementById("cuerpoTabla");
-        <%//Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
-        for (Espectaculo elem : espectaculos.values()) { %>
-        let nuevaFila = tabla.insertRow(-1);
-        let celdaEspectaculo = nuevaFila.insertCell(0);
-        let celdaArtista = nuevaFila.insertCell(1);
+        let nuevaFila = document.createElement("tr");
+        let celdaEspectaculo = document.createElement("td");
+        let celdaArtista = document.createElement("td");
+
+        <%for (Espectaculo elem : totalEspectaculos.values()) {%>
+        nuevaFila = tabla.insertRow(-1);
+        celdaEspectaculo = nuevaFila.insertCell(0);
+        celdaArtista = nuevaFila.insertCell(1);
+
+        celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
+        celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
+
+        celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
+
+        <% } %>
+        }
+    <% }else{ %> //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOPOST()
+      function crearTablaConsulta(){
+        <%Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");%>
+        let tabla = document.getElementById("cuerpoTabla");
+        let nuevaFila = document.createElement("tr");
+        let celdaEspectaculo = document.createElement("td");
+        let celdaArtista = document.createElement("td");
+        <%for (Espectaculo elem : espectaculos.values()) {%>
+        nuevaFila = tabla.insertRow(-1);
+        celdaEspectaculo = nuevaFila.insertCell(0);
+        celdaArtista = nuevaFila.insertCell(1);
 
         celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
         celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
 
         celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
         <% } %>
-      }
-    <%} %>
-
-
-      function enviarForm(){
-        $("#formEspectaculos").first().submit();
-      }
-
-
+        }
+    <% } %>
   </script>
 </body>
 </html>
