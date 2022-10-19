@@ -13,14 +13,47 @@
 %>
 
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
     <style><%@ include file="/pages/global.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
+    <style>
+
+        #idform {
+            top: 50%;
+            padding: 30px;
+        }
+        .subtitulos{
+            width: 30%;
+        }
+        #idform input {
+            width: 50%;
+            float: left;
+            text-align: left;
+            line-height: 30px;
+        }
+        #idform textarea {
+            width: 50%;
+            float: left;
+            text-align: left;
+            resize: none;
+            line-height: 60px;
+        }
+        .input-container{
+            border-bottom: 1px solid #f2f2f2;
+            padding-bottom: 20px;
+            width: 100%;
+            display: flex;
+            -webkit-box-pack: justify;
+            /*justify-content: space-between;*/
+            -webkit-box-align: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+    </style>
+
 </head>
 <body>
 <%@ include file="/pages/header.jsp" %>
@@ -32,25 +65,52 @@
         <h1>Alta de espectaculo</h1>
             <form id="idform" name="formEspectaculo" method="POST" action="alta-espectaculo">
                 <div style="display: flex; flex-direction: column; align-items: flex-start">
-                    <div id="camposComunes" style="display: flex; flex-direction: column; align-items: flex-start">
-                        Plataforma<select name="plataforma" >
-                        <%
-                            Map<String, Plataforma> plataformas= (Map<String, Plataforma>) request.getAttribute("plataformas");
-                            for (Plataforma elem : plataformas.values()) {
-                        %>
-                            <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
-                        <%
-                            }
-                        %>
-                        </select>
-                        <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                        <textarea name="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
+                    <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
+                        <div class="input-container">
+                            <label class="subtitulos">Plataforma</label>
+                            <select name="plataforma" >
+                            <%
+                                Map<String, Plataforma> plataformas= (Map<String, Plataforma>) request.getAttribute("plataformas");
+                                for (Plataforma elem : plataformas.values()) {
+                            %>
+                                <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                            <%
+                                }
+                            %>
+                            </select>
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Nombre</label>
+                            <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Descripcion</label>
+                        <textarea name="descripcion" placeholder="*Descripcion..." maxlength="100" ><%= descripcion%></textarea>
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Duracion</label>
                         <input type="number" min="0" name="duracion" placeholder="*Duracion..." value="<%= duracion%>">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Espectadores Minimos</label>
                         <input type="number" min="0" name="espMinimos" placeholder="*Espectadores Minimos..." value="<%= especMinimos%>">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Espectadores Maximos</label>
                         <input type="number" min="0" name="espMaximos" placeholder="*Espectadores Maximos..." value="<%= especMaximos%>">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">URL sitio web</label>
                         <input type="url" name="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Costo de entrada</label>
                         <input type="number" min="0" name="costo" placeholder="*Costo de entrada..." value="<%= costo%>">
-                        <input type="file" name="imagen">
+                        </div>
+                        <div class="input-container">
+                            <label class="subtitulos">Imagen</label>
+                            <input type="file" name="imagen">
+                        </div>
 
                         <div id="select-categorias">
                             Categorias<select name="categorias"  id="categorias">
@@ -61,7 +121,7 @@
                                 <%
                             }
                             %>
-                        </select>
+                            </select>
                             <button type="button" onclick="AgregarCategoria()">Agregar</button>
                             <ul id="Categorias-list"></ul>
                         </div>
