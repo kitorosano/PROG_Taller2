@@ -21,6 +21,39 @@
   <style><%@ include file="../global.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
+  <style>
+
+    #idform {
+      top: 50%;
+      padding: 30px;
+    }
+    .subtitulos{
+      width: 30%;
+    }
+    #idform input {
+      width: 50%;
+      float: left;
+      text-align: left;
+      line-height: 30px;
+    }
+    #idform textarea {
+      width: 50%;
+      float: left;
+      text-align: left;
+      line-height: 60px;
+    }
+    .input-container{
+      border-bottom: 1px solid #f2f2f2;
+      padding-bottom: 20px;
+      width: 100%;
+      display: flex;
+      -webkit-box-pack: justify;
+      /*justify-content: space-between;*/
+      -webkit-box-align: center;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
 <%@ include file="../header.jsp" %>
@@ -32,26 +65,40 @@
       <h1>Registro de funcion de espectaculo</h1>
       <form id="idform" name="formEspectaculo" method="POST" action="alta-funcion">
         <div style="display: flex; flex-direction: column; align-items: flex-start">
-          <div id="camposComunes" style="display: flex; flex-direction: column; align-items: flex-start">
-            Espectaculo<select name="espectaculo" >
-            <%
-              for (Espectaculo elem : espectaculos.values()) {
-            %>
-            <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
-            <%
-              }
-            %>
-          </select>
-            <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%=nombrefuncion%>">
-            <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>" value="<%=fecha%>">
-            <input type="time" name="horaInicio" value="<%=hora%>" >
-            <input type="file" name="imagen">
+          <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
+            <div class="input-container">
+                <label class="subtitulos">Espectaculo</label>
+                <select name="espectaculo" >
+                <%
+                  for (Espectaculo elem : espectaculos.values()) {
+                %>
+                <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                <%
+                  }
+                %>
+                </select>
+            </div>
+            <div class="input-container">
+              <label class="subtitulos">Nombre</label>
+              <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%=nombrefuncion%>">
+            </div>
+            <div class="input-container">
+              <label class="subtitulos">Fecha de inicio</label>
+              <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>" value="<%=fecha%>">
+            </div>
+            <div class="input-container">
+              <label class="subtitulos">Hora de inicio</label>
+              <input type="time" name="horaInicio" value="<%=hora%>">
+            </div>
+            <div class="input-container">
+              <label class="subtitulos">Imagen</label>
+              <input type="file" name="imagen">
+            </div>
           </div>
           <div id="artistas-list">
             <p>Artistas a invitar</p>
             <select multiple name="listArtistas" id="listArtistas">
               <%
-
                 for(String artista: artistas){
               %>
               <option value="<%=artista%>"><%=artista%></option>
