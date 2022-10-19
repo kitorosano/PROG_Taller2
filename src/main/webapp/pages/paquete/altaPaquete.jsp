@@ -18,6 +18,39 @@
     <style><%@ include file="/pages/global.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
+    <style>
+
+        #idform {
+            top: 50%;
+            padding: 30px;
+        }
+        .subtitulos{
+            width: 30%;
+        }
+        #idform input {
+            width: 50%;
+            float: left;
+            text-align: left;
+            line-height: 30px;
+        }
+        #idform textarea {
+            width: 50%;
+            float: left;
+            text-align: left;
+            line-height: 60px;
+        }
+        .input-container{
+            border-bottom: 1px solid #f2f2f2;
+            padding-bottom: 20px;
+            width: 100%;
+            display: flex;
+            -webkit-box-pack: justify;
+            /*justify-content: space-between;*/
+            -webkit-box-align: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
 <%@ include file="/pages/header.jsp" %>
@@ -26,17 +59,30 @@
     <%@ include file="/pages/sidebar.jsp" %>
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
-        <h1>Alta de espectaculo</h1>
+        <h1>Registro de paquete de espectaculos</h1>
         <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <div id="camposComunes" style="display: flex; flex-direction: column; align-items: flex-start">
-                    <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                    <textarea name="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
-                    <input type="date" min="<%=LocalDate.now()%>" name="vigencia" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
-                    <input type="number" min="0" name="descuento" placeholder="*Porcentaje de descuento" value="<%= descuento%>">%
-                    <input type="file" name="imagen">
+                <div class="input-container">
+                    <label class="subtitulos">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
                 </div>
-                <button type="button" onclick="enviarForm()">Registrarse!</button>
+                <div class="input-container">
+                    <label class="subtitulos">Descripcion</label>
+                    <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
+                </div>
+                <div class="input-container">
+                    <label class="subtitulos">Fecha de expiracion</label>
+                    <input type="date" min="<%=LocalDate.now()%>" name="vigencia" id="fecha-expiracion" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
+                </div>
+                <div class="input-container">
+                    <label class="subtitulos">Porcentaje de descuento</label>
+                    <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" value="<%= descuento%>">
+                </div>
+                <div class="input-container">
+                    <label class="subtitulos">Imagen</label>
+                    <input type="file" name="imagen" id="imagen">
+                </div>
+                <button type="button" onclick="enviarForm()">Confirmar</button>
             </div>
         </form>
 
