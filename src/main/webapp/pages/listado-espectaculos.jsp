@@ -36,12 +36,11 @@
               <option value="<%=elem.getNombre()%>"><%=elem.getNombre()%></option>
               <% } %>
             </select>
-
             <label for="categorias">Selecciona una categoria:</label>
             <select name="categorias" id="categorias">
+              <!-- FALTA HACER EL SELECT POR CATEGORIAS  -->
             </select>
             <button type="button" onclick="enviarForm()">Buscar</button>
-
           </form>
 
           <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
@@ -50,7 +49,15 @@
 
 
         </div>
+
+        <div class="busqueda">
+        <br/>
+        <label for="">Buscar espectaculo</label>
+          <input type="text" name="buscarEmpleado" id="txtBuscar" value="Espectaculo...">
+        </div>
+
         <div>
+          <h2>Espectaculos</h2>
           <table class="tablaEspectaculos" id="tabla">
             <thead>
               <tr>
@@ -122,10 +129,36 @@
         celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
         celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
 
-        celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
+        celdaEspectaculo.setAttribute('onClick',"location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'");
+        //celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
         <% } %>
         }
     <% } %>
+
+    //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
+    $("#txtBuscar").on("keyup", function() {
+      var keyword = this.value;
+      keyword = keyword.toUpperCase();
+      var table_1 = document.getElementById("tabla");
+      var all_tr = table_1.getElementsByTagName("tr");
+      for(var i=0; i<all_tr.length; i++){
+        var name_column = all_tr[i].getElementsByTagName("td")[0];
+        if(name_column){
+          var name_value = name_column.textContent || name_column.innerText;
+          name_value = name_value.toUpperCase();
+          if(name_value.indexOf(keyword) > -1){
+            all_tr[i].style.display = ""; // show
+          }else{
+            all_tr[i].style.display = "none"; // hide
+          }
+        }
+      }
+    });
+    //limpiar textbox
+    $("#txtBuscar").click(function(){
+      $("#txtBuscar").val("");
+    });
+
   </script>
 </body>
 </html>

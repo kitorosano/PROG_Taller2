@@ -1,11 +1,20 @@
-.tablaEspectaculos {
-    font-family: Arial, Helvetica, sans-serif;
+.tablaEspectaculos{
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 200px;
 }
 
-.tablaEspectaculos td, .tablaEspectaculos th {
-    border: 1px solid #ddd;
+.tablaEspectaculos td, .tablaEspectaculos th, h2{
     padding: 8px;
+    text-align: start;
+    border-bottom: 1px solid #ddd;
+}
+
+.busqueda{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+    margin-top: 5px;
+    gap: 10px;
 }
