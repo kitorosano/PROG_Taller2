@@ -45,7 +45,7 @@
     celdaNombre.innerHTML = "<%=elem.getNombre()%>";
     celdaDescripcion.innerHTML = "<%=elem.getDescripcion()%>";
 
-    celdaNombre.setAttribute('onClick',"location.href='detalle-paquete?nombre=<%=elem.getNombre()%>'");
+    celdaNombre.setAttribute('onClick',"location.href='detalle-paquete?nombre_paquete=<%=elem.getNombre()%>'");
     //celdaNombre.setAttribute('onClick','window.location.href = \'detalle-paquete.jsp\';');
     <% } %>
 
