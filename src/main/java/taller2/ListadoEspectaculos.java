@@ -39,9 +39,6 @@ public class ListadoEspectaculos extends HttpServlet {
                 totalEspectaculos.put(e.getNombre(), e);
             }
         }
-        for (Espectaculo es : totalEspectaculos.values()){
-            System.out.println(es.getNombre());
-        }
         request.setAttribute("plataformas", plataformas);
         request.setAttribute("totalEspectaculos", totalEspectaculos);
         dispatchPage("/pages/listado-espectaculos.jsp", request, response);
