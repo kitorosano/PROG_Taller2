@@ -117,10 +117,11 @@
                             <%
                                 Map<String, EspectadorRegistradoAFuncion> funciones =(Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones");
                                 for (EspectadorRegistradoAFuncion elem : funciones.values()) {
+
                             %>
                             <tr>
 
-                                <th> <%=elem.getFuncion().getNombre()%> </th>
+                                <th onClick="location.href='detalle-funcion?nombre_funcion=<%=elem.getFuncion().getNombre()%>&nombre_espectaculo=<%=elem.getFuncion().getEspectaculo().getNombre()%>&nombre_plataforma=<%=elem.getFuncion().getEspectaculo().getPlataforma().getNombre()%>'"> <%=elem.getFuncion().getNombre()%> </th>
 
 
                             </tr>

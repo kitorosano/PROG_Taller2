@@ -42,12 +42,12 @@
                         <h4>Nombre:<%=espectaculo.getNombre()%></h4>
                         <h4>Duracion:<%=espectaculo.getDuracion()%></h4>
                         <h4>Minimo de espectadores:<%=espectaculo.getMinEspectadores()%></h4>
-                        <h4>Maximo de espectadores:</h4>
-                        <h4>Url:</h4>
-                        <h4>Costo:</h4>
-                        <h4>Fecha de registro:</h4>
-                        <h4>Nombre de plataforma:</h4>
-                        <h4>Artista organizador:</h4>
+                        <h4>Maximo de espectadores:<%=espectaculo.getMaxEspectadores()%></h4>
+                        <h4>Url:<%=espectaculo.getUrl()%></h4>
+                        <h4>Costo:<%=espectaculo.getCosto()%></h4>
+                        <h4>Fecha de registro:<%=espectaculo.getFechaRegistro()%></h4>
+                        <h4>Nombre de plataforma:<%=espectaculo.getPlataforma().getNombre()%></h4>
+                        <h4>Artista organizador:<%=espectaculo.getArtista().getNickname()%></h4>
 
                     </div>
                     <div data-content id="descripcion">
@@ -63,7 +63,7 @@
                                 for (Funcion funcion : funciones.values()) {
                             %>
                             <tr>
-                                <th > <%=funcion.getNombre()%>  </th>
+                                <th onClick="location.href='detalle-funcion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=espectaculo.getNombre()%>&nombre_plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>  </th>
                             </tr>
                             <%
                                 }
