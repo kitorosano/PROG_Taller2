@@ -14,6 +14,7 @@
 <html>
 <head>
   <style><%@ include file="./global.css" %></style>
+  <style><%@ include file="./listado-espectaculos.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
 </head>
