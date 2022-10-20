@@ -1,0 +1,24 @@
+.tablaFunciones{
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 200px;
+}
+
+.tablaFunciones td, .tablaFunciones th, h2{
+    padding: 8px;
+    text-align: start;
+    border-bottom: 1px solid #ddd;
+}
+
+select{
+    width: 100px;
+}
+
+.busqueda{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+    margin-top: 5px;
+    gap: 10px;
+}

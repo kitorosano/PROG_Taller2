@@ -21,6 +21,7 @@
                 <a href="detalle-usuario">Detalle Usuario</a>
                 <a href="alta-espectaculo">Alta Espectaculo</a>
                 <a href="alta-funcion">Registro de funcion</a>
+                <a href="listado-funciones">Listado Funciones</a>
                 <a href="alta-paquete">Alta Paquete</a>
                 <a href="listado-paquetes">Listado Paquetes</a>
 <%--                AGREGAR COMPONENTES ACA--%>
