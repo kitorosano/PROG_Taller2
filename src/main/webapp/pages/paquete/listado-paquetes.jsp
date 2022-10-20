@@ -4,16 +4,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style><%@ include file="./global.css" %></style>
-    <style><%@ include file="./listado-paquetes.css" %></style>
+    <style><%@ include file="../global.css" %></style>
+    <style><%@ include file="listado-paquetes.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
 </head>
 <body>
-<%@ include file="header.jsp" %>
+<%@ include file="../header.jsp" %>
 
 <section>
-    <%@ include file="sidebar.jsp" %>
+    <%@ include file="../sidebar.jsp" %>
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
             <h2>Paquetes</h2>

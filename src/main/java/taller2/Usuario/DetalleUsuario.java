@@ -29,14 +29,14 @@ public class DetalleUsuario extends HttpServlet {
     Usuario usu=usuarios.get(nickname);
 
     if(usu instanceof Artista){
-      Map <String, Espectaculo> espectaculos=Fabrica.getInstance().getIUsuario().obtenerEspectaculosArtista(usu.getNickname());
+      Map <String, Espectaculo> espectaculos=Fabrica.getInstance().getIEspectaculo().obtenerEspectaculosPorArtista(usu.getNickname());
       request.setAttribute("tipo","Artista");
       request.setAttribute("datos",usu);
       request.setAttribute("espectaculos",espectaculos);
       RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }else{
-      Map<String, EspectadorRegistradoAFuncion> funciones=Fabrica.getInstance().getIUsuario().obtenerFuncionesRegistradasDelEspectador(usu.getNickname());
+      Map<String, EspectadorRegistradoAFuncion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(usu.getNickname());
       request.setAttribute("tipo","Espectador");
       request.setAttribute("datos",usu);
       request.setAttribute("funciones",funciones);

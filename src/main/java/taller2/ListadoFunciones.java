@@ -31,7 +31,7 @@ public class ListadoFunciones extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         //Map<String, Espectaculo> totalEspectaculos = new HashMap();
 
         /*
@@ -53,20 +53,20 @@ public class ListadoFunciones extends HttpServlet {
 
         String miPlataforma = request.getParameter("plataforma");
 
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         request.setAttribute("plataformas", plataformas);
 
         if (request.getParameter("espectaculo") == null){
-            Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(miPlataforma);
+            Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
             request.setAttribute("espectaculos", espectaculos);
             dispatchPage("/pages/listado-funciones.jsp", request, response);
         }
 
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(miPlataforma);
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
         request.setAttribute("espectaculos", espectaculos);
 
         String miEspectaculo = request.getParameter("espectaculo");
-        Map<String, Funcion> funciones = fabrica.getIEspectaculo().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
+        Map<String, Funcion> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
 
         request.setAttribute("funciones", funciones);
         dispatchPage("/pages/listado-funciones.jsp", request, response);

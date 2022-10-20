@@ -73,7 +73,7 @@ public class Login extends HttpServlet {
     }
     
     //error cuando la contraseña es incorrecta
-    if(!usuario.getContrasena().equals(contrasenia)) {
+    if(!usuario.getContrasenia().equals(contrasenia)) {
       request.setAttribute("error", "La contraseña es incorrecta");
       dispatchPage("/pages/login.jsp", request, response);
       return;

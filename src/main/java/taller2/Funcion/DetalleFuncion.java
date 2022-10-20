@@ -30,11 +30,11 @@ public class DetalleFuncion extends HttpServlet {
     String nombre_espectaculo= request.getParameter("nombre_espectaculo");
     String nombre_plataforma=request.getParameter("nombre_plataforma");
 
-    Map<String, Funcion> funciones=Fabrica.getInstance().getIEspectaculo().obtenerFuncionesDeEspectaculo(nombre_plataforma,nombre_espectaculo);
+    Map<String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(nombre_plataforma,nombre_espectaculo);
     Funcion funcion=funciones.get(nombre_funcion);
 
 
-      Map <String, EspectadorRegistradoAFuncion> espectadores=Fabrica.getInstance().getIUsuario().obtenerEspectadoresRegistradosAFuncion(nombre_funcion);
+      Map <String, EspectadorRegistradoAFuncion> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre_funcion);
        request.setAttribute("espectadores",espectadores);
        request.setAttribute("datos",funcion);
       RequestDispatcher view = request.getRequestDispatcher("/pages/funcion/detalle-funcion.jsp");
