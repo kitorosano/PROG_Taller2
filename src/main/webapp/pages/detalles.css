@@ -1,0 +1,106 @@
+.grid-container{
+    display: grid;
+    grid-template-columns: 10px 120px 150px 160px 3px 550px;
+    grid-template-rows: 80px 80px 50px 360px 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.title{
+    grid-column: 3/5;
+    grid-row: 1;
+}
+
+.first-data{
+    grid-column: 3/5;
+    grid-row: 2;
+}
+.tabs{
+    //background-color: red;
+    grid-column: 2/5;
+    grid-row: 4;
+    border: solid black 1px;
+    border-collapse: collapse;
+}
+
+.table{
+//    grid-column: 4;
+//    grid-row: 4;
+}
+
+.back{
+    grid-column: 2;
+    grid-row: 5;
+}
+.img_perfil{
+    grid-column: 2;
+    grid-row: 2;
+    height: 100px;
+    width: 90px;
+}
+
+
+.menu {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: solid black 1px;
+}
+
+.menu p {
+    //margin-right: 2rem;
+    cursor: pointer;
+
+}
+
+[data-target]{
+    background-color: white;
+}
+[data-target]:hover {
+    background-color: lightgrey;
+}
+.active[data-target]{
+    background-color: darkgrey;
+    border-radius: 6px;
+}
+.target-selected{
+    background-color: gray;
+}
+.content {
+    margin-top: 1rem;
+
+}
+
+[data-content] {
+    display: none;
+}
+
+
+.active[data-content] {
+    display: block;
+
+}
+#funciones table tbody tr th{
+    cursor: pointer;
+}
+
+#espectaculos table tbody tr th{
+    cursor:pointer;
+}
+
+#espectadores table tbody tr th{
+    cursor:pointer;
+}
+
+#paquetes table tbody tr th{
+    cursor:pointer;
+}
+
+.seleccion{
+    cursor:pointer;
+    text-decoration: underline;
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 31px;
+    padding: 1px 1px;
+}
