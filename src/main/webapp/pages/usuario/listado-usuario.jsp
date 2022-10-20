@@ -1,54 +1,55 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: esteban.rosano
-  Date: 6/10/2022
-  Time: 1:42
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 <%@ page import="java.util.Map" %>
-
+<%@ page import="main.java.taller1.Logica.Clases.Artista" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Listado usuario</title>
+    <style><%@ include file="/pages/global.css" %></style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP - Hello World</title>
 </head>
-
 <body>
-<h1>Listado usuario</h1>
-<table class="table">
-    <thead>
-    <tr>
-        <th> Nickname</th>
-    </tr>
-    </thead>
-    <tbody>
-    <%
-        Map<String,Usuario> usuarios= (Map<String, Usuario>) request.getAttribute("usuarios");
-        for (Usuario elem : usuarios.values()) {
-    %>
-    <tr>
-        <th onClick="location.href='detalle-usuario?nickname=<%=elem.getNickname()%>'"> <%=elem.getNickname()%> </th>
-    </tr>
-    <% } %>
-    </tbody>
-</table>
-<a href="../home.jsp">Volver</a>
+<%@ include file="/pages/header.jsp" %>
+
+<section>
+    <%@ include file="/pages/sidebar.jsp" %>
+    <div class="main-container">
+        <%--                AGREGAR COMPONENTES ACA--%>
+        <h2>Usuarios</h2>
+        <br>
+        <div>
+            <table class="tablaUsuarios" id="tabla">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo de usuario</th>
+                </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                </tbody>
+            </table>
+        </div>
+        <%--                AGREGAR COMPONENTES ACA--%>
+    </div>
+</section>
 
 <script>
-    let nom = document.getElementById("nickname");
-    nom.setAttribute('onClick','window.location.href = \'detalle-usuario.jsp\';');
+    <% Map<String, Usuario> usuarios = (Map<String, Usuario>) request.getAttribute("usuarios");
+    for (Usuario elem : usuarios.values()) {%>
+    nuevaFila = tabla.insertRow(-1);
+    celdaNickname = nuevaFila.insertCell(0);
+    celdaTipo = nuevaFila.insertCell(1);
 
-    var selectRow = null;
+    celdaNickname.innerHTML = "<%=elem.getNickname()%>";
+    <% if (elem instanceof Artista){%>
+    celdaTipo.innerHTML = "Artista";
+    <%}else{%>
+    celdaTipo.innerHTML = "Espectador";
+    <%}%>
 
-    function editar(a){
-
-        console.log(a);
-    }
-
-    function llamarDetalleUsuario(){
-        window.location.href ='detalle-usuario.jsp';
-    }
+    celdaNickname.setAttribute('onClick',"location.href='detalle-usuario?nickname=<%=elem.getNickname()%>'");
+    <% } %>
 </script>
 </body>
 </html>
