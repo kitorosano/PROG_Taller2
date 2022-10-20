@@ -14,6 +14,7 @@
 <html>
 <head>
     <style><%@ include file="./global.css" %></style>
+    <style><%@ include file="./listado-funciones.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
 </head>
@@ -24,37 +25,38 @@
     <%@ include file="sidebar.jsp" %>
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
-        <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: row;">
-            <form method="POST" action="listado-funciones" id="formFunciones">
+        <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: column;">
+            <form method="GET" action="listado-funciones" id="recargar">
+                <button type="button" onclick="resetearForm()">Resetear</button>
+            </form>
+            <br>
+            <form method="POST" action="listado-funciones" id="formFunciones" >
                 <label for="plataforma">Selecciona una plataforma:</label>
                 <select name="plataforma" id="plataforma">
                     <option value="" selected disabled hidden>Plataforma</option>
                 </select>
+                <br> <br>
                 <label for="espectaculo">Selecciona un espectáculo:</label>
                 <select name="espectaculo" id="espectaculo">
                     <option value="" selected disabled hidden>Espectaculo</option>
                 </select>
                 <button type="button" onclick="enviarForm()">Buscar</button>
             </form>
-
-            <form method="GET" action="listado-funciones" id="recargar">
-                <button type="button" onclick="resetearForm()">Resetear</button>
-            </form>
         </div>
 
         <div class="busqueda">
             <br/>
-            <label for="">Buscar funcion</label>
+            <label for="txtBuscar">Buscar funcion</label>
             <input type="text" name="buscarFuncion" id="txtBuscar" value="Funcion...">
         </div>
 
         <div>
-            <h2>Espectaculos</h2>
+            <h2>Funciones</h2>
             <table class="tablaFunciones" id="tabla">
                 <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Descripción</th>
+                    <th>Fecha de inicio</th>
                 </tr>
                 </thead>
                 <tbody id="cuerpoTabla">
