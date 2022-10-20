@@ -3,7 +3,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
-        <title>Detalle usuario</title>
+        <title>Detalle de funcion</title>
         <style><%@ include file="/pages/global.css" %></style>
         <style><%@ include file="/pages/detalles.css" %></style>
     </head>
@@ -21,10 +21,12 @@
 
                 <h1 class="title">Detalle de función</h1>
 
-                    <img src="https://hoy.com.do/wp-content/uploads/2022/04/Kooza.jpeg?mrf-size=m" alt="Foto de perfil" class="img_perfil">
+                    <img src="https://img.europapress.es/fotoweb/fotonoticia_20211027165949_420.jpg" alt="Foto de perfil" class="img_perfil">
             <div class="first-data">
                 <h2><%=funcion.getNombre()%></h2>
-                <h4></h4>
+                <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
+                <button class="btn" onClick="location.href='registroAFuncion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrar espectador</button>
+
             </div>
             <div class="tabs">
                 <div class="menu">

@@ -1,6 +1,6 @@
 .grid-container{
     display: grid;
-    grid-template-columns: 10px 120px 150px 150px 3px 550px;
+    grid-template-columns: 10px 120px 150px 160px 3px 550px;
     grid-template-rows: 80px 80px 50px 360px 20px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -77,4 +77,30 @@
 .active[data-content] {
     display: block;
 
+}
+#funciones table tbody tr th{
+    cursor: pointer;
+}
+
+#espectaculos table tbody tr th{
+    cursor:pointer;
+}
+
+#espectadores table tbody tr th{
+    cursor:pointer;
+}
+
+#paquetes table tbody tr th{
+    cursor:pointer;
+}
+
+.seleccion{
+    cursor:pointer;
+    text-decoration: underline;
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 31px;
+    padding: 1px 1px;
 }

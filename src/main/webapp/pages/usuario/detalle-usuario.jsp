@@ -36,6 +36,7 @@
             <div class="first-data">
                 <h2><%=usu.getNombre()+" "+usu.getApellido()%></h2>
                 <h4><%=usu.getNickname()+" / "+usu.getCorreo()%></h4>
+                <button class="btn">Modificar usuario</button>
             </div>
             <div class="tabs">
                 <div class="menu">
@@ -50,7 +51,7 @@
                         }
                         else{
                     %>
-                        <p data-target="#func" >Funciones</p>
+                        <p data-target="#funciones" >Funciones</p>
                         <p data-target="#paquetes">Paquetes adquiridos</p>
                     <%
                         }
@@ -111,7 +112,7 @@
                         else{
                     %>
 
-                    <div data-content id="func" >
+                    <div data-content id="funciones" >
                         <table class="table" >
                             <tbody>
                             <%

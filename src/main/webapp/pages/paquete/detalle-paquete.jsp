@@ -3,7 +3,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
-        <title>Detalle usuario</title>
+        <title>Detalle de paquete</title>
         <style><%@ include file="/pages/global.css" %></style>
         <style><%@ include file="/pages/detalles.css" %></style>
     </head>
@@ -12,24 +12,26 @@
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
         <%
-            Funcion funcion= (Funcion) request.getAttribute("datos");
+            Paquete paquete= (Paquete) request.getAttribute("datos");
         %>
         <div class="grid-container">
 
 
                 <%-- AGREGAR COMPONENTES ACA--%>
 
-                <h1 class="title">Detalle de función</h1>
+                <h1 class="title">Detalle de paquete</h1>
 
-                    <img src="https://hoy.com.do/wp-content/uploads/2022/04/Kooza.jpeg?mrf-size=m" alt="Foto de perfil" class="img_perfil">
+                    <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto de perfil" class="img_perfil">
             <div class="first-data">
-                <h2><%=funcion.getNombre()%></h2>
-                <h4></h4>
+                <h2><%=paquete.getNombre()%></h2>
+                <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+
             </div>
             <div class="tabs">
                 <div class="menu">
                         <p data-target="#datos_generales" class="active">Datos Generales</p>
-                        <p data-target="#espectadores">Espectadores</p>
+                        <p data-target="#descripcion">Descripcion</p>
+                        <p data-target="#espectaculos">Espectaculos</p>
 
 
                 </div>
@@ -37,25 +39,30 @@
                 <div class="content">
 
                     <div data-content id="datos_generales" class="active">
-                        <h4>Nombre:<%=funcion.getNombre()%></h4>
-                        <h4>Espectaculo:<%=funcion.getEspectaculo().getNombre()%></h4>
-                        <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
-                        <h4>Fecha de registro:<%=funcion.getFechaRegistro()%></h4>
+                        <h4>Nombre:<%=paquete.getNombre()%></h4>
+                        <h4>Descuento:<%=paquete.getDescuento()%></h4>
+                        <h4>Fecha de registro:<%=paquete.getFechaRegistro()%></h4>
+                        <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+
+                    </div>
+
+                    <div data-content id="descripcion">
+                        <h4><%=paquete.getDescripcion()%></h4>
 
 
                     </div>
 
 
-                    <div data-content id="espectadores">
+                    <div data-content id="espectaculos">
                         <table >
                             <tbody>
                             <%
 
-                                Map<String, EspectadorRegistradoAFuncion> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
-                                for (EspectadorRegistradoAFuncion espect_reg_funcion : espectador_registrado_funcion.values()) {
+                                Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+                                for (Espectaculo espectaculo : espectaculos.values()) {
                             %>
                             <tr>
-                                <th onClick="location.href='detalle-usuario?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
+                                <th onClick="location.href='detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=espectaculo.getNombre()%> </th>
                             </tr>
                             <%
                                 }

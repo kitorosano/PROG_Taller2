@@ -3,7 +3,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
-        <title>Detalle usuario</title>
+        <title>Detalle de espectaculo</title>
         <style><%@ include file="/pages/global.css" %></style>
         <style><%@ include file="/pages/detalles.css" %></style>
     </head>
@@ -24,7 +24,7 @@
                     <img src="https://cloudfront-us-east-1.images.arcpublishing.com/infobae/252IOWPHVVHDTAP73WPMQ4F62Q.jpg" alt="Foto de perfil" class="img_perfil">
             <div class="first-data">
                 <h2><%=espectaculo.getNombre()%></h2>
-                <h4></h4>
+                <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
             </div>
             <div class="tabs">
                 <div class="menu">
@@ -40,14 +40,14 @@
 
                     <div data-content id="datos_generales" class="active">
                         <h4>Nombre:<%=espectaculo.getNombre()%></h4>
-                        <h4>Duracion:<%=espectaculo.getDuracion()%></h4>
-                        <h4>Minimo de espectadores:<%=espectaculo.getMinEspectadores()%></h4>
-                        <h4>Maximo de espectadores:<%=espectaculo.getMaxEspectadores()%></h4>
+                        <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
+                        <h4>Mínimo de espectadores:<%=espectaculo.getMinEspectadores()%></h4>
+                        <h4>Máximo de espectadores:<%=espectaculo.getMaxEspectadores()%></h4>
                         <h4>Url:<%=espectaculo.getUrl()%></h4>
                         <h4>Costo:<%=espectaculo.getCosto()%></h4>
                         <h4>Fecha de registro:<%=espectaculo.getFechaRegistro()%></h4>
                         <h4>Nombre de plataforma:<%=espectaculo.getPlataforma().getNombre()%></h4>
-                        <h4>Artista organizador:<%=espectaculo.getArtista().getNickname()%></h4>
+                        <h4 class="seleccion" onClick="location.href='detalle-usuario?nickname=<%=espectaculo.getArtista().getNickname()%>'">Artista organizador:<%=espectaculo.getArtista().getNickname()%></h4>
 
                     </div>
                     <div data-content id="descripcion">
@@ -75,14 +75,13 @@
                     <div data-content id="paquetes">
                         <table >
                             <tbody>
-                            aca van los paquetes
                             <%
 
                                  Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
                                  for (Paquete paquete : paquetes.values()) {
                             %>
                             <tr>
-                                <th> <%=paquete.getNombre()%></th>
+                                <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=paquete.getNombre()%></th>
                             </tr>
                             <%
                                   }
