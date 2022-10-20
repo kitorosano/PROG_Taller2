@@ -20,6 +20,9 @@
                 <a href="listado-usuario">Listado Usuario</a>
                 <a href="detalle-usuario">Detalle Usuario</a>
                 <a href="alta-espectaculo">Alta Espectaculo</a>
+                <a href="alta-funcion">Registro de funcion</a>
+                <a href="alta-paquete">Alta Paquete</a>
+                <a href="listado-paquetes">Listado Paquetes</a>
 <%--                AGREGAR COMPONENTES ACA--%>
             </div>
         </section>
