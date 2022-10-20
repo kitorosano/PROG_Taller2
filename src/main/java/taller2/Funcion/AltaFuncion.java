@@ -38,7 +38,7 @@ public class AltaFuncion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String artista="Kanlam";
-        Map<String, Espectaculo> espectaculos = fabrica.getIUsuario().obtenerEspectaculosArtista(artista);
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
         request.setAttribute("espectaculos", espectaculos);
         request.setAttribute("artistas",artistas);
@@ -54,7 +54,7 @@ public class AltaFuncion extends HttpServlet {
         String imagen = request.getParameter("imagen");
         String artista="Kanlam";
         String[] artistasInvitados = request.getParameterValues("artInvitado");
-        Map<String, Espectaculo> espectaculos = fabrica.getIUsuario().obtenerEspectaculosArtista(artista);
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
             for(String invitado:artistasInvitados){
@@ -82,9 +82,9 @@ public class AltaFuncion extends HttpServlet {
             dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
         }
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
-        Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now());
+        Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now(), "");
         try {
-            fabrica.getIEspectaculo().altaFuncion(nueva);
+            fabrica.getIFuncion().altaFuncion(nueva);
             response.sendRedirect("home"); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -99,7 +99,7 @@ public class AltaFuncion extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrefunc, Espectaculo esp) {      //Devuelve true si hay error
-        Map<String, Funcion> funciones = fabrica.getIEspectaculo().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
+        Map<String, Funcion> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         for (Funcion fun : funciones.values()) {
             if (fun.getNombre().equals(nombrefunc)) {
                 return true;

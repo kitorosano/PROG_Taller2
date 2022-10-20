@@ -75,7 +75,7 @@ public class AltaUsuario extends HttpServlet {
       return;
     }
     // Error contraseñas no machean
-    if(!contrasenasIguales(contrasenia, contrasenia2)){
+    if(!contraseniasIguales(contrasenia, contrasenia2)){
       request.setAttribute("error", "Las contraseñas no coinciden");
       dispatchPage("/pages/registro.jsp", request, response);
       return;
@@ -120,7 +120,7 @@ public class AltaUsuario extends HttpServlet {
 
 
   // metodos para validar datos
-  private boolean contrasenasIguales(String pass1, String pass2){
+  private boolean contraseniasIguales(String pass1, String pass2){
     return pass1.equals(pass2);
   }
   private boolean camposVacios(String nickname,String nombre, String apellido, String correo, String fechaNac, String contrasenia, String contrasenia2){

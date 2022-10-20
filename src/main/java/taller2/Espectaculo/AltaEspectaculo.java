@@ -3,10 +3,7 @@ package taller2.Espectaculo;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.Plataforma;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import javax.swing.*;
@@ -31,7 +28,7 @@ public class AltaEspectaculo extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         request.setAttribute("plataformas", plataformas);
         dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
     }
@@ -48,7 +45,7 @@ public class AltaEspectaculo extends HttpServlet {
         String costostr = request.getParameter("costo");
         String imagen = request.getParameter("imagen");
         String[] categorias = request.getParameterValues("catElegidas");
-        request.setAttribute("plataformas",fabrica.getIEspectaculo().obtenerPlataformas());
+        request.setAttribute("plataformas",fabrica.getIPlataforma().obtenerPlataformas());
         //String nombArtista=(String)request.getSession().getAttribute("nickname");
         String nombArtista = "Kanlam";
         if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr,nombArtista)){
@@ -72,11 +69,11 @@ public class AltaEspectaculo extends HttpServlet {
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
         }
 
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Plataforma p = plataformas.get(nombplataforma);
         Map<String, Usuario> usuarios = fabrica.getIUsuario().obtenerUsuarios();
         Artista art = (Artista) usuarios.get(nombArtista);
-        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, LocalDateTime.now(), p, art);
+        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), "", p, art);
 
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevo);
@@ -95,7 +92,7 @@ public class AltaEspectaculo extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(plataforma);
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(plataforma);
         for (Espectaculo esp : espectaculos.values()) {
             if (esp.getNombre().equals(nombreesp)) {
                 return true;

@@ -50,10 +50,10 @@ public class AltaPaquete extends HttpServlet {
             dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
         }
 
-        Paquete nuevo = new Paquete(nombre, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")),descripcion,descuentoDb,LocalDateTime.now());
+        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb,LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), "");
 
         try {
-            fabrica.getIEspectaculo().altaPaquete(nuevo);
+            fabrica.getIPaquete().altaPaquete(nuevo);
             response.sendRedirect("home"); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -69,7 +69,7 @@ public class AltaPaquete extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrepaq) {      //Devuelve true si hay error
-        Map<String, Paquete> paquetes = fabrica.getIEspectaculo().obtenerPaquetes();
+        Map<String, Paquete> paquetes = fabrica.getIPaquete().obtenerPaquetes();
         for (Paquete paq : paquetes.values()) {
             if (paq.getNombre().equals(nombrepaq)) {
                 return true;

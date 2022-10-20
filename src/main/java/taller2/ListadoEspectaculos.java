@@ -30,11 +30,11 @@ public class ListadoEspectaculos extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> totalEspectaculos = new HashMap();
 
         for (Plataforma p : plataformas.values()) {
-            Map<String, Espectaculo> auxEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(p.getNombre());
+            Map<String, Espectaculo> auxEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(p.getNombre());
             for (Espectaculo e : auxEspectaculos.values()) {
                 totalEspectaculos.put(e.getNombre(), e);
             }
@@ -47,10 +47,10 @@ public class ListadoEspectaculos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String miPlataforma = request.getParameter("plataforma");
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(miPlataforma);
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
         request.setAttribute("espectaculos", espectaculos);
 
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         request.setAttribute("plataformas", plataformas);
 
         dispatchPage("/pages/listado-espectaculos.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url

@@ -29,11 +29,11 @@ public class DetallePaquete extends HttpServlet {
     String nombre_paquete = request.getParameter("nombre_paquete");
 
 
-    Map<String, Paquete> paquetes=Fabrica.getInstance().getIEspectaculo().obtenerPaquetes();
+    Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetes();
     Paquete paquete = paquetes.get(nombre_paquete);
     request.setAttribute("datos",paquete);
 
-    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculosDePaquete(paquete.getNombre());
+    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(paquete.getNombre());
     request.setAttribute("espectaculos",espectaculos);
 
     RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/detalle-paquete.jsp");

@@ -30,7 +30,7 @@ public class ListadoPaquetes extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Paquete> paquetes = fabrica.getIEspectaculo().obtenerPaquetes();
+        Map<String, Paquete> paquetes = fabrica.getIPaquete().obtenerPaquetes();
         request.setAttribute("paquetes", paquetes);
         dispatchPage("/pages/listado-paquetes.jsp", request, response);
         /*
