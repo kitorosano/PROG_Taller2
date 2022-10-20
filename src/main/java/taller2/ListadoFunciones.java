@@ -62,6 +62,9 @@ public class ListadoFunciones extends HttpServlet {
             dispatchPage("/pages/listado-funciones.jsp", request, response);
         }
 
+        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(miPlataforma);
+        request.setAttribute("espectaculos", espectaculos);
+
         String miEspectaculo = request.getParameter("espectaculo");
         Map<String, Funcion> funciones = fabrica.getIEspectaculo().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
 

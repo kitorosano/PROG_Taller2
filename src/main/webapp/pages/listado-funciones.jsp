@@ -41,8 +41,6 @@
             <form method="GET" action="listado-espectaculos" id="Recargar">
                 <button type="button" onclick="resetearForm()">Resetear</button>
             </form>
-
-
         </div>
 
         <div class="busqueda">
@@ -74,14 +72,12 @@
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
         cargarPlataformas();
-
         <%if (request.getAttribute("espectaculos") != null){%>
             cargarEspectaculos();
             <%}%>
         <%if (request.getAttribute("funciones") != null){%>
         crearTablaTotal();
         <%}%>
-
     });
 
     function enviarForm(){
@@ -107,26 +103,34 @@
         celdaInicio = nuevaFila.insertCell(1);
 
         celdaNombre.innerHTML = "<%=elem.getNombre()%>";
+        celdaNombre.setAttribute('onClick','location.href=detalle-espectaculo?nombre_funcion=<%=elem.getNombre()%>&nombre_plataforma=<%=request.getAttribute("plataforma")%>&nombre_espectaculo=<%=request.getAttribute("espectaculo")%>');
         celdaInicio.innerHTML = "<%=elem.getFechaHoraInicio()%>";
 
         //celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
 
         <% } %>
     }
-    <% }else if (request.getAttribute("espectaculos") != null){ %> //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOPOST()
+    <% } if (request.getAttribute("espectaculos") != null){ %>
     function cargarEspectaculos(){
         <%Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");%>
         let select = document.getElementById("espectaculo");
-        let opt = document.createElement('option');
+        let opt;
         <%for (Espectaculo elem : espectaculos.values()) {%>
+            opt = document.createElement('option');
             opt.value = "<%=elem.getNombre()%>";
+            <%
+            String s2 = elem.getNombre();
+            String s1 = request.getParameter("espectaculo") instanceof String ? request.getParameter("espectaculo") : "";
+            if (s1.equals(s2)){%>
+                opt.selected="selected"
+            <%}%>
             opt.innerHTML = "<%=elem.getNombre()%>";
             select.appendChild(opt);
         <% } %>
         }
     <% } %>
 
-    //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
+    //FUNCION PARA BUSCAR POR FUNCIONES EN TIEMPO REAL
     $("#txtBuscar").on("keyup", function() {
         var keyword = this.value;
         keyword = keyword.toUpperCase();
@@ -150,14 +154,6 @@
         $("#txtBuscar").val("");
     });
 
-    /*
-    function llenarEspectaculos(){
-        alert("CLICK EN OPCION");
-        $('#espectaculo').empty();
-        $("#formFunciones").first().submit();
-    }
-    */
-
     $("#plataforma").on("change", function() {
         document.getElementById("espectaculo").textContent = "";
         $("#formFunciones").first().submit();
@@ -168,16 +164,16 @@
         let select = document.getElementById("plataforma");
         let opt;
         <%for (Plataforma elem : plataformas.values()) {%>
-        opt = document.createElement('option');
-        opt.value = "<%=elem.getNombre()%>";
-        <%
-        String s2 = elem.getNombre();
-        String s1 = request.getParameter("plataforma") instanceof String ? request.getParameter("plataforma") : "";
-        if (s1.equals(s2)){%>
-        opt.selected="selected"
-        <%}%>
-        opt.innerHTML = "<%=elem.getNombre()%>";
-        select.appendChild(opt);
+            opt = document.createElement('option');
+            opt.value = "<%=elem.getNombre()%>";
+            <%
+            String s2 = elem.getNombre();
+            String s1 = request.getParameter("plataforma") instanceof String ? request.getParameter("plataforma") : "";
+            if (s1.equals(s2)){%>
+                opt.selected="selected"
+            <%}%>
+            opt.innerHTML = "<%=elem.getNombre()%>";
+            select.appendChild(opt);
         <% } %>
     }
 
