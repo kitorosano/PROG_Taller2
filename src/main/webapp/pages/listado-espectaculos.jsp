@@ -29,15 +29,11 @@
           <form method="POST" action="listado-espectaculos" id="formEspectaculos">
             <label for="plataforma">Selecciona una plataforma:</label>
             <select name="plataforma" id="plataforma">
-              <%
-                Map<String, Plataforma> plataformas= (Map<String, Plataforma>) request.getAttribute("plataformas");
-                for (Plataforma elem : plataformas.values()) {
-              %>
-              <option value="<%=elem.getNombre()%>"><%=elem.getNombre()%></option>
-              <% } %>
+              <option value="" selected disabled hidden>Plataforma</option>
             </select>
             <label for="categorias">Selecciona una categoria:</label>
             <select name="categorias" id="categorias">
+              <option value="" selected>Todas</option>
               <!-- FALTA HACER EL SELECT POR CATEGORIAS  -->
             </select>
             <button type="button" onclick="enviarForm()">Buscar</button>
@@ -78,6 +74,7 @@
 
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
+      cargarPlataformas();
       <%if (request.getAttribute("totalEspectaculos") != null){%>
       crearTablaTotal();
     <%}else{%>
@@ -134,6 +131,24 @@
         <% } %>
         }
     <% } %>
+
+    function cargarPlataformas(){
+      <%Map<String, Plataforma> plataformas = (Map<String, Plataforma>) request.getAttribute("plataformas");%>
+      let select = document.getElementById("plataforma");
+      let opt;
+      <%for (Plataforma elem : plataformas.values()) {%>
+        opt = document.createElement('option');
+        opt.value = "<%=elem.getNombre()%>";
+        <%
+        String s2 = elem.getNombre();
+        String s1 = request.getParameter("plataforma") instanceof String ? request.getParameter("plataforma") : "";
+        if (s1.equals(s2)){%>
+          opt.selected="selected"
+        <%}%>
+        opt.innerHTML = "<%=elem.getNombre()%>";
+        select.appendChild(opt);
+      <% } %>
+    }
 
     //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
     $("#txtBuscar").on("keyup", function() {
