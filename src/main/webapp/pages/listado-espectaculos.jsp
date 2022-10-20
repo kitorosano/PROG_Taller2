@@ -110,7 +110,7 @@
         celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
         celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
 
-        celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
+        celdaEspectaculo.setAttribute('onClick',"location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'");
 
         <% } %>
         }
