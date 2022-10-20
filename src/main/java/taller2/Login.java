@@ -45,7 +45,7 @@ public class Login extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String nickname = request.getParameter("nickname");
     String contrasenia = request.getParameter("contrasenia");
-    String esCorreo = request.getParameter("esCorreo");
+    Boolean esCorreo = request.getParameter("esCorreo").equals("true");
     
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, contrasenia)) {
@@ -57,7 +57,7 @@ public class Login extends HttpServlet {
     // Buscar el usuario en la base de datos
     Usuario usuario = null;
     
-    if(esCorreo == "true") {
+    if(esCorreo) {
 //      usuario = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname);
     } else {
 //      usuario = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname);

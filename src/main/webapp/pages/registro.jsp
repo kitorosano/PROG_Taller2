@@ -102,12 +102,14 @@
                 if (nickname === "" || nombre === "" || apellido === "" || correo === "" || fechaNac === "" || contrasenia === "" || contrasenia2 === "") {
                     alert("Complete todos los campos obligatorios");
                     formularioValido = false;
+                    return;
                 }
 
                 // Validar contraseñas
                 if (contrasenia !== contrasenia2) {
                     alert("Las contraseñas no coinciden");
                     formularioValido = false;
+                    return;
                 }
 
                 let regexCorreo = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$";
@@ -116,16 +118,19 @@
                 if (nickname.match(regexCorreo)){
                     alert("Formato de nickname no valido, no puede ser un correo");
                     formularioValido = false;
+                    return;
                 }
                 // Validar formato correo
                 if (!correo.match(regexCorreo)){
                     alert("Formato de correo no valido");
                     formularioValido = false;
+                    return;
                 }
                 //validar fecha nacimiento menor a hoy
                 if(new Date(fechaNac) > new Date()){
                     alert("Fecha no valida");
                     formularioValido = false;
+                    return;
                 }
 
                 if(tipo == "Artista"){
@@ -135,9 +140,10 @@
                     }
 
                     let regexUrl = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
-                    if(!url.match(regexUrl)){
+                    if(url != "" && !url.match(regexUrl)){
                         alert("Formato de url no valido");
                         formularioValido = false;
+                        return;
                     }
                 }
 
@@ -147,6 +153,7 @@
                     $( "form" ).first().submit();
                 } else {
                     alert("EL FORMULARIO NO SE ENVIO POR INVALIDO")
+                    return;
                 }
 
             }

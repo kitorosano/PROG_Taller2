@@ -45,7 +45,7 @@ public class AltaUsuario extends HttpServlet {
     String biografia = request.getParameter("biografia");
     String url = request.getParameter("url");
     String tipo = request.getParameter("tipo");
-
+  
     // Validar los datos traidos del formulario:
     //TODO: Pensar si vale la pena verificar el tamaño de string de los campos
 
@@ -89,8 +89,8 @@ public class AltaUsuario extends HttpServlet {
 
     // Se especifica el tipo de usuario a crear
     Usuario usuario;
-    if(tipo == "Artista"){
-      if(camposVaciosArtista(descripcion, biografia, url)){
+    if(tipo.equals("Artista")){
+      if(camposVaciosArtista(descripcion)){
         request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
         dispatchPage("/pages/registro.jsp", request, response);
         return;
@@ -101,7 +101,7 @@ public class AltaUsuario extends HttpServlet {
       }
       usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, imagen, descripcion, biografia, url);
     } else {
-        usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, imagen);
+      usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, imagen);
     }
 
     try {
@@ -131,8 +131,8 @@ public class AltaUsuario extends HttpServlet {
     String regexCorreo = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$";
     return correo.matches(regexCorreo);
   }
-  private boolean camposVaciosArtista(String descripcion, String biografia, String url){
-    return descripcion==null || biografia==null || url==null || descripcion=="" || biografia=="" || url=="";
+  private boolean camposVaciosArtista(String descripcion){
+    return descripcion==null || descripcion.isEmpty();
   }
   private boolean fechaValida(LocalDate fecha){
     LocalDate hoy = LocalDate.now();
