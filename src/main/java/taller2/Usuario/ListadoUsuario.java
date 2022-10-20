@@ -22,7 +22,7 @@ public class ListadoUsuario extends HttpServlet {
     response.setContentType("text/html");
     Map<String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
     request.setAttribute("usuarios", usuarios);
-    RequestDispatcher view = request.getRequestDispatcher("/listado-usuario.jsp");
+    RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/listado-usuario.jsp");
     view.forward(request, response);
   }
   
