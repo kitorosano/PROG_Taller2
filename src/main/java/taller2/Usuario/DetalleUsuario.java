@@ -33,14 +33,14 @@ public class DetalleUsuario extends HttpServlet {
       request.setAttribute("tipo","Artista");
       request.setAttribute("datos",usu);
       request.setAttribute("espectaculos",espectaculos);
-      RequestDispatcher view = request.getRequestDispatcher("/detalle-usuario.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }else{
       Map<String, EspectadorRegistradoAFuncion> funciones=Fabrica.getInstance().getIUsuario().obtenerFuncionesRegistradasDelEspectador(usu.getNickname());
       request.setAttribute("tipo","Espectador");
       request.setAttribute("datos",usu);
       request.setAttribute("funciones",funciones);
-      RequestDispatcher view = request.getRequestDispatcher("/detalle-usuario.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }
   }
