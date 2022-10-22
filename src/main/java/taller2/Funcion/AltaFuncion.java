@@ -37,7 +37,7 @@ public class AltaFuncion extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String artista="Kanlam";
+        String artista="Domainer2";
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
         request.setAttribute("espectaculos", espectaculos);
@@ -52,7 +52,7 @@ public class AltaFuncion extends HttpServlet {
         String fecha = request.getParameter("fechaInicio");
         String hora = request.getParameter("horaInicio");
         String imagen = request.getParameter("imagen");
-        String artista="Kanlam";
+        String artista="Domainer2";
         String[] artistasInvitados = request.getParameterValues("artInvitado");
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
