@@ -141,7 +141,6 @@
 
       <script>
 
-        <%--CUANDO EL DOCUMENTO TERMINE DE CARGAR QUE TOME TODOS LOS VALORES DE LA LISTA INVITADOS Y LES AGREGUE UN INPUT DE HIJO--%>
         function enviarForm() {
           //Obtener inputs con jquery
           let espectaculo = $("input[name='espectaculo']").val();

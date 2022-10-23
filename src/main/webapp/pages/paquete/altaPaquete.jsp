@@ -60,7 +60,7 @@
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
         <h1>Registro de paquete de espectaculos</h1>
-        <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete">
+        <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete" enctype="multipart/form-data">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <div class="input-container">
                     <label class="subtitulos">Nombre</label>
