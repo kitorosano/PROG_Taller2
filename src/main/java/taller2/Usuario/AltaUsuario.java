@@ -9,9 +9,11 @@ import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 
 @WebServlet(name = "AltaUsuario", value = "/registro")
+@MultipartConfig
 public class AltaUsuario extends HttpServlet {
 
   Fabrica fabrica;
@@ -40,7 +42,8 @@ public class AltaUsuario extends HttpServlet {
     String contrasenia = request.getParameter("contrasenia");
     String fechaNac_str = request.getParameter("fechaNac");
     String contrasenia2 = request.getParameter("contrasenia2");
-    String imagen = request.getParameter("imagen");
+    String urlImagen="";
+    Part part=request.getPart("imagen");
     String descripcion = request.getParameter("descripcion");
     String biografia = request.getParameter("biografia");
     String url = request.getParameter("url");
@@ -99,9 +102,17 @@ public class AltaUsuario extends HttpServlet {
         request.setAttribute("error", "Formato de url invalida");
         return;
       }
-      usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, imagen, descripcion, biografia, url);
+      if(part.getSize()!=0){
+        InputStream inputImagen=part.getInputStream();
+        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+      }
+      usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
     } else {
-      usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, imagen);
+      if(part.getSize()!=0){
+        InputStream inputImagen=part.getInputStream();
+        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+      }
+      usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
     }
 
     try {
