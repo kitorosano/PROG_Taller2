@@ -63,7 +63,7 @@
   <div class="main-container">
     <%--                AGREGAR COMPONENTES ACA--%>
       <h1>Registro de funcion de espectaculo</h1>
-      <form id="idform" name="formEspectaculo" method="POST" action="alta-funcion">
+      <form id="idform" name="formEspectaculo" method="POST" action="alta-funcion" enctype="multipart/form-data">
         <div style="display: flex; flex-direction: column; align-items: flex-start">
           <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
             <div class="input-container">
@@ -72,7 +72,7 @@
                 <%
                   for (Espectaculo elem : espectaculos.values()) {
                 %>
-                <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
                 <%
                   }
                 %>
