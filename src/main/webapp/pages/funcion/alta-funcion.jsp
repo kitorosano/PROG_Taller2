@@ -6,6 +6,7 @@
 
 <%  //Traer datos precargados del request anterior
   String nombrespectaculo = request.getParameter("espectaculo");
+  String nombreplataforma = request.getParameter("plataforma");
   String nombrefuncion= request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";
   String fecha = request.getParameter("fechaInicio") instanceof String ? request.getParameter("fechaInicio") : "";
   String hora = request.getParameter("horaInicio") instanceof String ? request.getParameter("horaInicio") : "";
@@ -70,11 +71,17 @@
                 <label class="subtitulos">Espectaculo</label>
                 <select name="espectaculo" >
                 <%
-                  for (Espectaculo elem : espectaculos.values()) {
+                  if(nombrespectaculo==null || nombreplataforma==null){
+                    for (Espectaculo elem : espectaculos.values()) {
                 %>
                 <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
                 <%
-                  }
+                    }
+                  }else{
+                %>
+                  <option value="<%=nombrespectaculo%>-<%=nombreplataforma%>"><%=nombrespectaculo%></option>
+                  <%
+                    }
                 %>
                 </select>
             </div>
