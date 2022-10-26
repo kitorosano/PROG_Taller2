@@ -76,11 +76,11 @@
                 </div>
                 <div class="input-container">
                     <label class="subtitulos">Porcentaje de descuento</label>
-                    <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" value="<%= descuento%>">
+                    <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" step="0.1" value="<%= descuento%>">
                 </div>
                 <div class="input-container">
                     <label class="subtitulos">Imagen</label>
-                    <input type="file" name="imagen" id="imagen">
+                    <input type="file" accept="image/*" name="imagen" id="imagen">
                 </div>
                 <button type="button" onclick="enviarForm()">Confirmar</button>
             </div>

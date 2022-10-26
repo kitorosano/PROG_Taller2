@@ -92,7 +92,7 @@
             </div>
             <div class="input-container">
               <label class="subtitulos">Imagen</label>
-              <input type="file" name="imagen">
+              <input type="file" accept="image/*" name="imagen">
             </div>
           </div>
           <div id="artistas-list">

@@ -58,10 +58,10 @@ public class AltaEspectaculo extends HttpServlet {
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
         }
-        int duracion= Integer.parseInt(duracionstr);
+        double duracion= Double.parseDouble(duracionstr);
         int espMaximos= Integer.parseInt(espMaximosstr);
         int espMinimos= Integer.parseInt(espMinimosstr);
-        int costo= Integer.parseInt(costostr);
+        double costo= Double.parseDouble(costostr);
         if(nombreExistente(nombre,nombplataforma)){
             request.setAttribute("error", "El nombre ingresado ya existe");
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
@@ -83,7 +83,6 @@ public class AltaEspectaculo extends HttpServlet {
             urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
         }
         Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), urlImagen, p, art);
-
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevo);
             if (categorias!=null) {

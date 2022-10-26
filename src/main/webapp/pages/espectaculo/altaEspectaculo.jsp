@@ -92,7 +92,7 @@
                         </div>
                         <div class="input-container">
                             <label class="subtitulos">Duracion</label>
-                        <input type="number" min="0" name="duracion" placeholder="*Duracion..." value="<%= duracion%>">
+                        <input type="number" min="0" name="duracion" placeholder="*Duracion..." step="0.01" value="<%= duracion%>">
                         </div>
                         <div class="input-container">
                             <label class="subtitulos">Espectadores Minimos</label>
@@ -108,11 +108,11 @@
                         </div>
                         <div class="input-container">
                             <label class="subtitulos">Costo de entrada</label>
-                        <input type="number" min="0" name="costo" placeholder="*Costo de entrada..." value="<%= costo%>">
+                        <input type="number" min="0" name="costo" placeholder="*Costo de entrada..." step="0.01" value="<%= costo%>">
                         </div>
                         <div class="input-container">
                             <label class="subtitulos">Imagen</label>
-                            <input type="file" name="imagen">
+                            <input type="file" name="imagen" accept="image/*">
                         </div>
 
                         <div id="select-categorias">
