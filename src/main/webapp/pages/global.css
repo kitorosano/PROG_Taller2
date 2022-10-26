@@ -1,7 +1,21 @@
 * {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Amatic SC', cursive;
     margin: 0;
-}
+
+    --primary-green: #96BDC6;
+    --secondary-green: #B3D4D9;
+    --primary-red: #98473E;
+    --secondary-red: #B35A4F;
+    --primary-yellow: #F7C4A5;
+    --secondary-yellow: #F7D9B5;
+    --primary-blue: #2C2C54;
+    --secondary-blue: #3D3D5C;
+    --primary-black: #071013;
+    --secondary-black: #0A1A1F;
+
+    --dark-grey: #999999;
+    --light-grey: #C4C4C4;
+} 
 
 body {
     display: flex;
@@ -71,6 +85,22 @@ section {
     margin-left: auto;
     margin-right: auto;
     animation: spin 2s linear infinite;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 80%;
+    border: 1px solid rgba(204, 204, 204, 0.4);
+}
+
+.invalidInput {
+    border: 1px solid red !important;
 }
 
 @keyframes spin {
