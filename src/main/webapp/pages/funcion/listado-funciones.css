@@ -22,3 +22,9 @@ select{
     margin-top: 5px;
     gap: 10px;
 }
+
+#select_list > select{
+    width: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
