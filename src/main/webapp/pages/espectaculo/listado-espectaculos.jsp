@@ -13,16 +13,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style><%@ include file="../global.css" %></style>
-  <style><%@ include file="listado-espectaculos.css" %></style>
+  <style><%@ include file="/pages/global.css" %></style>
+  <style><%@ include file="/pages/espectaculo/listado-espectaculos.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
   <section>
-    <%@ include file="../sidebar.jsp" %>
+    <%@ include file="/pages/sidebar.jsp" %>
     <div class="main-container">
       <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">

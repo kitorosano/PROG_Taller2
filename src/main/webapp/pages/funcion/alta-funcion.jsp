@@ -18,7 +18,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style><%@ include file="../global.css" %></style>
+  <style><%@ include file="/pages/global.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
   <style>
@@ -56,10 +56,10 @@
   </style>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
 <section>
-  <%@ include file="../sidebar.jsp" %>
+  <%@ include file="/pages/sidebar.jsp" %>
   <div class="main-container">
     <%--                AGREGAR COMPONENTES ACA--%>
       <h1>Registro de funcion de espectaculo</h1>
