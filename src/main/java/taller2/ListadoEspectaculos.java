@@ -41,7 +41,7 @@ public class ListadoEspectaculos extends HttpServlet {
         }
         request.setAttribute("plataformas", plataformas);
         request.setAttribute("totalEspectaculos", totalEspectaculos);
-        dispatchPage("/pages/listado-espectaculos.jsp", request, response);
+        dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
     }
 
     @Override
@@ -53,6 +53,6 @@ public class ListadoEspectaculos extends HttpServlet {
         Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         request.setAttribute("plataformas", plataformas);
 
-        dispatchPage("/pages/listado-espectaculos.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+        dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
     }
 }

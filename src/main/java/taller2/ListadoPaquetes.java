@@ -32,7 +32,7 @@ public class ListadoPaquetes extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Paquete> paquetes = fabrica.getIPaquete().obtenerPaquetes();
         request.setAttribute("paquetes", paquetes);
-        dispatchPage("/pages/listado-paquetes.jsp", request, response);
+        dispatchPage("/pages/paquete/listado-paquetes.jsp", request, response);
         /*
         Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
         Map<String, Espectaculo> totalEspectaculos = new HashMap();

@@ -45,7 +45,7 @@ public class ListadoFunciones extends HttpServlet {
          */
         request.setAttribute("plataformas", plataformas);
         //request.setAttribute("totalEspectaculos", totalEspectaculos);
-        dispatchPage("/pages/listado-funciones.jsp", request, response);
+        dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ListadoFunciones extends HttpServlet {
         if (request.getParameter("espectaculo") == null){
             Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
             request.setAttribute("espectaculos", espectaculos);
-            dispatchPage("/pages/listado-funciones.jsp", request, response);
+            dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
         }
 
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
@@ -69,6 +69,6 @@ public class ListadoFunciones extends HttpServlet {
         Map<String, Funcion> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
 
         request.setAttribute("funciones", funciones);
-        dispatchPage("/pages/listado-funciones.jsp", request, response);
+        dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 }
