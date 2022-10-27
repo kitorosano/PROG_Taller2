@@ -38,7 +38,7 @@
                     }
                 %>
             </div>
-            <button class="btn2" onClick="location.href='alta-funcion?espectaculo=<%=espectaculo.getNombre()%>'">Añadir funcion</button>
+            <button class="btn2" onClick="location.href='alta-funcion?espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'">Añadir funcion</button>
             <div class="tabs">
                 <div class="menu">
                         <p data-target="#datos_generales" class="active">Datos Generales</p>
