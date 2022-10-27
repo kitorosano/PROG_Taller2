@@ -151,12 +151,12 @@
                         <table class="table" >
                             <tbody>
                             <%
-                                Map<String, Paquete> paquetes =(Map<String, Paquete>) request.getAttribute("paquetes");
-                                for (Paquete paquete : paquetes.values()) {
+                                Map<String, EspectadorPaquete> paquetes =(Map<String, EspectadorPaquete>) request.getAttribute("paquetes");
+                                for (EspectadorPaquete paquete : paquetes.values()) {
 
                             %>
                                     <tr>
-                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%> </th>
+                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getPaquete().getNombre()%>'"> <%=paquete.getPaquete().getNombre()%> </th>
                                     </tr>
                             <%
 

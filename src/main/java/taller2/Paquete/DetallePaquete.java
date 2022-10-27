@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion;
-import main.java.taller1.Logica.Clases.Funcion;
-import main.java.taller1.Logica.Clases.Paquete;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -35,8 +32,8 @@ public class DetallePaquete extends HttpServlet {
     Paquete paquete = paquetes.get(nombre_paquete);
     request.setAttribute("datos",paquete);
     if((Boolean) session.getAttribute("esEspectador")) {
-        Map<String, Paquete> paquetes_comprados = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador((String) session.getAttribute("nickname"));
-        Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete);
+        Map<String, EspectadorPaquete> paquetes_comprados = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador((String) session.getAttribute("nickname"));
+        Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete).getPaquete();
         if(paquete_comprado != null){
             request.setAttribute("respuesta","Paquete Adquirido");
         }
@@ -60,8 +57,8 @@ public class DetallePaquete extends HttpServlet {
     Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetes();
     Paquete paquete = paquetes.get(nombre_paquete);// paquete para el detalle
 
-    Map<String, Paquete> paquetes_comprados=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
-    Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete);
+    Map<String, EspectadorPaquete> paquetes_comprados=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete).getPaquete();
 
     if(paquete_comprado==null){
       request.setAttribute("respuesta","Paquete comprado!");
