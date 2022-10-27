@@ -106,11 +106,12 @@ public class RegistroAFuncion extends HttpServlet {
             EspectadorRegistradoAFuncion nuevo= new EspectadorRegistradoAFuncion(esp,fun,paq,true,costo, LocalDateTime.now());
             try{
                 fabrica.getIFuncion().registrarEspectadorAFuncion(nuevo);
+                response.sendRedirect("home");
             } catch (Exception e) {
                 System.out.println(e);
+                request.setAttribute("error", "No se pudo registrar a la funcion");
+                dispatchPage("/pages/registroEspectadores.jsp", request, response);
             }
-            //RegistrarEspectadorAFuncion(nuevo,FuncionesCanjeadas,paquete);
-            response.sendRedirect("home");
         }
     }
 }
