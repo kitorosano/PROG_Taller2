@@ -114,11 +114,11 @@
                     </div>
 
                     <div data-content id="descripcion">
-                        <h4>Descripcion:<%=((Artista) usu).getDescripcion()%></h4>
+                        <h4><%=((Artista) usu).getDescripcion()%></h4>
                     </div>
 
                     <div data-content id="biografia">
-                        <h4>Biografia:<%=((Artista) usu).getBiografia()%></h4>
+                        <h4><%=((Artista) usu).getBiografia()%></h4>
                     </div>
                     <%
                         }

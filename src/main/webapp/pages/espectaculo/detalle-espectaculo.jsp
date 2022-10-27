@@ -64,7 +64,7 @@
 
                     </div>
                     <div data-content id="descripcion">
-                        <h4>Descripcion:<%=espectaculo.getDescripcion()%></h4>
+                        <h4><%=espectaculo.getDescripcion()%></h4>
                     </div>
 
                     <div data-content id="funciones">
