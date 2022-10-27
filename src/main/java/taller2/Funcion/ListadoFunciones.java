@@ -62,20 +62,19 @@ public class ListadoFunciones extends HttpServlet {
         request.setAttribute("espectaculos", espectaculos);
 
         //SI EL PARAMETRO TIPO TIENE VALOR "tipo2" ES PORQUE SOLAMENTE SE NECESITA LLENAR EL <SELECT> DE ESPECTACULOS, Y NO LAS FUNCIONES.
-        if (request.getParameter("tipoPost") == "tipo2"){
-            dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
+        if (!request.getParameter("tipoPost").equals("tipo2")){
+            Map<String, Funcion> funciones = new HashMap<>();
+            if (miEspectaculo.equals("Todos") && miPlataforma.equals("Todas")) {
+                funciones = fabrica.getIFuncion().obtenerFunciones();
+            } else if (miEspectaculo.equals("Todos")) {
+                funciones = fabrica.getIFuncion().obtenerFuncionesDePlataforma(miPlataforma);   // ------¡¡¡CAMBIAR!!!------ AQUI IRIA EL METODO QUE ME TRAE TODAS LAS FUNCIONES DE UNA PLATAFORMA ESPECIFICA.
+            } /*else if (miPlataforma.equals("Todas")) {
+                //funciones = fabrica.getIFuncion().obtener
+            }*/ else {
+                funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
+            }
+            request.setAttribute("funciones", funciones);
         }
-
-        Map<String, Funcion> funciones = new HashMap<>();
-        if (miEspectaculo.equals("Todos") && miPlataforma.equals("Todas")){
-            funciones = fabrica.getIFuncion().obtenerFunciones();
-        } else if (miEspectaculo.equals("Todos")){
-            funciones = fabrica.getIFuncion().obtenerFunciones();   // ------¡¡¡CAMBIAR!!!------ AQUI IRIA EL METODO QUE ME TRAE TODAS LAS FUNCIONES DE UNA PLATAFORMA ESPECIFICA.
-        } else {
-            funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
-        }
-
-        request.setAttribute("funciones", funciones);
         dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 }

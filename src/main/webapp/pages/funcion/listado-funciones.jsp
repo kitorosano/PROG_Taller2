@@ -31,13 +31,15 @@
             </form>
             <br>
             <form method="POST" action="listado-funciones" id="formFunciones" >
+                <input value="tipo1" type="hidden" name="tipoPost" id="tipoPost"/>
+
                 <label for="plataforma">Selecciona una plataforma:</label>
                 <select name="plataforma" id="plataforma">
                     <option value="Todas" selected >Todas</option>
                 </select>
                 <br> <br>
                 <label for="espectaculo">Selecciona un espectáculo:</label>
-                <select name="espectaculo" id="espectaculo" size="1">
+                <select name="espectaculo" id="espectaculo">
                     <option value="Todos" selected>Todos</option>
                 </select>
                 <button type="button" onclick="enviarForm()">Buscar</button>
@@ -66,7 +68,6 @@
         <%--                AGREGAR COMPONENTES ACA--%>
     </div>
 
-    <input value="tipo1" type="hidden" name="tipoPost" id="tipoPost"/>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -96,10 +97,22 @@
     });
 
     $("#plataforma").on("change", function() {
+        if (document.getElementById("plataforma").value === "Todas"){
+            $('#espectaculo').val("Todos");
+        }
         document.getElementById("tipoPost").value = "tipo2";
-        //document.getElementById("espectaculo").textContent = "";
         $("#formFunciones").first().submit();
     });
+
+    $("#espectaculo").on("change", function() {
+        if (document.getElementById("plataforma").value === "Todas" && document.getElementById("espectaculo").value != "Todos") {
+            var opcion = $('option:selected', this).attr('data-plataforma');
+            document.getElementById("tipoPost").value = "tipo2";
+            $('#plataforma').val(opcion);
+            $("#formFunciones").first().submit();
+        }
+    });
+
 
     //FUNCION PARA BUSCAR POR FUNCIONES EN TIEMPO REAL
     $("#txtBuscar").on("keyup", function() {
@@ -166,7 +179,8 @@
         <%for (Espectaculo elem : espectaculos.values()) {%>
             opt = document.createElement('option');
             opt.maxLength=300;
-            opt.value = "<%=elem.getNombre()%>"
+            opt.value = "<%=elem.getNombre()%>";
+            opt.setAttribute("data-plataforma", "<%=elem.getPlataforma().getNombre()%>");
             <%
             if (request.getParameter("espectaculo") != null){
                 String s2 = elem.getNombre();
