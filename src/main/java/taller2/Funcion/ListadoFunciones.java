@@ -61,54 +61,16 @@ public class ListadoFunciones extends HttpServlet {
         }
         request.setAttribute("espectaculos", espectaculos);
 
+        //SI EL PARAMETRO TIPO TIENE VALOR "tipo2" ES PORQUE SOLAMENTE SE NECESITA LLENAR EL <SELECT> DE ESPECTACULOS, Y NO LAS FUNCIONES.
         if (request.getParameter("tipoPost") == "tipo2"){
             dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
         }
 
         Map<String, Funcion> funciones = new HashMap<>();
-        if (miEspectaculo.equals("Todos")){
+        if (miEspectaculo.equals("Todos") && miPlataforma.equals("Todas")){
             funciones = fabrica.getIFuncion().obtenerFunciones();
-        } else {
-            funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
-        }
-
-        request.setAttribute("funciones", funciones);
-        dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
-
-    }
-
-
-}
-
-    /*
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String miPlataforma = request.getParameter("plataforma");
-
-        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        request.setAttribute("plataformas", plataformas);
-
-        if (request.getParameter("espectaculo") == null){
-            Map<String, Espectaculo> espectaculos;
-
-            if (miPlataforma.equals("Todas")){
-                System.out.println("ANTESSSSS");
-                espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-                System.out.println("DESPUEEEES");
-
-            } else {
-                espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
-            }
-
-            request.setAttribute("espectaculos", espectaculos);
-        }
-
-        String miEspectaculo = request.getParameter("espectaculo");
-        Map<String, Funcion> funciones = new HashMap<>();
-
-        if (miEspectaculo.equals("Todos")){
-            funciones = fabrica.getIFuncion().obtenerFunciones();
+        } else if (miEspectaculo.equals("Todos")){
+            funciones = fabrica.getIFuncion().obtenerFunciones();   // ------¡¡¡CAMBIAR!!!------ AQUI IRIA EL METODO QUE ME TRAE TODAS LAS FUNCIONES DE UNA PLATAFORMA ESPECIFICA.
         } else {
             funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
         }
@@ -117,4 +79,4 @@ public class ListadoFunciones extends HttpServlet {
         dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 }
-*/
+
