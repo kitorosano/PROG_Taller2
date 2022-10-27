@@ -31,7 +31,8 @@ public class DetalleEspectaculo extends HttpServlet {
 
       Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,espectaculo.getNombre());
       Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo.getNombre());
-
+      Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
+      request.setAttribute("categorias",categorias);
       request.setAttribute("paquetes",paquetes);
       request.setAttribute("funciones",funciones);
       request.setAttribute("datos",espectaculo);

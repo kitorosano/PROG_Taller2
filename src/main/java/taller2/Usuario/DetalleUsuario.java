@@ -3,10 +3,7 @@ package taller2.Usuario;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 import sun.misc.Request;
 
@@ -40,6 +37,8 @@ public class DetalleUsuario extends HttpServlet {
       request.setAttribute("tipo","Espectador");
       request.setAttribute("datos",usu);
       request.setAttribute("funciones",funciones);
+      Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usu.getNickname());
+      request.setAttribute("paquetes",paquetes);
       RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }

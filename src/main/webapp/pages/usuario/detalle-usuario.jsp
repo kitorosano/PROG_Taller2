@@ -1,8 +1,5 @@
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
-<%@ page import="main.java.taller1.Logica.Clases.Artista" %>
-<%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion" %>
+<%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
@@ -32,11 +29,11 @@
             <%
                 }
             %>
-                    <img src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg" alt="Foto de perfil" class="img_perfil">
+                    <img src="<%=usu.getImagen()%>" alt="Foto de perfil" class="img_perfil">
             <div class="first-data">
                 <h2><%=usu.getNombre()+" "+usu.getApellido()%></h2>
                 <h4><%=usu.getNickname()+" / "+usu.getCorreo()%></h4>
-                <button class="btn">Modificar usuario</button>
+                <button class="btn" onClick="location.href='modificar-usuario?nickname=<%=usu.getNickname()%>'">Modificar usuario</button>
             </div>
             <div class="tabs">
                 <div class="menu">
@@ -50,10 +47,16 @@
                     <%
                         }
                         else{
+
                     %>
                         <p data-target="#funciones" >Funciones</p>
-                        <p data-target="#paquetes">Paquetes adquiridos</p>
+
                     <%
+                            if(session.getAttribute("nickname")==usu.getNickname()){
+                    %>
+                                <p data-target="#paquetes">Paquetes adquiridos</p>
+                    <%
+                            }
                         }
                     %>
                 </div>
@@ -85,14 +88,24 @@
                         <table >
                             <tbody>
                             <%
+                                System.out.println(session.getAttribute("nickname"));
                                 //queda esperar a que este el estado de aceptado o cancelado para e filtro
                                 Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
                                 for (Espectaculo elem : espectaculos.values()) {
+                                    if(elem.getEstado()== E_EstadoEspectaculo.ACEPTADO){
                             %>
-                            <tr>
-                                <th onClick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'"> <%=elem.getNombre()%> </th>
-                            </tr>
+                                    <tr>
+                                        <th onClick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'"> <%=elem.getNombre()%> </th>
+                                    </tr>
                             <%
+                                    }
+                                    if((elem.getEstado()== E_EstadoEspectaculo.RECHAZADO || elem.getEstado()== E_EstadoEspectaculo.INGRESADO)&& session.getAttribute("nickname")==usu.getNickname()){
+                            %>
+                                    <tr>
+                                        <th onClick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'"> <%=elem.getNombre()%> </th>
+                                    </tr>
+                            <%
+                                    }
                                 }
                             %>
 
@@ -101,11 +114,11 @@
                     </div>
 
                     <div data-content id="descripcion">
-                        <h4>Descripcion:<%=((Artista) usu).getDescripcion()%></h4>
+                        <h4><%=((Artista) usu).getDescripcion()%></h4>
                     </div>
 
                     <div data-content id="biografia">
-                        <h4>Biografia:<%=((Artista) usu).getBiografia()%></h4>
+                        <h4><%=((Artista) usu).getBiografia()%></h4>
                     </div>
                     <%
                         }
@@ -135,7 +148,22 @@
                     </div>
 
                     <div data-content id="paquetes">
-                        aca van los paquetes comprados
+                        <table class="table" >
+                            <tbody>
+                            <%
+                                Map<String, Paquete> paquetes =(Map<String, Paquete>) request.getAttribute("paquetes");
+                                for (Paquete paquete : paquetes.values()) {
+
+                            %>
+                                    <tr>
+                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%> </th>
+                                    </tr>
+                            <%
+
+                                }
+                            %>
+                            </tbody>
+                        </table>
                     </div>
 
                     <%
