@@ -29,7 +29,7 @@
             <%
                 }
             %>
-                    <img src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg" alt="Foto de perfil" class="img_perfil">
+                    <img src="<%=usu.getImagen()%>" alt="Foto de perfil" class="img_perfil">
             <div class="first-data">
                 <h2><%=usu.getNombre()+" "+usu.getApellido()%></h2>
                 <h4><%=usu.getNickname()+" / "+usu.getCorreo()%></h4>

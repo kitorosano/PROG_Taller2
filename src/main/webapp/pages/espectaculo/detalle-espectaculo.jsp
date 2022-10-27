@@ -22,7 +22,7 @@
 
                 <h1 class="title">Detalle de espectaculo</h1>
 
-                    <img src="https://cloudfront-us-east-1.images.arcpublishing.com/infobae/252IOWPHVVHDTAP73WPMQ4F62Q.jpg" alt="Foto de perfil" class="img_perfil">
+                    <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
             <div class="first-data">
                 <h2><%=espectaculo.getNombre()%></h2>
                 <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
