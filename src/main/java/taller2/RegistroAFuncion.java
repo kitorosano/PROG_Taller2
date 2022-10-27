@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(name = "RegistroAFuncion", value = "/registroAFuncion")
 public class RegistroAFuncion extends HttpServlet {
@@ -36,7 +37,14 @@ public class RegistroAFuncion extends HttpServlet {
         Map<String, Funcion> funciones= fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador("Domainer");
         //Map<String, EspectadorRegistradoAFuncion> registros=null;
-        Map<String, Paquete> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador("Domainer");
+        Map<String, Paquete> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(esp.getNombre());
+        Map<String, EspectadorPaquete> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador("Domainer");
+        Map<String, Paquete> paquetes= new HashMap<>();
+        for(EspectadorPaquete paq :paquetesEspectador.values()){
+            if (paquetesEspectaculo.get(paq.getPaquete().getNombre())!=null) {
+                paquetes.put(paq.getPaquete().getNombre(),paq.getPaquete());
+            }
+        }
 
         Funcion fun=funciones.get("Argentina vs Brasil");
         request.setAttribute("funcion",fun);
@@ -56,7 +64,7 @@ public class RegistroAFuncion extends HttpServlet {
         String[] registrosCanjeados = request.getParameterValues("registrosCanjeados");
 
         Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
-        Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion);
+        Funcion fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
         Paquete paq=null;
 
 
@@ -92,10 +100,15 @@ public class RegistroAFuncion extends HttpServlet {
                 costo = fun.getEspectaculo().getCosto();
             }
             if (!paquete.equals("undefined") && costo!=0) {
-                paq = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador).get(paquete);
+                paq = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador).get(paquete).getPaquete();
                 costo = fun.getEspectaculo().getCosto() - (fun.getEspectaculo().getCosto() * paq.getDescuento() / 100);
             }
             EspectadorRegistradoAFuncion nuevo= new EspectadorRegistradoAFuncion(esp,fun,paq,true,costo, LocalDateTime.now());
+            try{
+                fabrica.getIFuncion().registrarEspectadorAFuncion(nuevo);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
             //RegistrarEspectadorAFuncion(nuevo,FuncionesCanjeadas,paquete);
             response.sendRedirect("home");
         }
