@@ -1,4 +1,4 @@
-package taller2;
+package taller2.Usuario;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -31,11 +31,18 @@ public class Login extends HttpServlet {
     // Obtener el usuario de la sesion
     HttpSession session = request.getSession();
     String nickname = (String) session.getAttribute("nickname");
+    String message = (String) session.getAttribute("message");
     
     // Si hay usuario en la sesion, redirigir al home
     if(nickname != null) {
       response.sendRedirect("home");
       return;
+    }
+    
+    // Si hay mensaje de error, mostrarlo
+    if(message != null) {
+      request.setAttribute("message", message);
+      session.removeAttribute("message");
     }
   
     dispatchPage("/pages/login.jsp", request, response);

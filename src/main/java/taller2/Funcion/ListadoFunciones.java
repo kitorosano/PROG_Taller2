@@ -31,6 +31,7 @@ public class ListadoFunciones extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String miPlataforma = request.getParameter("plataforma");
         String miEspectaculo = request.getParameter("espectaculo");
         Map<String, Plataforma> plataformas;
@@ -79,7 +80,6 @@ public class ListadoFunciones extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    
+
     }
 }
-

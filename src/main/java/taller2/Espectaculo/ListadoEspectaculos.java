@@ -1,6 +1,5 @@
 package taller2.Espectaculo;
 
-import com.sun.org.apache.xerces.internal.impl.xs.util.XSInputSource;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -9,7 +8,6 @@ import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 @WebServlet(name = "ListadoEspectaculos", value = "/listado-espectaculos")
@@ -28,6 +26,7 @@ public class ListadoEspectaculos extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String miCategoria = request.getParameter("categoria");
         String miPlataforma = request.getParameter("plataforma");
         Map<String, Plataforma> plataformas;

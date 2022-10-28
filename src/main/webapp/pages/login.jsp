@@ -7,8 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%  //Traer datos precargados del request anterior
-    String nickname = request.getParameter("nickname") instanceof String ? request.getParameter("nickname") : "";
-    String contrasenia = request.getParameter("contrasenia") instanceof String ? request.getParameter("contrasenia") : "";
+    String nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
+    String contrasenia = request.getParameter("contrasenia") != null ? request.getParameter("contrasenia") : "";
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
 %>
 <html>
     <head>
@@ -23,9 +25,8 @@
             <img src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />
             <div class="background_container">
 
-                <div id="error_message" class="hidden" role="alert">
-                  <% String error = (String) request.getAttribute("error"); %>
-                    ${error}
+                <div id="message" class="hidden <%=messageType%>" role="alert">
+                    <%=message%>
                 </div>
 
                 <div class="container">
@@ -66,35 +67,39 @@
     <%--    Javascript    --%>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const ERROR_MSG = $("#error_message");
+            const MESSAGE = $("#message");
             const NICKNAME_INPUT = $("#nickname");
             const CONTRASENIA_INPUT = $("#contrasenia");
 
-            if (ERROR_MSG.text().trim() != "") {
-                ERROR_MSG.removeClass("hidden");
+            if (MESSAGE.text().trim() != "") {
+                MESSAGE.removeClass("hidden");
+                setTimeout(() => {
+                    MESSAGE.text("");
+                    MESSAGE.addClass("hidden");
+                }, 5000);
             } else {
-                ERROR_MSG.addClass("hidden");
+                MESSAGE.addClass("hidden");
             }
 
             NICKNAME_INPUT.on("input", function() {
-                ERROR_MSG.addClass("hidden");
+                MESSAGE.addClass("hidden");
                 validarNickname();
             });
             
             CONTRASENIA_INPUT.on("input", function() {
-                ERROR_MSG.addClass("hidden");
+                MESSAGE.addClass("hidden");
                 validarContrasenia();
             });
         });
 
         function mensaje(msg) {
-            const ERROR_MSG = $("#error_message");
-            ERROR_MSG.text(msg);
-            ERROR_MSG.removeClass("hidden");
+            const MESSAGE = $("#message");
+            MESSAGE.text(msg);
+            MESSAGE.removeClass("hidden");
 
             setTimeout(() => {
-                ERROR_MSG.text("");
-                ERROR_MSG.addClass("hidden");
+                MESSAGE.text("");
+                MESSAGE.addClass("hidden");
             }, 5000);
         }
 
