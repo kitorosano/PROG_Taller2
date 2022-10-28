@@ -33,34 +33,9 @@ public class ListadoPaquetes extends HttpServlet {
         Map<String, Paquete> paquetes = fabrica.getIPaquete().obtenerPaquetes();
         request.setAttribute("paquetes", paquetes);
         dispatchPage("/pages/paquete/listado-paquetes.jsp", request, response);
-        /*
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
-        Map<String, Espectaculo> totalEspectaculos = new HashMap();
-
-        for (Plataforma p : plataformas.values()) {
-            Map<String, Espectaculo> auxEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(p.getNombre());
-            for (Espectaculo e : auxEspectaculos.values()) {
-                totalEspectaculos.put(e.getNombre(), e);
-            }
-        }
-        request.setAttribute("plataformas", plataformas);
-        request.setAttribute("totalEspectaculos", totalEspectaculos);
-        dispatchPage("/pages/listado-espectaculos.jsp", request, response);
-        */
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*
-        String miPlataforma = request.getParameter("plataforma");
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos(miPlataforma);
-        request.setAttribute("espectaculos", espectaculos);
-
-        Map<String, Plataforma> plataformas = fabrica.getIEspectaculo().obtenerPlataformas();
-        request.setAttribute("plataformas", plataformas);
-
-        dispatchPage("/pages/listado-espectaculos.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
-         */
-
     }
 }

@@ -14,33 +14,35 @@
 <html>
 <head>
     <style><%@ include file="../global.css" %></style>
-    <style><%@ include file="listado-funciones.css" %></style>
+    <style><%@ include file="/pages/funcion/listado-funciones.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
 <section>
-    <%@ include file="../sidebar.jsp" %>
+    <%@ include file="/pages/sidebar.jsp" %>
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
-        <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: column;">
+        <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: column;" id="select_list">
             <form method="GET" action="listado-funciones" id="recargar">
-                <button type="button" onclick="resetearForm()">Resetear</button>
+                <button type="submit" >Resetear</button>
             </form>
             <br>
-            <form method="POST" action="listado-funciones" id="formFunciones" >
+            <form method="GET" action="listado-funciones" id="formFunciones" >
+                <input value="tipo1" type="hidden" name="tipoPost" id="tipoPost"/>
+
                 <label for="plataforma">Selecciona una plataforma:</label>
                 <select name="plataforma" id="plataforma">
-                    <option value="" selected disabled hidden>Plataforma</option>
+                    <option value="Todas" selected >Todas</option>
                 </select>
                 <br> <br>
                 <label for="espectaculo">Selecciona un espectáculo:</label>
                 <select name="espectaculo" id="espectaculo">
-                    <option value="" selected disabled hidden>Espectaculo</option>
+                    <option value="Todos" selected>Todos</option>
                 </select>
-                <button type="button" onclick="enviarForm()">Buscar</button>
+                <button type="submit">Buscar</button>
             </form>
         </div>
 
@@ -65,6 +67,7 @@
         </div>
         <%--                AGREGAR COMPONENTES ACA--%>
     </div>
+
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -81,22 +84,28 @@
         <%}%>
     });
 
-    function enviarForm(){
-        $("#formFunciones").first().submit();
-    }
-    function resetearForm(){
-        $("#recargar").first().submit();
-    }
-
     //limpiar textbox
     $("#txtBuscar").click(function(){
         $("#txtBuscar").val("");
     });
 
     $("#plataforma").on("change", function() {
-        document.getElementById("espectaculo").textContent = "";
+        if (document.getElementById("plataforma").value === "Todas"){
+            $('#espectaculo').val("Todos");
+        }
+        document.getElementById("tipoPost").value = "tipo2";
         $("#formFunciones").first().submit();
     });
+
+    $("#espectaculo").on("change", function() {
+        if (document.getElementById("plataforma").value === "Todas" && document.getElementById("espectaculo").value != "Todos") {
+            var opcion = $('option:selected', this).attr('data-plataforma');
+            document.getElementById("tipoPost").value = "tipo2";
+            $('#plataforma').val(opcion);
+            $("#formFunciones").first().submit();
+        }
+    });
+
 
     //FUNCION PARA BUSCAR POR FUNCIONES EN TIEMPO REAL
     $("#txtBuscar").on("keyup", function() {
@@ -151,7 +160,7 @@
         celdaInicio = nuevaFila.insertCell(1);
 
         celdaNombre.innerHTML = "<%=elem.getNombre()%>";
-        celdaNombre.setAttribute('onClick',"location.href='detalle-espectaculo?nombre_funcion=<%=elem.getNombre()%>&nombre_plataforma=<%=request.getAttribute("plataforma")%>&nombre_espectaculo=<%=request.getAttribute("espectaculo")%>'");
+        celdaNombre.setAttribute('onClick',"location.href='detalle-funcion?nombre_funcion=<%=elem.getNombre()%>&nombre_espectaculo=<%=elem.getEspectaculo().getNombre()%>&nombre_plataforma=<%=elem.getEspectaculo().getPlataforma().getNombre()%>'");
         celdaInicio.innerHTML = "<%=elem.getFechaHoraInicio()%>";
         <% } %>
     }
@@ -162,13 +171,17 @@
         let opt;
         <%for (Espectaculo elem : espectaculos.values()) {%>
             opt = document.createElement('option');
+            opt.maxLength=300;
             opt.value = "<%=elem.getNombre()%>";
+            opt.setAttribute("data-plataforma", "<%=elem.getPlataforma().getNombre()%>");
             <%
-            String s2 = elem.getNombre();
-            String s1 = request.getParameter("espectaculo") instanceof String ? request.getParameter("espectaculo") : "";
-            if (s1.equals(s2)){%>
-                opt.selected="selected"
-            <%}%>
+            if (request.getParameter("espectaculo") != null){
+                String s2 = elem.getNombre();
+                String s1 = request.getParameter("espectaculo") instanceof String ? request.getParameter("espectaculo") : "";
+                if (s1.equals(s2)){%>
+                    opt.selected="selected"
+                <%}
+            }%>
             opt.innerHTML = "<%=elem.getNombre()%>";
             select.appendChild(opt);
         <% } %>

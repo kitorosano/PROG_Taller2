@@ -5,7 +5,6 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
-import sun.misc.Request;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,8 +36,8 @@ public class DetalleUsuario extends HttpServlet {
       request.setAttribute("tipo","Espectador");
       request.setAttribute("datos",usu);
       request.setAttribute("funciones",funciones);
-      Map<String, EspectadorPaquete> ue_paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usu.getNickname());
-      request.setAttribute("ue_paquetes", ue_paquetes);
+      Map<String, EspectadorPaquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usu.getNickname());
+      request.setAttribute("paquetes",paquetes);
       RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }

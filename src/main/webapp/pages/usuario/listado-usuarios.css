@@ -1,0 +1,17 @@
+.tablaUsuarios{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 200px;
+}
+
+.tablaUsuarios td, .tablaUsuarios th, h2{
+    padding: 8px;
+    align-items: start;
+    align-content: start;
+    text-align: start;
+    border-bottom: 1px solid #ddd;
+}
+
+
+

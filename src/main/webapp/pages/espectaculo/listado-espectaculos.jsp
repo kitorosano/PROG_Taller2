@@ -9,6 +9,8 @@
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
+<%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
+<%@ page import="java.util.HashMap" %>
 <% String nickname = request.getParameter("nickname") instanceof String ? request.getParameter("nickname") : ""; %>
 <!DOCTYPE html>
 <html>
@@ -26,21 +28,21 @@
     <div class="main-container">
       <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
-          <form method="POST" action="listado-espectaculos" id="formEspectaculos">
+          <form method="GET" action="listado-espectaculos" id="formEspectaculos">
             <label for="plataforma">Selecciona una plataforma:</label>
             <select name="plataforma" id="plataforma">
-              <option value="" selected disabled hidden>Plataforma</option>
+              <option value="Todas" selected>Todas</option>
             </select>
-            <label for="categorias">Selecciona una categoria:</label>
-            <select name="categorias" id="categorias">
-              <option value="" selected>Todas</option>
+            <label for="categoria">Selecciona una categoria:</label>
+            <select name="categoria" id="categoria">
+              <option value="Todas" selected>Todas</option>
               <!-- FALTA HACER EL SELECT POR CATEGORIAS  -->
             </select>
-            <button type="button" onclick="enviarForm()">Buscar</button>
+            <button type="submit">Buscar</button>
           </form>
 
           <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
-            <button type="button" onclick="resetearForm()">Resetear</button>
+            <button type="submit">Resetear</button>
           </form>
 
 
@@ -48,8 +50,8 @@
 
         <div class="busqueda">
         <br/>
-        <label for="">Buscar espectaculo</label>
-          <input type="text" name="buscarEmpleado" id="txtBuscar" value="Espectaculo...">
+        <label for="txtBuscar">Buscar espectaculo</label>
+          <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
         </div>
 
         <div>
@@ -75,21 +77,15 @@
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
       cargarPlataformas();
+      cargarCategorias();
       <%if (request.getAttribute("totalEspectaculos") != null){%>
       crearTablaTotal();
-    <%}else{%>
+    <%} else {%>
       crearTablaConsulta();
-      <%}%>
+      <% } %>
     });
 
-    function enviarForm(){
-      $("#formEspectaculos").first().submit();
-    }
-    function resetearForm(){
-      $("#resetEspectaculos").first().submit();
-    }
-
-    //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" NO SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOGET()
+    //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" NO SE ENCUENTRA NULO
     <% if (request.getAttribute("totalEspectaculos") != null){ %>
       function crearTablaTotal(){
         <%Map<String, Espectaculo> totalEspectaculos = (Map<String, Espectaculo>) request.getAttribute("totalEspectaculos");%>
@@ -111,9 +107,19 @@
 
         <% } %>
         }
-    <% }else{ %> //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOPOST()
+    <% } else { %>
       function crearTablaConsulta(){
-        <%Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");%>
+
+        <%Map<String, Espectaculo> espectaculos = new HashMap<>();
+
+        if (request.getAttribute("espectaculosPlataformaCategoria") != null){
+          espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculosPlataformaCategoria");
+        } else if (request.getAttribute("espectaculosDePlataforma") != null){
+          espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculosDePlataforma");
+        } else {
+          espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculosDeCategoria");
+        } %>
+
         let tabla = document.getElementById("cuerpoTabla");
         let nuevaFila = document.createElement("tr");
         let celdaEspectaculo = document.createElement("td");
@@ -132,6 +138,8 @@
         }
     <% } %>
 
+
+
     function cargarPlataformas(){
       <%Map<String, Plataforma> plataformas = (Map<String, Plataforma>) request.getAttribute("plataformas");%>
       let select = document.getElementById("plataforma");
@@ -147,6 +155,24 @@
         <%}%>
         opt.innerHTML = "<%=elem.getNombre()%>";
         select.appendChild(opt);
+      <% } %>
+    }
+
+    function cargarCategorias(){
+      <%Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");%>
+      let select = document.getElementById("categoria");
+      let opt;
+      <%for (Categoria elem : categorias.values()) {%>
+      opt = document.createElement('option');
+      opt.value = "<%=elem.getNombre()%>";
+      <%
+      String s2 = elem.getNombre();
+      String s1 = request.getParameter("categoria") instanceof String ? request.getParameter("categoria") : "";
+      if (s1.equals(s2)){%>
+      opt.selected="selected"
+      <%}%>
+      opt.innerHTML = "<%=elem.getNombre()%>";
+      select.appendChild(opt);
       <% } %>
     }
 
