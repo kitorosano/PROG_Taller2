@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -80,7 +81,7 @@ public class AltaEspectaculo extends HttpServlet {
         Artista art = (Artista) usuarios.get(nombArtista);
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), urlImagen, p, art);
         try {

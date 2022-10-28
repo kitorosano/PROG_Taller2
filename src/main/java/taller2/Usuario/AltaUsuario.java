@@ -8,6 +8,7 @@ import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -104,13 +105,13 @@ public class AltaUsuario extends HttpServlet {
       }
       if(part.getSize()!=0){
         InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+        urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
       usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
     } else {
       if(part.getSize()!=0){
         InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+        urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
       usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
     }
