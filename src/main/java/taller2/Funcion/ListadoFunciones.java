@@ -31,50 +31,35 @@ public class ListadoFunciones extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String miPlataforma = request.getParameter("plataforma");
-        String miEspectaculo = request.getParameter("espectaculo");
+        String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+        String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
         Map<String, Plataforma> plataformas;
         Map<String, Espectaculo> espectaculos;
-        Map<String, Funcion> funciones;
+        Map<String, Funcion> funcionesFiltradas;
+    
+        // Cargar opciones plataformas y categorias para el filtrado
+        plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        request.setAttribute("plataformas", plataformas);
+    
+        espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+        request.setAttribute("espectaculos", espectaculos);
         
         // Si se llega con un filtrado vacio
-        if(miPlataforma == null || miEspectaculo == null){
-            plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-            request.setAttribute("plataformas", plataformas);
-    
-            espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-            request.setAttribute("espectaculos", espectaculos);
-    
-            funciones = fabrica.getIFuncion().obtenerFunciones();
-            request.setAttribute("funciones", funciones);
-    
-            dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
-            return;
+        if(filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
+            funcionesFiltradas = fabrica.getIFuncion().obtenerFunciones();
+            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+        }
+        // Si se llega con un filtrado de plataforma
+        else if (!filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
+            funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+        }
+        // Si llega con un filtrado espectaculo tambien llegara con uno de plataforma
+        else {
+            funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
         }
         
-        // Si se llego con algo filtrado
-        
-        if (miPlataforma.equals("Todas")) {
-            espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        } else {
-            espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
-        }
-        request.setAttribute("espectaculos", espectaculos);
-    
-        //SI EL PARAMETRO TIPO TIENE VALOR "tipo2" ES PORQUE SOLAMENTE SE NECESITA LLENAR EL <SELECT> DE ESPECTACULOS, Y NO LAS FUNCIONES.
-        if (!request.getParameter("tipoPost").equals("tipo2")){
-            if (miEspectaculo.equals("Todos") && miPlataforma.equals("Todas")) {
-                funciones = fabrica.getIFuncion().obtenerFunciones();
-            } else if (miEspectaculo.equals("Todos")) {
-                funciones = fabrica.getIFuncion().obtenerFuncionesDePlataforma(miPlataforma);   // ------¡¡¡CAMBIAR!!!------ AQUI IRIA EL METODO QUE ME TRAE TODAS LAS FUNCIONES DE UNA PLATAFORMA ESPECIFICA.
-            } /*else if (miPlataforma.equals("Todas")) {
-                //funciones = fabrica.getIFuncion().obtener
-            }*/ else {
-                funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(miPlataforma, miEspectaculo);
-            }
-            request.setAttribute("funciones", funciones);
-        }
         dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 

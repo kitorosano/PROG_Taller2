@@ -43,12 +43,12 @@
 
                         <form id="idform" name="myform" method="POST" action="login">
                             
-										        <label for='nickname'>Nickname o Correo *</label>
+                            <label for='nickname'>Nickname o Correo *</label>
                             <input id="nickname" type="text" name="nickname" maxlength="30" value="<%= nickname%>">
-										        <label for='contrasenia'>Contraseña *</label>
+                            <label for='contrasenia'>Contraseña *</label>
                             <input id="contrasenia" type="password" name="contrasenia" maxlength="30" value="<%= contrasenia%>">
+
                             <a href="#" onclick="alert('una pena brother')" class="forgot">¿Olvidaste tu contraseña?</a>
-                            <input type="hidden" name="esCorreo">
 
                             <button type="button" onclick="enviarForm()">INGRESAR </button>
                         </form>
@@ -119,12 +119,6 @@
                 NICKNAME_INPUT.addClass("invalidInput");
                 mensaje("El nickname debe ser alfanumérico y/o un correo válido");
                 return false;
-            }
-
-            if (REGEX_CORREO.test(NICKNAME)) {
-                $("#idform").find("input[name='esCorreo']").val("true");
-            } else {
-                $("#idform").find("input[name='esCorreo']").val("false");
             }
 
             NICKNAME_INPUT.removeClass("invalidInput");

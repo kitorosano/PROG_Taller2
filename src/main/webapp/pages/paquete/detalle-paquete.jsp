@@ -33,7 +33,7 @@
                 if(respuesta != "Paquete Adquirido"){
             %>
                     <form class="form" action="detalle-paquete" method="POST">
-                        <input type="hidden" name="nombre_paquete" value="<%=paquete.getNombre()%>">
+                        <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
                         <button class="btn2">Comprar Paquete</button>
                     </form>
             <%

@@ -93,9 +93,10 @@
   <script>
     // Declaramos elementos del DOM
     const TABLA = document.getElementById("cuerpoTabla");
-    const TXT_BUSCAR = $("#txtBuscar");
+    const FORM = document.getElementById("formEspectaculos");
     const SELECT_PLATAFORMA = document.getElementById("filtroPlataforma");
     const SELECT_CATEGORIA = document.getElementById("filtroCategoria");
+    const TXT_BUSCAR = $("#txtBuscar");
 
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
@@ -104,7 +105,7 @@
     });
 
     function resetForm() {
-      document.getElementById("formEspectaculos").reset();
+      FORM.reset();
     }
 
     function seleccionarFiltrosAnteriores() {
@@ -145,9 +146,9 @@
           celdaPlataforma.innerHTML = "<%=elem.getPlataforma().getNombre()%>";
           celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
 
-          celdaEspectaculo.addEventListener("click", function(){
-          window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
-        });
+          nuevaFila.addEventListener("click", function(){
+            window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
+          });
       <% } %>
     }
 

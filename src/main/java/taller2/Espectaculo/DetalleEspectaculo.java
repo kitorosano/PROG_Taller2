@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
@@ -27,18 +28,28 @@ public class DetalleEspectaculo extends HttpServlet {
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    String nickname = (String) session.getAttribute("nickname");
     String nombre = request.getParameter("nombre");
     String plataforma= request.getParameter("plataforma");
-    Map<String, Espectaculo> espectaculos=Fabrica.getInstance().getIEspectaculo().obtenerEspectaculosPorPlataforma(plataforma);
-    Espectaculo espectaculo=espectaculos.get(nombre);
-
-    Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,espectaculo.getNombre());
-    Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo.getNombre());
-    Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
-    request.setAttribute("categorias",categorias);
-    request.setAttribute("paquetes",paquetes);
-    request.setAttribute("funciones",funciones);
+    
+    boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
+    if(!espectaculoExiste) { // Si el espectaculo no existe
+      request.setAttribute("respuesta","Espectaculo no encontrado");
+      response.sendRedirect("listado-espectaculos");
+      return;
+    }
+    Espectaculo espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
     request.setAttribute("datos",espectaculo);
+
+    Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
+    request.setAttribute("funciones",funciones);
+    
+    Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
+    request.setAttribute("paquetes",paquetes);
+    
+    Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
+    request.setAttribute("categorias",categorias);
     
     dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);
   }

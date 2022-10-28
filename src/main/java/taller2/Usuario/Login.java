@@ -50,44 +50,46 @@ public class Login extends HttpServlet {
   
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession();
     String nickname = request.getParameter("nickname");
+    System.out.println("Nickname: " + nickname);
     String contrasenia = request.getParameter("contrasenia");
-    Boolean esCorreo = request.getParameter("esCorreo").equals("true");
+    System.out.println("Contrasenia: " + contrasenia);
     
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, contrasenia)) {
-      request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
+      request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/login.jsp", request, response);
       return;
     }
     
     // Buscar el usuario en la base de datos
-    Usuario usuario = null;
-    
-    if(esCorreo) {
-//      usuario = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname);
+    Usuario usuario;
+    boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
+    if(!usuarioExistePorNickname) { // Si el usuario no existe
+      boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
+      if(!usuarioExistePorCorreo) {
+        //error cuando el usuario no existe
+        request.setAttribute("message", "El usuario no existe");
+        request.setAttribute("messageType", "error");
+        dispatchPage("/pages/usuario/login.jsp", request, response);
+        return;
+      }
+      usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
     } else {
-   //    usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname);
-      usuario = new Espectador("Estebankito", "Esteban", "Rosano", "esteban@rosano.com", LocalDate.now(), "123", "");
-  
-    }
-    
-    //error cuando el usuario no existe
-    if(usuario == null) {
-      request.setAttribute("error", "El usuario no existe");
-      dispatchPage("/pages/usuario/login.jsp", request, response);
-      return;
+      usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).get();
     }
     
     //error cuando la contraseña es incorrecta
     if(!usuario.getContrasenia().equals(contrasenia)) {
-      request.setAttribute("error", "La contraseña es incorrecta");
+      request.setAttribute("message", "La contraseña es incorrecta");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/login.jsp", request, response);
       return;
     }
     
     // Si el usuario existe y la contraseña es correcta, iniciar sesión
-    HttpSession session = request.getSession();
     session.setAttribute("nickname", usuario.getNickname());
     session.setAttribute("correo", usuario.getCorreo());
     session.setAttribute("esArtista", usuario instanceof Artista);
@@ -101,7 +103,7 @@ public class Login extends HttpServlet {
     return nickname==null || contrasenia==null || nickname.isEmpty() || contrasenia.isEmpty();
   }
   private boolean esFormatoCorreo(String correo){
-    String regexCorreo = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$";
+    String regexCorreo = "/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$/";
     return correo.matches(regexCorreo);
   }
 }

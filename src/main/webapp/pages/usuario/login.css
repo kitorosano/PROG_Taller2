@@ -41,7 +41,7 @@
     margin: 10px;
 }
 
-#message .error {
+#message.error {
     background-color: rgba(255, 0, 0, 0.5);
 }
 

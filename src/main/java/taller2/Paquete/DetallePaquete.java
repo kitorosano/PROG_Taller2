@@ -30,42 +30,42 @@ public class DetallePaquete extends HttpServlet {
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
     HttpSession session = request.getSession();
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     String nickname = (String) session.getAttribute("nickname");
-    String nombre_paquete = request.getParameter("nombre_paquete");
+    String nombre = request.getParameter("nombre");
   
-    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre_paquete).isPresent();
+    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
     if(!paqueteExiste) { // Si el paquete no existe
       request.setAttribute("respuesta","Paquete no encontrado");
       response.sendRedirect("listado-paquetes");
       return;
     }
+    Paquete paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
+    request.setAttribute("datos",paquete);
+    
+    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);
+    request.setAttribute("espectaculos",espectaculos);
     
     if(esEspectador) {
         Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname);
         
-        if(paquetes_espectador.containsKey(nombre_paquete)) {
+        if(paquetes_espectador.containsKey(nombre)) {
             request.setAttribute("respuesta","Paquete Adquirido");
-            request.setAttribute("datos", paquetes_espectador.get(nombre_paquete));
+            request.setAttribute("fechaCompra", paquetes_espectador.get(nombre).getFechaRegistro());
         }
     }
-    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre_paquete);
-    request.setAttribute("espectaculos",espectaculos);
-
-    RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/detalle-paquete.jsp");
-    view.forward(request, response);
-    }
+    
+    dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
+  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
     HttpSession session = request.getSession();
-    String nombre_paquete = request.getParameter("nombre_paquete");
+    String nombre = request.getParameter("nombre");
     String nickname_espectador = (String) session.getAttribute("nickname");
     
-    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre_paquete).isPresent();
+    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
     if(!paqueteExiste) { // Si el paquete no existe
         request.setAttribute("respuesta","Paquete no encontrado");
         dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
@@ -73,7 +73,7 @@ public class DetallePaquete extends HttpServlet {
     }
   
     Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
-    boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre_paquete); // Si el paquete no está comprado, paquete_comprado es null
+    boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
 
     if (paqueteYaComprado) {
       request.setAttribute("respuesta", "Paquete ya está comprado");
@@ -81,8 +81,8 @@ public class DetallePaquete extends HttpServlet {
       return;
     }
     
-    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nickname_espectador, nombre_paquete);
+    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nickname_espectador, nombre);
     request.setAttribute("respuesta", "Paquete Adquirido");
-    response.sendRedirect("detalle-paquete.jsp" + "?nombre_paquete=" + nombre_paquete);
+    response.sendRedirect("detalle-paquete.jsp" + "?nombre=" + nombre);
   }
 }

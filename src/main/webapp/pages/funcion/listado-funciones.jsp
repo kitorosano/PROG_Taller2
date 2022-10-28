@@ -1,4 +1,4 @@
-<%@ page import="main.java.taller1.Logica.Clases.Plataforma" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: sebas
   Date: 12/10/2022
@@ -7,9 +7,19 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="main.java.taller1.Logica.Clases.Funcion" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.google.gson.Gson" %>
+<%
+    String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+    String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
+    Map<String, Plataforma> plataformas = request.getAttribute("plataformas") != null ? (Map<String, Plataforma>) request.getAttribute("plataformas") : new HashMap<>();
+    Map<String, Espectaculo> espectaculos =  request.getAttribute("espectaculos") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculos") : new HashMap<>();
+    Map<String, Funcion> funcionesFiltradas = request.getAttribute("funcionesFiltradas") != null ? (Map<String, Funcion>) request.getAttribute("funcionesFiltradas") : new HashMap<>();
+    String json = new Gson().toJson(funcionesFiltradas);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,23 +36,24 @@
     <div class="main-container">
         <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: column;" id="select_list">
-            <form method="GET" action="listado-funciones" id="recargar">
-                <button type="submit" >Resetear</button>
-            </form>
-            <br>
             <form method="GET" action="listado-funciones" id="formFunciones" >
-                <input value="tipo1" type="hidden" name="tipoPost" id="tipoPost"/>
-
-                <label for="plataforma">Selecciona una plataforma:</label>
-                <select name="plataforma" id="plataforma">
-                    <option value="Todas" selected >Todas</option>
+                <label for="filtroPlataforma">Selecciona una plataforma:</label>
+                <select name="filtroPlataforma" id="filtroPlataforma">
+                    <option value="">Todas</option>
+                    <% for (Plataforma plataforma : plataformas.values()) { %>
+                    <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
+                    <% } %>
                 </select>
-                <br> <br>
-                <label for="espectaculo">Selecciona un espectáculo:</label>
-                <select name="espectaculo" id="espectaculo">
-                    <option value="Todos" selected>Todos</option>
+                <br><br>
+                <label for="filtroEspectaculo">Selecciona un espectáculo:</label>
+                <select name="filtroEspectaculo" id="filtroEspectaculo">
+                    <option value="">Todas</option>
+                    <% for (Espectaculo espectaculo : espectaculos.values()) { %>
+                    <option data-plataforma="<%= espectaculo.getPlataforma().getNombre() %>" value="<%= espectaculo.getNombre() %>"><%= espectaculo.getNombre() %></option>
+                    <% } %>
                 </select>
                 <button type="submit">Buscar</button>
+                <button onclick="resetForm()">Resetear</button>
             </form>
         </div>
 
@@ -58,6 +69,8 @@
                 <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Plataforma</th>
+                    <th>Espectaculo</th>
                     <th>Fecha de inicio</th>
                 </tr>
                 </thead>
@@ -72,43 +85,95 @@
 
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
+    // Declaramos elementos del DOM
+    const TABLA = document.getElementById("cuerpoTabla");
+    const FORM = document.getElementById("formFunciones");
+    const SELECT_PLATAFORMA = document.getElementById("filtroPlataforma");
+    const SELECT_ESPECTACULO = document.getElementById("filtroEspectaculo");
+    const TXT_BUSCAR = $("#txtBuscar");
 
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
-        cargarPlataformas();
-        <%if (request.getAttribute("espectaculos") != null){%>
-            cargarEspectaculos();
-            <%}%>
-        <%if (request.getAttribute("funciones") != null){%>
-        crearTablaTotal();
-        <%}%>
+        seleccionarFiltrosAnteriores();
+        filtrarEspectaculos("<%= filtroPlataforma %>");
+        crearTabla();
     });
 
-    //limpiar textbox
-    $("#txtBuscar").click(function(){
-        $("#txtBuscar").val("");
-    });
+    function resetForm() {
+        FORM.reset();
+    }
 
-    $("#plataforma").on("change", function() {
-        if (document.getElementById("plataforma").value === "Todas"){
-            $('#espectaculo').val("Todos");
+    function seleccionarFiltrosAnteriores() {
+        const opcionPlataforma = "<%= filtroPlataforma %>";
+        for (let i = 0; i < SELECT_PLATAFORMA.options.length; i++) {
+            if (SELECT_PLATAFORMA.options[i].value === opcionPlataforma) {
+                SELECT_PLATAFORMA.options[i].selected = true;
+                break;
+            }
         }
-        document.getElementById("tipoPost").value = "tipo2";
-        $("#formFunciones").first().submit();
-    });
 
-    $("#espectaculo").on("change", function() {
-        if (document.getElementById("plataforma").value === "Todas" && document.getElementById("espectaculo").value != "Todos") {
-            var opcion = $('option:selected', this).attr('data-plataforma');
-            document.getElementById("tipoPost").value = "tipo2";
-            $('#plataforma').val(opcion);
-            $("#formFunciones").first().submit();
+        const optionsEspectaculo = SELECT_ESPECTACULO.options;
+        for (let i = 0; i < optionsEspectaculo.length; i++) {
+            let option = optionsEspectaculo[i];
+            if (option.value === "<%= filtroEspectaculo %>") {
+                option.selected = true;
+            }
         }
+    }
+
+    SELECT_PLATAFORMA.addEventListener("change", function (e) {
+        filtrarEspectaculos(e.target.value);
+    });
+    SELECT_ESPECTACULO.addEventListener("change", function (e) {
+        SELECT_PLATAFORMA.value = e.target.options[e.target.selectedIndex].dataset.plataforma;
     });
 
+    function filtrarEspectaculos(plataformaSeleccionada) {
+        for (let i = 0; i < SELECT_ESPECTACULO.options.length; i++) {
+            let option = SELECT_ESPECTACULO.options[i];
+
+            // Si no hay plataforma seleccionada, mostramos todas las opciones y seleccionamos la primera
+            if (plataformaSeleccionada === ""){
+               SELECT_ESPECTACULO.options[0].selected = true;
+                option.style.display = "block";
+                return;
+            }
+
+            // Si la plataforma de la opcion es igual a la seleccionada, mostramos la opcion
+            if (option.dataset.plataforma === plataformaSeleccionada) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        }
+    }
+
+    function crearTabla(){
+        let nuevaFila;
+        let celdaNombre;
+        let celdaPlataforma;
+        let celdaEspectaculo;
+        let celdaInicio;
+
+        <%for (Funcion elem : funcionesFiltradas.values()) {%>
+            nuevaFila = TABLA.insertRow(-1);
+            celdaNombre = nuevaFila.insertCell(0);
+            celdaPlataforma = nuevaFila.insertCell(1);
+            celdaEspectaculo = nuevaFila.insertCell(2);
+            celdaInicio = nuevaFila.insertCell(3);
+
+            celdaNombre.innerHTML = "<%=elem.getNombre()%>";
+            celdaPlataforma.innerHTML = "<%=elem.getEspectaculo().getPlataforma().getNombre()%>";
+            celdaEspectaculo.innerHTML = "<%=elem.getEspectaculo().getNombre()%>";
+            celdaInicio.innerHTML = "<%=elem.getFechaHoraInicio()%>";
+            nuevaFila.addEventListener("click", () => {
+                window.location.href = "detalle-funcion?nombre=<%=elem.getNombre()%>&espectaculo=<%=elem.getEspectaculo().getNombre()%>&plataforma=<%=elem.getEspectaculo().getPlataforma().getNombre()%>";
+            });
+        <% } %>
+    }
 
     //FUNCION PARA BUSCAR POR FUNCIONES EN TIEMPO REAL
-    $("#txtBuscar").on("keyup", function() {
+    TXT_BUSCAR.on("keyup", function() {
         var keyword = this.value;
         keyword = keyword.toUpperCase();
         var table_1 = document.getElementById("tabla");
@@ -127,66 +192,10 @@
         }
     });
 
-    function cargarPlataformas(){
-        <%Map<String, Plataforma> plataformas = (Map<String, Plataforma>) request.getAttribute("plataformas");%>
-        let select = document.getElementById("plataforma");
-        let opt;
-        <%for (Plataforma elem : plataformas.values()) {%>
-        opt = document.createElement('option');
-        opt.value = "<%=elem.getNombre()%>";
-        <%
-        String s2 = elem.getNombre();
-        String s1 = request.getParameter("plataforma") instanceof String ? request.getParameter("plataforma") : "";
-        if (s1.equals(s2)){%>
-        opt.selected="selected"
-        <%}%>
-        opt.innerHTML = "<%=elem.getNombre()%>";
-        select.appendChild(opt);
-        <% } %>
-    }
-
-    <% if (request.getAttribute("funciones") != null){ %>
-    function crearTablaTotal(){
-        <%Map<String, Funcion> totalFunciones = (Map<String, Funcion>) request.getAttribute("funciones");%>
-
-        let tabla = document.getElementById("cuerpoTabla");
-        let nuevaFila = document.createElement("tr");
-        let celdaNombre = document.createElement("td");
-        let celdaInicio = document.createElement("td");
-
-        <%for (Funcion elem : totalFunciones.values()) {%>
-        nuevaFila = tabla.insertRow(-1);
-        celdaNombre = nuevaFila.insertCell(0);
-        celdaInicio = nuevaFila.insertCell(1);
-
-        celdaNombre.innerHTML = "<%=elem.getNombre()%>";
-        celdaNombre.setAttribute('onClick',"location.href='detalle-funcion?nombre_funcion=<%=elem.getNombre()%>&nombre_espectaculo=<%=elem.getEspectaculo().getNombre()%>&nombre_plataforma=<%=elem.getEspectaculo().getPlataforma().getNombre()%>'");
-        celdaInicio.innerHTML = "<%=elem.getFechaHoraInicio()%>";
-        <% } %>
-    }
-    <% } if (request.getAttribute("espectaculos") != null){ %>
-    function cargarEspectaculos(){
-        <%Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");%>
-        let select = document.getElementById("espectaculo");
-        let opt;
-        <%for (Espectaculo elem : espectaculos.values()) {%>
-            opt = document.createElement('option');
-            opt.maxLength=300;
-            opt.value = "<%=elem.getNombre()%>";
-            opt.setAttribute("data-plataforma", "<%=elem.getPlataforma().getNombre()%>");
-            <%
-            if (request.getParameter("espectaculo") != null){
-                String s2 = elem.getNombre();
-                String s1 = request.getParameter("espectaculo") instanceof String ? request.getParameter("espectaculo") : "";
-                if (s1.equals(s2)){%>
-                    opt.selected="selected"
-                <%}
-            }%>
-            opt.innerHTML = "<%=elem.getNombre()%>";
-            select.appendChild(opt);
-        <% } %>
-        }
-    <% } %>
+    //limpiar textbox
+    TXT_BUSCAR.click(function(){
+        TXT_BUSCAR.val("");
+    });
 
 </script>
 </body>
