@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.Paquete;
 import main.java.taller1.Logica.Fabrica;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -55,7 +56,7 @@ public class AltaPaquete extends HttpServlet {
 
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb,LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 

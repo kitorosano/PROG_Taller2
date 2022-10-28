@@ -13,8 +13,7 @@ import java.util.Map;
 @WebServlet(name = "ListadoEspectaculos", value = "/listado-espectaculos")
 public class ListadoEspectaculos extends HttpServlet {
     Fabrica fabrica;
-
-
+    
     public void init() {
         fabrica = Fabrica.getInstance();
     }
@@ -26,66 +25,59 @@ public class ListadoEspectaculos extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String miCategoria = request.getParameter("categoria");
-        String miPlataforma = request.getParameter("plataforma");
+        String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+        String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
         Map<String, Plataforma> plataformas;
-        Map<String, Espectaculo> totalEspectaculos;
         Map<String, Categoria> categorias;
+        Map<String, Espectaculo> espectaculosFiltrados = new HashMap<>();
+        Map<String, Map<String, Categoria>> categoriasEspectaculosFiltrados = new HashMap<>();
+    
+        // Cargar opciones plataformas y categorias para el filtrado
+        plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        request.setAttribute("plataformas", plataformas);
+    
+        categorias = fabrica.getICategoria().obtenerCategorias();
+        request.setAttribute("categorias", categorias);
     
         // Si se llega con un filtrado vacio
-        if(miPlataforma == null || miCategoria == null){
-            plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-            request.setAttribute("plataformas", plataformas);
-        
-            categorias = fabrica.getICategoria().obtenerCategorias();
-            request.setAttribute("categorias", categorias);
-    
-            totalEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-            request.setAttribute("totalEspectaculos", totalEspectaculos);
-        
-            dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
-            return;
+        if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
+            espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculos();
+            request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
         }
-    
-        // Si se llego con algo filtrado
-        if (!miPlataforma.equals("Todas") && !miCategoria.equals("Todas")){
-            Map<String, Espectaculo> espectaculosPlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
-            Map<String, Espectaculo> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(miCategoria);
-            Map<String, Espectaculo> espectaculosPlataformaCategoria = new HashMap<>();
+        // Si se llega con un filtrado de plataforma
+        else if (!filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
+            espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
+            request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+        }
+        // Si se llega con un filtrado de categoria
+        else if (filtroPlataforma.isEmpty() && !filtroCategoria.isEmpty()) {
+            espectaculosFiltrados = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
+            request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+        }
+        // Si llega con un filtrado de plataforma y categoria
+        else {
+            Map<String, Espectaculo> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
+            Map<String, Espectaculo> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
         
-            for (Espectaculo e : espectaculosDeCategoria.values()){
-                if (espectaculosPlataforma.containsKey(e.getNombre())){
-                    espectaculosPlataformaCategoria.put(e.getNombre(), e);
+            for (Espectaculo espectaculo : espectaculosDeCategoria.values()){
+                if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
+                    espectaculosFiltrados.put(espectaculo.getNombre(), espectaculo);
                 }
             }
-        
-            request.setAttribute("plataforma", miPlataforma);
-            request.setAttribute("categoria", miCategoria);
-            request.setAttribute("espectaculosPlataformaCategoria", espectaculosPlataformaCategoria);
-        
-            dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
-        
-        } else if (!miPlataforma.equals("Todas")) {
-            Map<String, Espectaculo> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(miPlataforma);
-            request.setAttribute("espectaculosDePlataforma", espectaculosDePlataforma);
-        
-        } else if (!miCategoria.equals("Todas")){
-            Map<String, Espectaculo> espectaculosDeCategoria= fabrica.getICategoria().obtenerEspectaculosDeCategoria(miCategoria);
-            request.setAttribute("espectaculosDeCategoria", espectaculosDeCategoria);
-        
-        } else {
-            totalEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-            request.setAttribute("totalEspectaculos", totalEspectaculos);
-        
+            request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
         }
-    
+        
+        // Cargar categorias de los espectaculos filtrados
+        for (Espectaculo espectaculo : espectaculosFiltrados.values()){
+            Map<String,Categoria> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
+            categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
+        }
+        request.setAttribute("categoriasEspectaculosFiltrados", categoriasEspectaculosFiltrados);
+        
         dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    
     }
-    
 }

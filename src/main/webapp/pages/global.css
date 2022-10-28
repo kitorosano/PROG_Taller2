@@ -35,6 +35,9 @@ body {
 }
 .header_title {
     margin: 0;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 .header_title > span {
     font-weight: 900;

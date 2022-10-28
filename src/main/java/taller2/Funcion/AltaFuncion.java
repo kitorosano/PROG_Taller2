@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -95,7 +96,7 @@ public class AltaFuncion extends HttpServlet {
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now(), urlImagen);
         try {

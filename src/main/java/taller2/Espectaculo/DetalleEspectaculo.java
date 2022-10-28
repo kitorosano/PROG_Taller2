@@ -19,27 +19,29 @@ public class DetalleEspectaculo extends HttpServlet {
   public void init() {
     fabrica = Fabrica.getInstance();
   }
+  protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    RequestDispatcher view = request.getRequestDispatcher(page);
+    view.forward(request, response);
+  }
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
     String nombre = request.getParameter("nombre");
     String plataforma= request.getParameter("plataforma");
     Map<String, Espectaculo> espectaculos=Fabrica.getInstance().getIEspectaculo().obtenerEspectaculosPorPlataforma(plataforma);
     Espectaculo espectaculo=espectaculos.get(nombre);
 
-
-      Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,espectaculo.getNombre());
-      Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo.getNombre());
-      Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
-      request.setAttribute("categorias",categorias);
-      request.setAttribute("paquetes",paquetes);
-      request.setAttribute("funciones",funciones);
-      request.setAttribute("datos",espectaculo);
-      RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/detalle-espectaculo.jsp");
-      view.forward(request, response);
-
-    }
+    Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,espectaculo.getNombre());
+    Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo.getNombre());
+    Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
+    request.setAttribute("categorias",categorias);
+    request.setAttribute("paquetes",paquetes);
+    request.setAttribute("funciones",funciones);
+    request.setAttribute("datos",espectaculo);
+    
+    dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);
+  }
 
   
   @Override
