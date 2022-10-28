@@ -28,11 +28,19 @@ public class EspectaculoAPaquete extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String paquete=request.getParameter("paquete");
         Map<String, Plataforma> plataformas=fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> espectaculos=fabrica.getIEspectaculo().obtenerEspectaculos();
+        Map<String, Espectaculo> espectaculosPaquete=fabrica.getIPaquete().obtenerEspectaculosDePaquete(paquete);
+        for(Espectaculo e:espectaculosPaquete.values()){
+            String clave=e.getNombre()+"-"+e.getPlataforma().getNombre();
+            if(espectaculos.containsKey(clave)){
+                espectaculos.remove(clave,espectaculos.get(clave));
+            }
+        }
         request.setAttribute("plataformas",plataformas);
         request.setAttribute("espectaculos",espectaculos);
-        request.setAttribute("paquete",request.getParameter("paquete"));
+        request.setAttribute("paquete",paquete);
         dispatchPage("/pages/espectaculo-a-paquete.jsp", request, response);
     }
 
