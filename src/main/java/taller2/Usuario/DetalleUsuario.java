@@ -37,8 +37,8 @@ public class DetalleUsuario extends HttpServlet {
       request.setAttribute("tipo","Espectador");
       request.setAttribute("datos",usu);
       request.setAttribute("funciones",funciones);
-      Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usu.getNickname());
-      request.setAttribute("paquetes",paquetes);
+      Map<String, EspectadorPaquete> ue_paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usu.getNickname());
+      request.setAttribute("ue_paquetes", ue_paquetes);
       RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/detalle-usuario.jsp");
       view.forward(request, response);
     }

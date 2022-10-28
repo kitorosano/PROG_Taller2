@@ -12,9 +12,9 @@
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
         <%
-            Paquete paquete= (Paquete) request.getAttribute("datos");
+            EspectadorPaquete espectadorPaquete= (EspectadorPaquete) request.getAttribute("datos");
+            Paquete paquete = espectadorPaquete.getPaquete();
             String respuesta = (String) request.getAttribute("respuesta");
-            System.out.println("La respuesta es: "+ respuesta);
         %>
         <div class="grid-container">
 
@@ -33,7 +33,8 @@
                 if(respuesta != "Paquete Adquirido"){
             %>
                     <form class="form" action="detalle-paquete" method="POST">
-                        <button class="btn2" >Comprar Paquete</button>
+                        <input type="hidden" name="nombre_paquete" value="<%=paquete.getNombre()%>">
+                        <button class="btn2">Comprar Paquete</button>
                     </form>
             <%
                 }else{
@@ -91,8 +92,6 @@
 
                 </div>
             </div>
-
-                    <a href="/pages/home.jsp" class="back">Volver</a>
         </div>
 
             <%--                AGREGAR COMPONENTES ACA--%>

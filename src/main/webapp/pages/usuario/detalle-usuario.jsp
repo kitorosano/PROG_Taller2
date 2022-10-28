@@ -13,6 +13,7 @@
         <%@ include file="/pages/sidebar.jsp" %>
         <%
             Usuario usu= (Usuario) request.getAttribute("datos");
+            System.out.println(usu.getImagen());
         %>
         <div class="grid-container">
 
@@ -151,12 +152,12 @@
                         <table class="table" >
                             <tbody>
                             <%
-                                Map<String, Paquete> paquetes =(Map<String, Paquete>) request.getAttribute("paquetes");
-                                for (Paquete paquete : paquetes.values()) {
+                                Map<String, EspectadorPaquete> ue_paquetes =(Map<String, EspectadorPaquete>) request.getAttribute("ue_paquetes");
+                                for (EspectadorPaquete ue_paquete : ue_paquetes.values()) {
 
                             %>
                                     <tr>
-                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%> </th>
+                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=ue_paquete.getPaquete().getNombre()%>'"> <%=ue_paquete.getPaquete().getNombre()%> </th>
                                     </tr>
                             <%
 

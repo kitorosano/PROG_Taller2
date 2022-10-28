@@ -7,7 +7,17 @@ import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import sun.misc.IOUtils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -42,7 +52,6 @@ public class AltaUsuario extends HttpServlet {
     String contrasenia = request.getParameter("contrasenia");
     String fechaNac_str = request.getParameter("fechaNac");
     String contrasenia2 = request.getParameter("contrasenia2");
-    String urlImagen="";
     Part part=request.getPart("imagen");
     String descripcion = request.getParameter("descripcion");
     String biografia = request.getParameter("biografia");
@@ -89,6 +98,12 @@ public class AltaUsuario extends HttpServlet {
       dispatchPage("/pages/registro.jsp", request, response);
       return;
     }
+  
+    String urlImagen="";
+    if(part.getSize()!=0){
+      InputStream inputImagen=part.getInputStream();
+      urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
+    }
 
     // Se especifica el tipo de usuario a crear
     Usuario usuario;
@@ -102,16 +117,9 @@ public class AltaUsuario extends HttpServlet {
         request.setAttribute("error", "Formato de url invalida");
         return;
       }
-      if(part.getSize()!=0){
-        InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
-      }
+      
       usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
     } else {
-      if(part.getSize()!=0){
-        InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
-      }
       usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
     }
 
@@ -120,6 +128,7 @@ public class AltaUsuario extends HttpServlet {
       fabrica.getIUsuario().altaUsuario(usuario);
 
       // Redireccionar a la pantalla de login
+      request.getSession().setAttribute("message", "Usuario creado exitosamente");
       response.sendRedirect("login"); // redirijir a un servlet (por url)
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
