@@ -31,7 +31,7 @@ public class AltaUsuario extends HttpServlet {
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    dispatchPage("/pages/registro.jsp", request, response);
+    dispatchPage("/pages/usuario/registro.jsp", request, response);
   }
   
   @Override
@@ -43,7 +43,6 @@ public class AltaUsuario extends HttpServlet {
     String contrasenia = request.getParameter("contrasenia");
     String fechaNac_str = request.getParameter("fechaNac");
     String contrasenia2 = request.getParameter("contrasenia2");
-    String urlImagen="";
     Part part=request.getPart("imagen");
     String descripcion = request.getParameter("descripcion");
     String biografia = request.getParameter("biografia");
@@ -56,7 +55,7 @@ public class AltaUsuario extends HttpServlet {
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, nombre, apellido, correo, fechaNac_str, contrasenia, contrasenia2)) {
       request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-      dispatchPage("/pages/registro.jsp", request, response);
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
 
@@ -69,26 +68,32 @@ public class AltaUsuario extends HttpServlet {
     //error para cuando el nickname posee un formato de correo
     if(esFormatoCorreo(nickname)){
       request.setAttribute("error", "El nickname no puede tener el formato de correo");
-      dispatchPage("/pages/registro.jsp", request, response);
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     //error para cuando el correo NO posea un formato de correo
     if(!esFormatoCorreo(correo)){
       request.setAttribute("error", "Formato de correo invalido");
-      dispatchPage("/pages/registro.jsp", request, response);
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     // Error contraseñas no machean
     if(!contraseniasIguales(contrasenia, contrasenia2)){
       request.setAttribute("error", "Las contraseñas no coinciden");
-      dispatchPage("/pages/registro.jsp", request, response);
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     //La fecha no es valida porque no nacio mañana
     if(!fechaValida(fechaNac)){
       request.setAttribute("error", "La fecha no es valida");
-      dispatchPage("/pages/registro.jsp", request, response);
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
+    }
+  
+    String urlImagen="";
+    if(part.getSize()!=0){
+      InputStream inputImagen=part.getInputStream();
+      urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
     }
 
     // Se especifica el tipo de usuario a crear
@@ -96,23 +101,16 @@ public class AltaUsuario extends HttpServlet {
     if(tipo.equals("Artista")){
       if(camposVaciosArtista(descripcion)){
         request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-        dispatchPage("/pages/registro.jsp", request, response);
+        dispatchPage("/pages/usuario/registro.jsp", request, response);
         return;
       }
       if (!esFormatoUrl(url)){
         request.setAttribute("error", "Formato de url invalida");
         return;
       }
-      if(part.getSize()!=0){
-        InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
-      }
+      
       usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
     } else {
-      if(part.getSize()!=0){
-        InputStream inputImagen=part.getInputStream();
-        urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
-      }
       usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
     }
 
@@ -121,12 +119,13 @@ public class AltaUsuario extends HttpServlet {
       fabrica.getIUsuario().altaUsuario(usuario);
 
       // Redireccionar a la pantalla de login
+      request.getSession().setAttribute("message", "Usuario creado exitosamente");
       response.sendRedirect("login"); // redirijir a un servlet (por url)
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
       // Error al crear el usuario
       request.setAttribute("error", "Error al crear el usuario");
-      dispatchPage("/pages/registro.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+      dispatchPage("/pages/usuario/registro.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
     }
   }
 

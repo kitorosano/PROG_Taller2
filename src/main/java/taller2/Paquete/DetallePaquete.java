@@ -12,6 +12,7 @@ import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(name = "DetallePaquete", value = "/detalle-paquete")
 public class DetallePaquete extends HttpServlet {
@@ -21,61 +22,67 @@ public class DetallePaquete extends HttpServlet {
     fabrica = Fabrica.getInstance();
   }
   
+  protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    RequestDispatcher view = request.getRequestDispatcher(page);
+    view.forward(request, response);
+  }
+  
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
     HttpSession session = request.getSession();
-    String nombre_paquete = request.getParameter("nombre_paquete");
-
-
-    Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetes();
-    Paquete paquete = paquetes.get(nombre_paquete);
+    Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
+    String nickname = (String) session.getAttribute("nickname");
+    String nombre = request.getParameter("nombre");
+  
+    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
+    if(!paqueteExiste) { // Si el paquete no existe
+      request.setAttribute("respuesta","Paquete no encontrado");
+      response.sendRedirect("listado-paquetes");
+      return;
+    }
+    Paquete paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
     request.setAttribute("datos",paquete);
-    if((Boolean) session.getAttribute("esEspectador")) {
-        Map<String, EspectadorPaquete> paquetes_comprados = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador((String) session.getAttribute("nickname"));
-        Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete).getPaquete();
-        if(paquete_comprado != null){
+    
+    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);
+    request.setAttribute("espectaculos",espectaculos);
+    
+    if(esEspectador) {
+        Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname);
+        
+        if(paquetes_espectador.containsKey(nombre)) {
             request.setAttribute("respuesta","Paquete Adquirido");
+            request.setAttribute("fechaCompra", paquetes_espectador.get(nombre).getFechaRegistro());
         }
     }
-    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(paquete.getNombre());
-    request.setAttribute("espectaculos",espectaculos);
-
-    RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/detalle-paquete.jsp");
-    view.forward(request, response);
-
-    }
+    
+    dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
+  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
     HttpSession session = request.getSession();
-    String nombre_paquete = request.getParameter("nombre_paquete");
+    String nombre = request.getParameter("nombre");
     String nickname_espectador = (String) session.getAttribute("nickname");
-
-
-    Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetes();
-    Paquete paquete = paquetes.get(nombre_paquete);// paquete para el detalle
-
-    Map<String, EspectadorPaquete> paquetes_comprados=Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
-    Paquete paquete_comprado = paquetes_comprados.get(nombre_paquete).getPaquete();
-
-    if(paquete_comprado==null){
-      request.setAttribute("respuesta","Paquete comprado!");
-
-      Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nickname_espectador,nombre_paquete);
+    
+    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
+    if(!paqueteExiste) { // Si el paquete no existe
+        request.setAttribute("respuesta","Paquete no encontrado");
+        dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
+        return;
     }
-    else{
-      request.setAttribute("respuesta","Paquete Adquirido");
+  
+    Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
+
+    if (paqueteYaComprado) {
+      request.setAttribute("respuesta", "Paquete ya está comprado");
+      dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
+      return;
     }
-
-    request.setAttribute("datos",paquete);
-
-    Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(paquete.getNombre());
-    request.setAttribute("espectaculos",espectaculos);
-
-    RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/detalle-paquete.jsp");
-    view.forward(request, response);
-
+    
+    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nickname_espectador, nombre);
+    request.setAttribute("respuesta", "Paquete Adquirido");
+    response.sendRedirect("detalle-paquete.jsp" + "?nombre=" + nombre);
   }
 }

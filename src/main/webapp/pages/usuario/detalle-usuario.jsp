@@ -13,6 +13,7 @@
         <%@ include file="/pages/sidebar.jsp" %>
         <%
             Usuario usu= (Usuario) request.getAttribute("datos");
+            System.out.println(usu.getImagen());
         %>
         <div class="grid-container">
 

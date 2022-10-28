@@ -8,7 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <div class="header">
-    <p class="header_title"><span>CoronaTickets</span>.uy</p>
+    <a href="home" class="header_title"><span>CoronaTickets</span>.uy</a>
     <form action="home" method="post">
         <button type="submit" class="header__logout" > Cerrar Sesion</button>
     </form>
