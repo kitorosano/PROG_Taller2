@@ -6,6 +6,7 @@
 
 <%  //Traer datos precargados del request anterior
   String nombrespectaculo = request.getParameter("espectaculo");
+  String nombreplataforma = request.getParameter("plataforma");
   String nombrefuncion= request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";
   String fecha = request.getParameter("fechaInicio") instanceof String ? request.getParameter("fechaInicio") : "";
   String hora = request.getParameter("horaInicio") instanceof String ? request.getParameter("horaInicio") : "";
@@ -18,7 +19,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style><%@ include file="../global.css" %></style>
+  <style><%@ include file="/pages/global.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
   <style>
@@ -56,25 +57,31 @@
   </style>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
 <section>
-  <%@ include file="../sidebar.jsp" %>
+  <%@ include file="/pages/sidebar.jsp" %>
   <div class="main-container">
     <%--                AGREGAR COMPONENTES ACA--%>
       <h1>Registro de funcion de espectaculo</h1>
-      <form id="idform" name="formEspectaculo" method="POST" action="alta-funcion">
+      <form id="idform" name="formEspectaculo" method="POST" action="alta-funcion" enctype="multipart/form-data">
         <div style="display: flex; flex-direction: column; align-items: flex-start">
           <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
             <div class="input-container">
                 <label class="subtitulos">Espectaculo</label>
                 <select name="espectaculo" >
                 <%
-                  for (Espectaculo elem : espectaculos.values()) {
+                  if(nombrespectaculo==null || nombreplataforma==null){
+                    for (Espectaculo elem : espectaculos.values()) {
                 %>
-                <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
                 <%
-                  }
+                    }
+                  }else{
+                %>
+                  <option value="<%=nombrespectaculo%>-<%=nombreplataforma%>"><%=nombrespectaculo%></option>
+                  <%
+                    }
                 %>
                 </select>
             </div>
@@ -92,7 +99,7 @@
             </div>
             <div class="input-container">
               <label class="subtitulos">Imagen</label>
-              <input type="file" name="imagen">
+              <input type="file" accept="image/*" name="imagen">
             </div>
           </div>
           <div id="artistas-list">
@@ -141,7 +148,6 @@
 
       <script>
 
-        <%--CUANDO EL DOCUMENTO TERMINE DE CARGAR QUE TOME TODOS LOS VALORES DE LA LISTA INVITADOS Y LES AGREGUE UN INPUT DE HIJO--%>
         function enviarForm() {
           //Obtener inputs con jquery
           let espectaculo = $("input[name='espectaculo']").val();

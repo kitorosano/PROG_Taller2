@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style><%@ include file="../global.css" %></style>
+  <style><%@ include file="/pages/global.css" %></style>
   <style><%@ include file="/pages/espectaculo/listado-espectaculos.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
@@ -28,7 +28,7 @@
     <div class="main-container">
       <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
-          <form method="POST" action="listado-espectaculos" id="formEspectaculos">
+          <form method="GET" action="listado-espectaculos" id="formEspectaculos">
             <label for="plataforma">Selecciona una plataforma:</label>
             <select name="plataforma" id="plataforma">
               <option value="Todas" selected>Todas</option>
@@ -38,11 +38,11 @@
               <option value="Todas" selected>Todas</option>
               <!-- FALTA HACER EL SELECT POR CATEGORIAS  -->
             </select>
-            <button type="button" onclick="enviarForm()">Buscar</button>
+            <button type="submit">Buscar</button>
           </form>
 
           <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
-            <button type="button" onclick="resetearForm()">Resetear</button>
+            <button type="submit">Resetear</button>
           </form>
 
 
@@ -50,7 +50,7 @@
 
         <div class="busqueda">
         <br/>
-        <label for="">Buscar espectaculo</label>
+        <label for="txtBuscar">Buscar espectaculo</label>
           <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
         </div>
 
@@ -84,13 +84,6 @@
       crearTablaConsulta();
       <% } %>
     });
-
-    function enviarForm(){
-      $("#formEspectaculos").first().submit();
-    }
-    function resetearForm(){
-      $("#resetEspectaculos").first().submit();
-    }
 
     //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" NO SE ENCUENTRA NULO
     <% if (request.getAttribute("totalEspectaculos") != null){ %>

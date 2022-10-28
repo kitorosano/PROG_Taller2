@@ -13,6 +13,8 @@
         <%@ include file="/pages/sidebar.jsp" %>
         <%
             Paquete paquete= (Paquete) request.getAttribute("datos");
+            String respuesta = (String) request.getAttribute("respuesta");
+            System.out.println("La respuesta es: "+ respuesta);
         %>
         <div class="grid-container">
 
@@ -27,6 +29,19 @@
                 <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
 
             </div>
+            <%
+                if(respuesta != "Paquete Adquirido"){
+            %>
+                    <form class="form" action="detalle-paquete" method="POST">
+                        <button class="btn2" >Comprar Paquete</button>
+                    </form>
+            <%
+                }else{
+            %>
+                    <h4 class="respuesta"><%=respuesta%></h4>
+            <%
+                }
+            %>
             <div class="tabs">
                 <div class="menu">
                         <p data-target="#datos_generales" class="active">Datos Generales</p>
@@ -105,6 +120,7 @@
                 console.log(target.classList);
             })
         })
+
 
 
     </script>

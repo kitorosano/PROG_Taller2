@@ -3,13 +3,11 @@ package taller2.Funcion;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.Funcion;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @WebServlet(name = "AltaFuncion", value = "/alta-funcion")
+@MultipartConfig
 public class AltaFuncion extends HttpServlet {
 
     Fabrica fabrica;
@@ -37,8 +36,14 @@ public class AltaFuncion extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String artista="Kanlam";
+        String artista="Domainer2";
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+        /* for(Espectaculo esp:espectaculos.values()){
+            if(esp.getEstado()!=E_EstadoEspectaculo.ACEPTADO){
+                espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+            }
+        }   COMENTADO HASTA IMPLEMENTAR EL CAMBIO DE ESTADO*/
+
         List<String> artistas=obtenerArtistas(artista);
         request.setAttribute("espectaculos", espectaculos);
         request.setAttribute("artistas",artistas);
@@ -51,8 +56,9 @@ public class AltaFuncion extends HttpServlet {
         String nombrefuncion= request.getParameter("nombre");
         String fecha = request.getParameter("fechaInicio");
         String hora = request.getParameter("horaInicio");
-        String imagen = request.getParameter("imagen");
-        String artista="Kanlam";
+        String urlImagen="";
+        Part part=request.getPart("imagen");
+        String artista="Domainer2";
         String[] artistasInvitados = request.getParameterValues("artInvitado");
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
@@ -62,6 +68,11 @@ public class AltaFuncion extends HttpServlet {
             }
         }
         request.setAttribute("artistas",artistas);
+       /* for(Espectaculo esp:espectaculos.values()){
+            if(esp.getEstado()!=E_EstadoEspectaculo.ACEPTADO){
+                espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+            }
+        }   COMENTADO HASTA IMPLEMENTAR EL CAMBIO DE ESTADO*/
         request.setAttribute("espectaculos", espectaculos);
 
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
@@ -82,9 +93,14 @@ public class AltaFuncion extends HttpServlet {
             dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
         }
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
-        Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now(), "");
+        if(part.getSize()!=0){
+            InputStream inputImagen=part.getInputStream();
+            urlImagen=fabrica.getIDatabase().guardarImagen(inputImagen);
+        }
+        Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now(), urlImagen);
         try {
             fabrica.getIFuncion().altaFuncion(nueva);
+            //TODO: VER COMO AGREGAR ARTISTAS INVITADOS
             response.sendRedirect("home"); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());

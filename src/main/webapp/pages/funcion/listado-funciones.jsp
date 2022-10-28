@@ -27,10 +27,10 @@
         <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-espectaculos-container" style="display: flex; flex-direction: column;" id="select_list">
             <form method="GET" action="listado-funciones" id="recargar">
-                <button type="button" onclick="resetearForm()">Resetear</button>
+                <button type="submit" >Resetear</button>
             </form>
             <br>
-            <form method="POST" action="listado-funciones" id="formFunciones" >
+            <form method="GET" action="listado-funciones" id="formFunciones" >
                 <input value="tipo1" type="hidden" name="tipoPost" id="tipoPost"/>
 
                 <label for="plataforma">Selecciona una plataforma:</label>
@@ -42,7 +42,7 @@
                 <select name="espectaculo" id="espectaculo">
                     <option value="Todos" selected>Todos</option>
                 </select>
-                <button type="button" onclick="enviarForm()">Buscar</button>
+                <button type="submit">Buscar</button>
             </form>
         </div>
 
@@ -83,13 +83,6 @@
         crearTablaTotal();
         <%}%>
     });
-
-    function enviarForm(){
-        $("#formFunciones").first().submit();
-    }
-    function resetearForm(){
-        $("#recargar").first().submit();
-    }
 
     //limpiar textbox
     $("#txtBuscar").click(function(){

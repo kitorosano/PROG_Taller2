@@ -60,7 +60,7 @@ public class Login extends HttpServlet {
     if(esCorreo) {
 //      usuario = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname);
     } else {
-//      usuario = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname);
+   //    usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname);
       usuario = new Espectador("Estebankito", "Esteban", "Rosano", "esteban@rosano.com", LocalDate.now(), "123", "");
   
     }
