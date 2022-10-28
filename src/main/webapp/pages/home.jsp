@@ -25,7 +25,7 @@
                 <a href="listado-funciones">Listado Funciones</a>
                 <a href="alta-paquete">Alta Paquete</a>
                 <a href="listado-paquetes">Listado Paquetes</a>
-                <a href="registroAFuncion">RegistroAFuncion</a>
+                <a href='registroAFuncion?nombre=Casados+y+complicated&nombre_espectaculo=La+boda+de+tu+tia&nombre_plataforma=Twitch'>RegistroAFuncion</a>
 <%--                AGREGAR COMPONENTES ACA--%>
             </div>
         </section>

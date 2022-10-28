@@ -28,25 +28,13 @@ public class RegistroAFuncion extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //Map<String,Funcion> funciones =fabrica.getIEspectaculo().obtenerFunciones();
-        //Funcion fun=funciones.get(request.getParameter("funcion"));
-
-        //PARA PROBAR
-        Map<String, Espectaculo> espectaculos= fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma("Meta");
-        Espectaculo esp= espectaculos.get("Partido de futbol");
-        Map<String, Funcion> funciones= fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
+        String espectaculo=request.getParameter("nombre_espectaculo");
+        String funcion=request.getParameter("nombre");
+        String plataforma=request.getParameter("nombre_plataforma");
+        Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma,espectaculo,funcion).get();
         Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador("Domainer");
-        //Map<String, EspectadorRegistradoAFuncion> registros=null;
-        Map<String, Paquete> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(esp.getNombre());
-        Map<String, EspectadorPaquete> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador("Domainer");
-        Map<String, Paquete> paquetes= new HashMap<>();
-        for(EspectadorPaquete paq :paquetesEspectador.values()){
-            if (paquetesEspectaculo.get(paq.getPaquete().getNombre())!=null) {
-                paquetes.put(paq.getPaquete().getNombre(),paq.getPaquete());
-            }
-        }
+        Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,"Domainer");
 
-        Funcion fun=funciones.get("Argentina vs Brasil");
         request.setAttribute("funcion",fun);
         request.setAttribute("registros",registros);
         request.setAttribute("paquetes", paquetes);
@@ -65,17 +53,16 @@ public class RegistroAFuncion extends HttpServlet {
 
         Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
         Funcion fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
+        Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador("Domainer");
+        Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,"Domainer");
         Paquete paq=null;
 
+        request.setAttribute("funcion",fun);
+        request.setAttribute("registros",registros);
+        request.setAttribute("paquetes", paquetes);
 
-        Map<String, Paquete> paquetes= fabrica.getIPaquete().obtenerPaquetes();
         Map<String, EspectadorRegistradoAFuncion> FuncionesCanjeadas = new HashMap<>();
         int cantMaxEspect = fabrica.getIFuncion().obtenerEspectadoresRegistradosAFuncion(funcion).size();
-
-        request.setAttribute("funcion",fun);
-        request.setAttribute("registros",null);
-        request.setAttribute("paquetes", null);
-
 
         if (cantMaxEspect == fun.getEspectaculo().getMaxEspectadores()) {
             request.setAttribute("error", "No se puede registrar, cantidad maxima alcanzada");
@@ -113,5 +100,17 @@ public class RegistroAFuncion extends HttpServlet {
                 dispatchPage("/pages/registroEspectadores.jsp", request, response);
             }
         }
+    }
+
+    private Map<String,Paquete> obtenerPaquetesEspectadorEspectaculo(String espectaculo,String plataforma, String espectador ){
+        Map<String, Paquete> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo);
+        Map<String, EspectadorPaquete> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador);
+        Map<String, Paquete> paquetes= new HashMap<>();
+        for(EspectadorPaquete paq :paquetesEspectador.values()){
+            if (paquetesEspectaculo.get(paq.getPaquete().getNombre())!=null) {
+                paquetes.put(paq.getPaquete().getNombre(),paq.getPaquete());
+            }
+        }
+        return paquetes;
     }
 }
