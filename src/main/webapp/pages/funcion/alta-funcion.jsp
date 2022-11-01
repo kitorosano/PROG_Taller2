@@ -23,7 +23,6 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
   <style>
-
     #idform {
       top: 50%;
       padding: 30px;
