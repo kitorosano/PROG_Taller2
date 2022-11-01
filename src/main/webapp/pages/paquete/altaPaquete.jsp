@@ -16,89 +16,60 @@
 <html>
 <head>
     <style><%@ include file="/pages/global.css" %></style>
+    <style><%@ include file="/pages/altas.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
-    <style>
-
-        #idform {
-            top: 50%;
-            padding: 30px;
-        }
-        .subtitulos{
-            width: 30%;
-        }
-        #idform input {
-            width: 50%;
-            float: left;
-            text-align: left;
-            line-height: 30px;
-        }
-        #idform textarea {
-            width: 50%;
-            float: left;
-            text-align: left;
-            line-height: 60px;
-        }
-        .input-container{
-            border-bottom: 1px solid #f2f2f2;
-            padding-bottom: 20px;
-            width: 100%;
-            display: flex;
-            -webkit-box-pack: justify;
-            /*justify-content: space-between;*/
-            -webkit-box-align: center;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-    </style>
 </head>
 <body>
-<%@ include file="/pages/header.jsp" %>
-
-<section>
-    <%@ include file="/pages/sidebar.jsp" %>
-    <div class="main-container">
-        <%--                AGREGAR COMPONENTES ACA--%>
-        <h1>Registro de paquete de espectaculos</h1>
-        <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete" enctype="multipart/form-data">
-            <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <div class="input-container">
-                    <label class="subtitulos">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+    <%@ include file="/pages/header.jsp" %>
+    
+    <section>
+        <%@ include file="/pages/sidebar.jsp" %>
+        <div class="main-container">
+            <%-- AGREGAR COMPONENTES ABAJO--%>
+            <h1>Registro de paquete de espectaculos</h1>
+            <button class="volver" onclick="history.back()">Volver</button>
+            <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete" enctype="multipart/form-data">
+                <div style="display: flex; flex-direction: column; align-items: flex-start">
+                    <div class="input-container">
+                        <label class="subtitulos">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+                    </div>
+                    <div class="input-container">
+                        <label class="subtitulos">Descripcion</label>
+                        <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
+                    </div>
+                    <div class="input-container">
+                        <label class="subtitulos">Fecha de expiracion</label>
+                        <input type="date" min="<%=LocalDate.now()%>" name="vigencia" id="fecha-expiracion" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
+                    </div>
+                    <div class="input-container">
+                        <label class="subtitulos">Porcentaje de descuento</label>
+                        <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" step="0.1" value="<%= descuento%>">
+                    </div>
+                    <div class="input-container">
+                        <label class="subtitulos">Imagen</label>
+                        <input type="file" accept="image/*" name="imagen" id="imagen">
+                    </div>
+                    <button type="button" onclick="enviarForm()">Confirmar</button>
                 </div>
-                <div class="input-container">
-                    <label class="subtitulos">Descripcion</label>
-                    <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
-                </div>
-                <div class="input-container">
-                    <label class="subtitulos">Fecha de expiracion</label>
-                    <input type="date" min="<%=LocalDate.now()%>" name="vigencia" id="fecha-expiracion" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
-                </div>
-                <div class="input-container">
-                    <label class="subtitulos">Porcentaje de descuento</label>
-                    <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" step="0.1" value="<%= descuento%>">
-                </div>
-                <div class="input-container">
-                    <label class="subtitulos">Imagen</label>
-                    <input type="file" accept="image/*" name="imagen" id="imagen">
-                </div>
-                <button type="button" onclick="enviarForm()">Confirmar</button>
+            </form>
+    
+            <%
+                String error = (String) request.getAttribute("error");
+                if (error != "") {
+            %>
+            <div role="alert">
+                ${error}
             </div>
-        </form>
-
-        <%
-            String error = (String) request.getAttribute("error");
-            if (error != "") {
-        %>
-        <div role="alert">
-            ${error}
+            <%
+                }
+            %>
+            <%-- AGREGAR COMPONENTES ARRIBA--%>
         </div>
-        <%
-            }
-        %>
-
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+        
         <%--    Javascript    --%>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
         <script>
             function enviarForm() {
                 //Obtener inputs con jquery
@@ -107,15 +78,15 @@
                 let vigencia = $("input[name='vigencia']").val();
                 let descuento = $("input[name='descuento']").val();
                 let imagen = $("input[name='imagen']").val();
-
+    
                 let formularioValido = true;
-
+    
                 // Validar campos vacios comunes
                 if (nombre === "" || descripcion === "" || vigencia === "" || descuento === "" ) {
                     alert("Complete todos los campos obligatorios");
                     formularioValido = false;
                 }
-
+    
                 //Enviar formulario con jquery
                 if (formularioValido) {
                     document.getElementById("idform").submit();
@@ -124,10 +95,8 @@
                 }
             }
         </script>
-
-        <%--                AGREGAR COMPONENTES ACA--%>
-    </div>
-</section>
+    
+    </section>
 </body>
 </html>
 

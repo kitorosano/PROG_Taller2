@@ -6,6 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+ //CARGAR ALGUN@S ESPECTACULOS / FUNCIONES / PAQUETES / ARTISTAS
+%>
 <!DOCTYPE html>
 <div class="sidebar">
     <div class="sidebar__item">
