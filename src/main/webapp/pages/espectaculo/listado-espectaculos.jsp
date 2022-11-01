@@ -32,151 +32,147 @@
   <title>JSP - Hello World</title>
 </head>
 <body>
-<%@ include file="/pages/header.jsp" %>
-
-  <section>
-    <%@ include file="/pages/sidebar.jsp" %>
-    <div class="main-container">
-      <%--                AGREGAR COMPONENTES ACA--%>
+    <%@ include file="/pages/header.jsp" %>
+    
+    <section>
+        <%@ include file="/pages/sidebar.jsp" %>
+        <div class="main-container">
+        <%-- AGREGAR COMPONENTES ABAJO--%>
         <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
-          <form method="GET" action="listado-espectaculos" id="formEspectaculos">
-            <label for="filtroPlataforma">Selecciona una plataforma:</label>
-            <select name="filtroPlataforma" id="filtroPlataforma">
-              <option value="">Todas</option>
-              <% for (Plataforma plataforma : plataformas.values()) { %>
-                <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
-              <% } %>
-            </select>
-            <label for="filtroCategoria">Selecciona una categoria:</label>
-            <select name="filtroCategoria" id="filtroCategoria">
-              <option value="">Todas</option>
-                <% for (Categoria categoria : categorias.values()) { %>
-                    <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
-                <% } %>
-            </select>
-            <button type="submit">Buscar</button>
-            <button onclick="resetForm()">Resetear</button>
-          </form>
-
-          <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
-          </form>
-
-
+            <form method="GET" action="listado-espectaculos" id="formEspectaculos">
+                <label for="filtroPlataforma">Selecciona una plataforma:</label>
+                <select name="filtroPlataforma" id="filtroPlataforma">
+                    <option value="">Todas</option>
+                    <% for (Plataforma plataforma : plataformas.values()) { %>
+                        <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
+                    <% } %>
+                </select>
+                <label for="filtroCategoria">Selecciona una categoria:</label>
+                <select name="filtroCategoria" id="filtroCategoria">
+                    <option value="">Todas</option>
+                    <% for (Categoria categoria : categorias.values()) { %>
+                        <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
+                    <% } %>
+                </select>
+                <button type="submit">Buscar</button>
+                <button onclick="resetForm()">Resetear</button>
+            </form>
         </div>
-
+    
         <div class="busqueda">
-        <br/>
-        <label for="txtBuscar">Buscar espectaculo</label>
-          <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
+            <label for="txtBuscar">Buscar espectaculo</label>
+            <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
         </div>
-
+    
         <div>
-          <h2>Espectaculos</h2>
-          <table class="tablaEspectaculos" id="tabla">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Categorias</th>
-                <th>Plataforma</th>
-                <th>Artista</th>
-              </tr>
-            </thead>
-            <tbody id="cuerpoTabla">
-            </tbody>
-          </table>
+            <h2>Espectaculos</h2>
+            <button class="volver" onclick="history.back()">Volver</button>
+            <table class="tablaEspectaculos" id="tabla">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categorias</th>
+                        <th>Plataforma</th>
+                        <th>Artista</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                </tbody>
+            </table>
         </div>
-      <%--                AGREGAR COMPONENTES ACA--%>
-    </div>
-  </section>
-
-  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-  <script>
-    // Declaramos elementos del DOM
-    const TABLA = document.getElementById("cuerpoTabla");
-    const FORM = document.getElementById("formEspectaculos");
-    const SELECT_PLATAFORMA = document.getElementById("filtroPlataforma");
-    const SELECT_CATEGORIA = document.getElementById("filtroCategoria");
-    const TXT_BUSCAR = $("#txtBuscar");
-
-    //CUANDO EL DOCUMENTO ESTE LISTO
-    $(document).ready(function(){
-      seleccionarFiltrosAnteriores();
-      crearTabla();
-    });
-
-    function resetForm() {
-      FORM.reset();
-    }
-
-    function seleccionarFiltrosAnteriores() {
-      SELECT_PLATAFORMA.childNodes.forEach((option) => {
-        if (option.value == "<%= filtroPlataforma %>") {
-          option.selected = true;
+        <%-- AGREGAR COMPONENTES ARRIBA--%>
+      </div>
+    </section>
+    
+    <%--Javascript--%>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        // Declaramos elementos del DOM
+        const TABLA = document.getElementById("cuerpoTabla");
+        const FORM = document.getElementById("formEspectaculos");
+        const SELECT_PLATAFORMA = document.getElementById("filtroPlataforma");
+        const SELECT_CATEGORIA = document.getElementById("filtroCategoria");
+        const TXT_BUSCAR = $("#txtBuscar");
+      
+        //CUANDO EL DOCUMENTO ESTE LISTO
+        $(document).ready(function(){
+            seleccionarFiltrosAnteriores();
+            crearTabla();
+        });
+      
+        function resetForm() {
+            FORM.reset();
         }
-      });
-      SELECT_CATEGORIA.childNodes.forEach((option) => {
-        if (option.value === "<%= filtroCategoria %>") {
-          option.selected = true;
+      
+        function seleccionarFiltrosAnteriores() {
+            SELECT_PLATAFORMA.childNodes.forEach((option) => {
+                if (option.value == "<%= filtroPlataforma %>") {
+                    option.selected = true;
+                }
+            });
+            SELECT_CATEGORIA.childNodes.forEach((option) => {
+                if (option.value === "<%= filtroCategoria %>") {
+                    option.selected = true;
+                }
+            });
         }
-      });
-    }
-
-
-    function crearTabla(){
-      let nuevaFila;
-      let celdaEspectaculo;
-      let celdaCategorias;
-      let celdaPlataforma;
-      let celdaArtista;
-
-      <%for (Espectaculo elem : espectaculosFiltrados.values()) {%>
-        nuevaFila = TABLA.insertRow(-1);
-        celdaEspectaculo = nuevaFila.insertCell(0);
-        celdaCategorias = nuevaFila.insertCell(1);
-        celdaPlataforma = nuevaFila.insertCell(2);
-        celdaArtista = nuevaFila.insertCell(3);
-
-        celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
-        celdaCategorias.innerHTML = "";
-        <%
-        Collection<Categoria> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();
-        for (Categoria categoria : categoriasEspectaculoFiltrado) { %>
-          celdaCategorias.innerHTML += "<%=categoria.getNombre()%> ";
-        <% } %>
-          celdaPlataforma.innerHTML = "<%=elem.getPlataforma().getNombre()%>";
-          celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
-
-          nuevaFila.addEventListener("click", function(){
-            window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
-          });
-      <% } %>
-    }
-
-    //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
-    TXT_BUSCAR.on("keyup", function() {
-      var keyword = this.value;
-      keyword = keyword.toUpperCase();
-      var table_1 = document.getElementById("tabla");
-      var all_tr = table_1.getElementsByTagName("tr");
-      for(var i=0; i<all_tr.length; i++){
-        var name_column = all_tr[i].getElementsByTagName("td")[0];
-        if(name_column){
-          var name_value = name_column.textContent || name_column.innerText;
-          name_value = name_value.toUpperCase();
-          if(name_value.indexOf(keyword) > -1){
-            all_tr[i].style.display = ""; // show
-          }else{
-            all_tr[i].style.display = "none"; // hide
-          }
+      
+      
+        function crearTabla(){
+            let nuevaFila;
+            let celdaEspectaculo;
+            let celdaCategorias;
+            let celdaPlataforma;
+            let celdaArtista;
+        
+            <%for (Espectaculo elem : espectaculosFiltrados.values()) {%>
+                nuevaFila = TABLA.insertRow(-1);
+                celdaEspectaculo = nuevaFila.insertCell(0);
+                celdaCategorias = nuevaFila.insertCell(1);
+                celdaPlataforma = nuevaFila.insertCell(2);
+                celdaArtista = nuevaFila.insertCell(3);
+          
+                celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
+                celdaCategorias.innerHTML = "";
+                <%
+                Collection<Categoria> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();
+                for (Categoria categoria : categoriasEspectaculoFiltrado) { %>
+                    celdaCategorias.innerHTML += "<%=categoria.getNombre()%> ";
+                <% } %>
+                    celdaPlataforma.innerHTML = "<%=elem.getPlataforma().getNombre()%>";
+                    celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
+            
+                    nuevaFila.addEventListener("click", function(){
+                        window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
+                    });
+            <% } %>
         }
-      }
-    });
-    //limpiar textbox
-    TXT_BUSCAR.click(function(){
-      TXT_BUSCAR.val("");
-    });
-
-  </script>
+      
+        //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
+        TXT_BUSCAR.on("keyup", function() {
+            let keyword = this.value;
+            keyword = keyword.toUpperCase();
+            let table_1 = document.getElementById("tabla");
+            let all_tr = table_1.getElementsByTagName("tr");
+            for(let i=0; i<all_tr.length; i++){
+                let name_column = all_tr[i].getElementsByTagName("td")[0];
+                if(name_column){
+                    let name_value = name_column.textContent || name_column.innerText;
+                    name_value = name_value.toUpperCase();
+                    if(name_value.indexOf(keyword) > -1){
+                        all_tr[i].style.display = ""; // show
+                    }else{
+                        all_tr[i].style.display = "none"; // hide
+                    }
+                }
+            }
+        });
+        //limpiar textbox
+        TXT_BUSCAR.click(function(){
+            TXT_BUSCAR.val("");
+        });
+    
+    </script>
 </body>
 </html>
 

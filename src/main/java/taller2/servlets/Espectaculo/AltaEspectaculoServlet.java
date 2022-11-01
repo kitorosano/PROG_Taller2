@@ -1,8 +1,13 @@
-package taller2.Espectaculo;
+package taller2.servlets.Espectaculo;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
@@ -14,7 +19,7 @@ import java.util.Map;
 
 @WebServlet(name = "AltaEspectaculo", value = "/alta-espectaculo")
 @MultipartConfig
-public class AltaEspectaculo extends HttpServlet {
+public class AltaEspectaculoServlet extends HttpServlet {
 
     Fabrica fabrica;
 
@@ -31,7 +36,7 @@ public class AltaEspectaculo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        Map<String,Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
+        Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
         request.setAttribute("plataformas", plataformas);
         request.setAttribute("categorias", categorias);
         dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
@@ -83,7 +88,7 @@ public class AltaEspectaculo extends HttpServlet {
             InputStream inputImagen=part.getInputStream();
             urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
-        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), urlImagen, p, art);
+        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, p, art);
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevo);
             if (categorias!=null) {
@@ -91,7 +96,7 @@ public class AltaEspectaculo extends HttpServlet {
                     fabrica.getICategoria().altaCategoriaAEspectaculo(cat,nuevo.getNombre(),nuevo.getPlataforma().getNombre());
                 }
             }
-            response.sendRedirect("home"); // redirigir a un servlet (por url)
+            response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             // Error al crear el usuario

@@ -1,4 +1,4 @@
-package taller2.Usuario;
+package taller2.servlets.Usuario;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

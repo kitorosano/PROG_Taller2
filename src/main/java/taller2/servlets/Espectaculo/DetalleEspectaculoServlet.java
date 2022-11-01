@@ -1,4 +1,5 @@
-package taller2.Espectaculo;
+package taller2.servlets.Espectaculo;
+
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -6,7 +7,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(name = "DetalleEspectaculo", value = "/detalle-espectaculo")
-public class DetalleEspectaculo extends HttpServlet {
+public class DetalleEspectaculoServlet extends HttpServlet {
   Fabrica fabrica;
   
   public void init() {
@@ -28,8 +28,6 @@ public class DetalleEspectaculo extends HttpServlet {
   
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    HttpSession session = request.getSession();
-    String nickname = (String) session.getAttribute("nickname");
     String nombre = request.getParameter("nombre");
     String plataforma= request.getParameter("plataforma");
     
@@ -42,13 +40,13 @@ public class DetalleEspectaculo extends HttpServlet {
     Espectaculo espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
     request.setAttribute("datos",espectaculo);
 
-    Map <String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
+    Map<String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
     request.setAttribute("funciones",funciones);
     
-    Map <String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
+    Map<String, Paquete> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
     request.setAttribute("paquetes",paquetes);
     
-    Map <String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
+    Map<String, Categoria> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
     request.setAttribute("categorias",categorias);
     
     dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);

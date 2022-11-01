@@ -13,12 +13,8 @@
             <%@ include file="sidebar.jsp" %>
             <div class="main-container">
 <%--                AGREGAR COMPONENTES ACA--%>
-                <h1><%= "Hello World!" + session.getAttribute("nickname") %>
-                </h1>
-                <br/>
-                <a href="registro">Alta Usuario</a>
                 <a href="listado-usuario">Listado Usuario</a>
-                <a href="detalle-usuario">Detalle Usuario</a>
+                <a href="perfil">Perfil</a>
                 <a href="alta-espectaculo">Alta Espectaculo</a>
                 <a href="listado-espectaculos">Listado Espectáculo</a>
                 <a href="alta-funcion">Registro de funcion</a>

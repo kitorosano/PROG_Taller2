@@ -1,8 +1,13 @@
-package taller2.Usuario;
+package taller2.servlets.Usuario;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
@@ -15,7 +20,7 @@ import java.time.LocalDate;
 
 @WebServlet(name = "AltaUsuario", value = "/registro")
 @MultipartConfig
-public class AltaUsuario extends HttpServlet {
+public class AltaUsuarioServlet extends HttpServlet {
 
   Fabrica fabrica;
   
@@ -54,7 +59,8 @@ public class AltaUsuario extends HttpServlet {
 
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, nombre, apellido, correo, fechaNac_str, contrasenia, contrasenia2)) {
-      request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
+      request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
@@ -67,29 +73,34 @@ public class AltaUsuario extends HttpServlet {
 
     //error para cuando el nickname posee un formato de correo
     if(esFormatoCorreo(nickname)){
-      request.setAttribute("error", "El nickname no puede tener el formato de correo");
+      request.setAttribute("message", "El nickname no puede tener el formato de correo");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     //error para cuando el correo NO posea un formato de correo
     if(!esFormatoCorreo(correo)){
-      request.setAttribute("error", "Formato de correo invalido");
+      request.setAttribute("message", "Formato de correo invalido");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     // Error contraseñas no machean
     if(!contraseniasIguales(contrasenia, contrasenia2)){
-      request.setAttribute("error", "Las contraseñas no coinciden");
+      request.setAttribute("message", "Las contraseñas no coinciden");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
     //La fecha no es valida porque no nacio mañana
     if(!fechaValida(fechaNac)){
-      request.setAttribute("error", "La fecha no es valida");
+      request.setAttribute("message", "La fecha no es valida");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
   
+    // TODO: Verificar que es una imagen
     String urlImagen="";
     if(part.getSize()!=0){
       InputStream inputImagen=part.getInputStream();
@@ -100,12 +111,14 @@ public class AltaUsuario extends HttpServlet {
     Usuario usuario;
     if(tipo.equals("Artista")){
       if(camposVaciosArtista(descripcion)){
-        request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
+        request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
+        request.setAttribute("messageType", "error");
         dispatchPage("/pages/usuario/registro.jsp", request, response);
         return;
       }
       if (!esFormatoUrl(url)){
-        request.setAttribute("error", "Formato de url invalida");
+        request.setAttribute("message", "Formato de url invalida");
+        request.setAttribute("messageType", "error");
         return;
       }
       
@@ -124,7 +137,8 @@ public class AltaUsuario extends HttpServlet {
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
       // Error al crear el usuario
-      request.setAttribute("error", "Error al crear el usuario");
+      request.setAttribute("message", "Error al crear el usuario");
+      request.setAttribute("messageType", "error");
       dispatchPage("/pages/usuario/registro.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
     }
   }

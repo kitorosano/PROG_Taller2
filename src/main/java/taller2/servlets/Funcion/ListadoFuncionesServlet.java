@@ -1,4 +1,4 @@
-package taller2.Funcion;
+package taller2.servlets.Funcion;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,11 +12,10 @@ import main.java.taller1.Logica.Clases.Plataforma;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet(name = "ListadoFunciones", value = "/listado-funciones")
-public class ListadoFunciones extends HttpServlet {
+public class ListadoFuncionesServlet extends HttpServlet {
     Fabrica fabrica;
 
 

@@ -1,8 +1,11 @@
-package taller2.Usuario;
+package taller2.servlets.Usuario;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
@@ -10,7 +13,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(name = "ListadoUsuario", value = "/listado-usuario")
-public class ListadoUsuario extends HttpServlet {
+public class ListadoUsuarioServlet extends HttpServlet {
   Fabrica fabrica;
   
   public void init() {

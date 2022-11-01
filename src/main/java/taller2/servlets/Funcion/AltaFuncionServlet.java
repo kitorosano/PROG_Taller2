@@ -1,9 +1,18 @@
-package taller2.Funcion;
+package taller2.servlets.Funcion;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.*;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import main.java.taller1.Logica.Clases.Artista;
+import main.java.taller1.Logica.Clases.Espectaculo;
+import main.java.taller1.Logica.Clases.Funcion;
+import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -17,11 +26,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @WebServlet(name = "AltaFuncion", value = "/alta-funcion")
 @MultipartConfig
-public class AltaFuncion extends HttpServlet {
+public class AltaFuncionServlet extends HttpServlet {
 
     Fabrica fabrica;
 
@@ -102,7 +110,7 @@ public class AltaFuncion extends HttpServlet {
         try {
             fabrica.getIFuncion().altaFuncion(nueva);
             //TODO: VER COMO AGREGAR ARTISTAS INVITADOS
-            response.sendRedirect("home"); // redirigir a un servlet (por url)
+            response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             request.setAttribute("error", "Error al crear la funcion");
@@ -150,8 +158,7 @@ public class AltaFuncion extends HttpServlet {
 
     private List<String> obtenerArtistas(String artista){
         Map <String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
-        List<String> artistas=new ArrayList<String>() {
-        };
+        List<String> artistas = new ArrayList<>();
         for(Usuario u:usuarios.values()){
             if(u instanceof Artista && !artista.equals(u.getNickname())){
                 artistas.add(u.getNickname());

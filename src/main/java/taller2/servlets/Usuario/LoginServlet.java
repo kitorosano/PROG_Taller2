@@ -1,25 +1,26 @@
-package taller2.Usuario;
+package taller2.servlets.Usuario;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 @WebServlet(name = "Login", value = "/login")
-public class Login extends HttpServlet {
+public class LoginServlet extends HttpServlet {
   Fabrica fabrica;
   
   public void init() {
     fabrica = Fabrica.getInstance();
   }
-  
-  
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
     RequestDispatcher view = request.getRequestDispatcher(page);
@@ -30,12 +31,11 @@ public class Login extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     // Obtener el usuario de la sesion
     HttpSession session = request.getSession();
-    String nickname = (String) session.getAttribute("nickname");
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
     String message = (String) session.getAttribute("message");
-    
     // Si hay usuario en la sesion, redirigir al home
-    if(nickname != null) {
-      response.sendRedirect("home");
+    if(usuarioLogueado != null) {
+      response.sendRedirect(request.getContextPath());
       return;
     }
     
@@ -52,9 +52,7 @@ public class Login extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
     String nickname = request.getParameter("nickname");
-    System.out.println("Nickname: " + nickname);
     String contrasenia = request.getParameter("contrasenia");
-    System.out.println("Contrasenia: " + contrasenia);
     
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, contrasenia)) {
@@ -90,8 +88,7 @@ public class Login extends HttpServlet {
     }
     
     // Si el usuario existe y la contraseña es correcta, iniciar sesión
-    session.setAttribute("nickname", usuario.getNickname());
-    session.setAttribute("correo", usuario.getCorreo());
+    session.setAttribute("usuarioLogueado", usuario);
     session.setAttribute("esArtista", usuario instanceof Artista);
     session.setAttribute("esEspectador", usuario instanceof Espectador);
     response.sendRedirect("home");

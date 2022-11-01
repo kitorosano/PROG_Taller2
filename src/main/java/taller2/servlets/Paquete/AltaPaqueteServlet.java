@@ -1,8 +1,13 @@
-package taller2.Paquete;
+package taller2.servlets.Paquete;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import main.java.taller1.Logica.Clases.Paquete;
 import main.java.taller1.Logica.Fabrica;
 
@@ -16,7 +21,7 @@ import java.util.Map;
 
 @WebServlet(name = "AltaPaquete", value = "/alta-paquete")
 @MultipartConfig
-public class AltaPaquete extends HttpServlet {
+public class AltaPaqueteServlet extends HttpServlet {
     Fabrica fabrica;
 
     public void init() {
@@ -58,11 +63,11 @@ public class AltaPaquete extends HttpServlet {
             InputStream inputImagen=part.getInputStream();
             urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
-        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb,LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
+        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 
         try {
             fabrica.getIPaquete().altaPaquete(nuevo);
-            response.sendRedirect("home"); // redirigir a un servlet (por url)
+            response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             // Error al crear el usuario

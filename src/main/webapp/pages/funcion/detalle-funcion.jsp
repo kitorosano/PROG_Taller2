@@ -31,7 +31,7 @@
 
             %>
 
-                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&nombre_espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrarme a función</button>
+                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrarme a función</button>
             <%
                 }
             %>
@@ -65,7 +65,7 @@
                                 for (EspectadorRegistradoAFuncion espect_reg_funcion : espectador_registrado_funcion.values()) {
                             %>
                             <tr>
-                                <th onClick="location.href='detalle-usuario?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
+                                <th onClick="location.href='perfil?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
                             </tr>
                             <%
                                 }
@@ -74,21 +74,18 @@
                             </tbody>
                         </table>
                     </div>
-
-
-
                 </div>
             </div>
-
-                    <a href="/pages/home.jsp" class="back">Volver</a>
+    
+            <button class="volver" onclick="history.back()">Volver</button>
         </div>
-
-            <%--                AGREGAR COMPONENTES ACA--%>
-
+        <%-- AGREGAR COMPONENTES ARRIBA--%>
     </section>
 
+    <%--    Javascript--%>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
-        var targets = document.querySelectorAll('[data-target]')
+        let targets = document.querySelectorAll('[data-target]')
         const content = document.querySelectorAll('[data-content]')
 
         targets.forEach(target  => {

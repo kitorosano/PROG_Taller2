@@ -1,4 +1,4 @@
-package taller2;
+package taller2.servlets;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -6,13 +6,12 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.Espectaculo;
 import main.java.taller1.Logica.Clases.Plataforma;
 import main.java.taller1.Logica.Fabrica;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 
 import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(name = "EspectaculoAPaquete", value = "/espectaculoAPaquete")
-public class EspectaculoAPaquete extends HttpServlet {
+public class EspectaculoAPaqueteServlet extends HttpServlet {
 
     Fabrica fabrica;
 
@@ -63,6 +62,6 @@ public class EspectaculoAPaquete extends HttpServlet {
                 }
             }
         }
-        response.sendRedirect("home");
+        response.sendRedirect(request.getContextPath());
     }
 }

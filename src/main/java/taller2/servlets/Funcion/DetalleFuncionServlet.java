@@ -1,4 +1,4 @@
-package taller2.Funcion;
+package taller2.servlets.Funcion;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -7,14 +7,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion;
+import main.java.taller1.Logica.Clases.Funcion;
+import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(name = "DetalleFuncion", value = "/detalle-funcion")
-public class DetalleFuncion extends HttpServlet {
+public class DetalleFuncionServlet extends HttpServlet {
   Fabrica fabrica;
   
   public void init() {
@@ -29,7 +31,7 @@ public class DetalleFuncion extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
-    String nickname = (String) session.getAttribute("nickname");
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     String nombre = request.getParameter("nombre");
     String espectaculo = request.getParameter("espectaculo");
@@ -48,7 +50,7 @@ public class DetalleFuncion extends HttpServlet {
     request.setAttribute("espectadores",espectadores);
   
     if(esEspectador) {
-      Map<String, EspectadorRegistradoAFuncion> funciones_registradas = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nickname);
+      Map<String, EspectadorRegistradoAFuncion> funciones_registradas = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuarioLogueado.getNickname());
     
       if(funciones_registradas.containsKey(nombre)) {
         request.setAttribute("respuesta","Registrado a funcion");

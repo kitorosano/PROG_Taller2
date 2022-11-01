@@ -1,9 +1,14 @@
-package taller2.Espectaculo;
+package taller2.servlets.Espectaculo;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import main.java.taller1.Logica.Clases.Categoria;
+import main.java.taller1.Logica.Clases.Espectaculo;
+import main.java.taller1.Logica.Clases.Plataforma;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -11,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet(name = "ListadoEspectaculos", value = "/listado-espectaculos")
-public class ListadoEspectaculos extends HttpServlet {
+public class ListadoEspectaculosServlet extends HttpServlet {
     Fabrica fabrica;
     
     public void init() {

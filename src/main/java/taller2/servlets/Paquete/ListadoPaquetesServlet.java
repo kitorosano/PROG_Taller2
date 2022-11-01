@@ -1,22 +1,19 @@
-package taller2.Paquete;
+package taller2.servlets.Paquete;
 
-import com.sun.org.apache.xerces.internal.impl.xs.util.XSInputSource;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.Plataforma;
-import main.java.taller1.Logica.Clases.Usuario;
-import main.java.taller1.Logica.Fabrica;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import main.java.taller1.Logica.Clases.Paquete;
+import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 @WebServlet(name = "ListadoPaquetes", value = "/listado-paquetes")
-public class ListadoPaquetes extends HttpServlet {
+public class ListadoPaquetesServlet extends HttpServlet {
     Fabrica fabrica;
 
     public void init() {

@@ -1,4 +1,4 @@
-package taller2.Paquete;
+package taller2.servlets.Paquete;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,10 +12,9 @@ import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 @WebServlet(name = "DetallePaquete", value = "/detalle-paquete")
-public class DetallePaquete extends HttpServlet {
+public class DetallePaqueteServlet extends HttpServlet {
   Fabrica fabrica;
 
   public void init() {
@@ -32,7 +31,7 @@ public class DetallePaquete extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
-    String nickname = (String) session.getAttribute("nickname");
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     String nombre = request.getParameter("nombre");
   
     boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
@@ -48,7 +47,7 @@ public class DetallePaquete extends HttpServlet {
     request.setAttribute("espectaculos",espectaculos);
     
     if(esEspectador) {
-        Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname);
+        Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
         
         if(paquetes_espectador.containsKey(nombre)) {
             request.setAttribute("respuesta","Paquete Adquirido");
