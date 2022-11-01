@@ -1,4 +1,4 @@
-package taller2;
+package taller2.servlets.Funcion;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -103,7 +103,7 @@ public class RegistroAFuncion extends HttpServlet {
     }
 
     private Map<String,Paquete> obtenerPaquetesEspectadorEspectaculo(String espectaculo,String plataforma, String espectador ){
-        Map<String, Paquete> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo);
+        Map<String, Paquete> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo,plataforma);
         Map<String, EspectadorPaquete> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador);
         Map<String, Paquete> paquetes= new HashMap<>();
         for(EspectadorPaquete paq :paquetesEspectador.values()){
