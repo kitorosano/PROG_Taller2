@@ -12,7 +12,9 @@
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
         <%
-            Paquete paquete= (Paquete) request.getAttribute("datos");
+            EspectadorPaquete espectadorPaquete= (EspectadorPaquete) request.getAttribute("datos");
+            Paquete paquete = espectadorPaquete.getPaquete();
+            String respuesta = (String) request.getAttribute("respuesta");
         %>
         <div class="grid-container">
 
@@ -27,6 +29,20 @@
                 <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
 
             </div>
+            <%
+                if(respuesta != "Paquete Adquirido"){
+            %>
+                    <form class="form" action="detalle-paquete" method="POST">
+                        <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
+                        <button class="btn2">Comprar Paquete</button>
+                    </form>
+            <%
+                }else{
+            %>
+                    <h4 class="respuesta"><%=respuesta%></h4>
+            <%
+                }
+            %>
             <div class="tabs">
                 <div class="menu">
                         <p data-target="#datos_generales" class="active">Datos Generales</p>
@@ -76,8 +92,6 @@
 
                 </div>
             </div>
-
-                    <a href="/pages/home.jsp" class="back">Volver</a>
         </div>
 
             <%--                AGREGAR COMPONENTES ACA--%>
@@ -105,6 +119,7 @@
                 console.log(target.classList);
             })
         })
+
 
 
     </script>

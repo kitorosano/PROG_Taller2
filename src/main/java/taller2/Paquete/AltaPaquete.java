@@ -6,13 +6,16 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.Paquete;
 import main.java.taller1.Logica.Fabrica;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
 @WebServlet(name = "AltaPaquete", value = "/alta-paquete")
+@MultipartConfig
 public class AltaPaquete extends HttpServlet {
     Fabrica fabrica;
 
@@ -37,7 +40,8 @@ public class AltaPaquete extends HttpServlet {
         String descripcion = request.getParameter("descripcion");
         String vigencia = request.getParameter("vigencia");
         String descuento = request.getParameter("descuento");
-        String imagen = request.getParameter("imagen");
+        String urlImagen="";
+        Part part=request.getPart("imagen");
 
         if(camposVacios(nombre,descripcion,vigencia,descuento)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
@@ -50,7 +54,11 @@ public class AltaPaquete extends HttpServlet {
             dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
         }
 
-        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb,LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), "");
+        if(part.getSize()!=0){
+            InputStream inputImagen=part.getInputStream();
+            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+        }
+        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb,LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 
         try {
             fabrica.getIPaquete().altaPaquete(nuevo);

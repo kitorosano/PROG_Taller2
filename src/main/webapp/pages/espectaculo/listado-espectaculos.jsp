@@ -1,4 +1,4 @@
-<%@ page import="main.java.taller1.Logica.Clases.Plataforma" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: sebas
   Date: 12/10/2022
@@ -7,40 +7,58 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
-<% String nickname = request.getParameter("nickname") instanceof String ? request.getParameter("nickname") : ""; %>
+<%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="java.util.Collection" %>
+<%
+  String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+  String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
+  Map<String, Plataforma> plataformas = request.getAttribute("plataformas") != null ? (Map<String, Plataforma>) request.getAttribute("plataformas") : new HashMap<>();
+  Map<String, Categoria> categorias =  request.getAttribute("categorias") != null ? (Map<String, Categoria>) request.getAttribute("categorias") : new HashMap<>();
+  Map<String, Espectaculo> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
+  Map<String, Map<String, Categoria>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, Categoria>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
+  String json = new Gson().toJson(espectaculosFiltrados);
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <style><%@ include file="../global.css" %></style>
-  <style><%@ include file="listado-espectaculos.css" %></style>
+  <style><%@ include file="/pages/global.css" %></style>
+  <style><%@ include file="/pages/espectaculo/listado-espectaculos.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
   <section>
-    <%@ include file="../sidebar.jsp" %>
+    <%@ include file="/pages/sidebar.jsp" %>
     <div class="main-container">
       <%--                AGREGAR COMPONENTES ACA--%>
         <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
-          <form method="POST" action="listado-espectaculos" id="formEspectaculos">
-            <label for="plataforma">Selecciona una plataforma:</label>
-            <select name="plataforma" id="plataforma">
-              <option value="" selected disabled hidden>Plataforma</option>
+          <form method="GET" action="listado-espectaculos" id="formEspectaculos">
+            <label for="filtroPlataforma">Selecciona una plataforma:</label>
+            <select name="filtroPlataforma" id="filtroPlataforma">
+              <option value="">Todas</option>
+              <% for (Plataforma plataforma : plataformas.values()) { %>
+                <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
+              <% } %>
             </select>
-            <label for="categorias">Selecciona una categoria:</label>
-            <select name="categorias" id="categorias">
-              <option value="" selected>Todas</option>
-              <!-- FALTA HACER EL SELECT POR CATEGORIAS  -->
+            <label for="filtroCategoria">Selecciona una categoria:</label>
+            <select name="filtroCategoria" id="filtroCategoria">
+              <option value="">Todas</option>
+                <% for (Categoria categoria : categorias.values()) { %>
+                    <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
+                <% } %>
             </select>
-            <button type="button" onclick="enviarForm()">Buscar</button>
+            <button type="submit">Buscar</button>
+            <button onclick="resetForm()">Resetear</button>
           </form>
 
           <form method="GET" action="listado-espectaculos" id="resetEspectaculos">
-            <button type="button" onclick="resetearForm()">Resetear</button>
           </form>
 
 
@@ -48,8 +66,8 @@
 
         <div class="busqueda">
         <br/>
-        <label for="">Buscar espectaculo</label>
-          <input type="text" name="buscarEmpleado" id="txtBuscar" value="Espectaculo...">
+        <label for="txtBuscar">Buscar espectaculo</label>
+          <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
         </div>
 
         <div>
@@ -58,6 +76,8 @@
             <thead>
               <tr>
                 <th>Nombre</th>
+                <th>Categorias</th>
+                <th>Plataforma</th>
                 <th>Artista</th>
               </tr>
             </thead>
@@ -71,87 +91,69 @@
 
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   <script>
+    // Declaramos elementos del DOM
+    const TABLA = document.getElementById("cuerpoTabla");
+    const FORM = document.getElementById("formEspectaculos");
+    const SELECT_PLATAFORMA = document.getElementById("filtroPlataforma");
+    const SELECT_CATEGORIA = document.getElementById("filtroCategoria");
+    const TXT_BUSCAR = $("#txtBuscar");
 
     //CUANDO EL DOCUMENTO ESTE LISTO
     $(document).ready(function(){
-      cargarPlataformas();
-      <%if (request.getAttribute("totalEspectaculos") != null){%>
-      crearTablaTotal();
-    <%}else{%>
-      crearTablaConsulta();
-      <%}%>
+      seleccionarFiltrosAnteriores();
+      crearTabla();
     });
 
-    function enviarForm(){
-      $("#formEspectaculos").first().submit();
-    }
-    function resetearForm(){
-      $("#resetEspectaculos").first().submit();
+    function resetForm() {
+      FORM.reset();
     }
 
-    //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" NO SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOGET()
-    <% if (request.getAttribute("totalEspectaculos") != null){ %>
-      function crearTablaTotal(){
-        <%Map<String, Espectaculo> totalEspectaculos = (Map<String, Espectaculo>) request.getAttribute("totalEspectaculos");%>
+    function seleccionarFiltrosAnteriores() {
+      SELECT_PLATAFORMA.childNodes.forEach((option) => {
+        if (option.value == "<%= filtroPlataforma %>") {
+          option.selected = true;
+        }
+      });
+      SELECT_CATEGORIA.childNodes.forEach((option) => {
+        if (option.value === "<%= filtroCategoria %>") {
+          option.selected = true;
+        }
+      });
+    }
 
-        let tabla = document.getElementById("cuerpoTabla");
-        let nuevaFila = document.createElement("tr");
-        let celdaEspectaculo = document.createElement("td");
-        let celdaArtista = document.createElement("td");
 
-        <%for (Espectaculo elem : totalEspectaculos.values()) {%>
-        nuevaFila = tabla.insertRow(-1);
+    function crearTabla(){
+      let nuevaFila;
+      let celdaEspectaculo;
+      let celdaCategorias;
+      let celdaPlataforma;
+      let celdaArtista;
+
+      <%for (Espectaculo elem : espectaculosFiltrados.values()) {%>
+        nuevaFila = TABLA.insertRow(-1);
         celdaEspectaculo = nuevaFila.insertCell(0);
-        celdaArtista = nuevaFila.insertCell(1);
+        celdaCategorias = nuevaFila.insertCell(1);
+        celdaPlataforma = nuevaFila.insertCell(2);
+        celdaArtista = nuevaFila.insertCell(3);
 
         celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
-        celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
-
-        celdaEspectaculo.setAttribute('onClick',"location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'");
-
-        <% } %>
-        }
-    <% }else{ %> //SI EL ATRIBUTO DEL REQUEST "totalEspectaculos" SE ENCUENTRA NULO, ENTONCES LA PETICION FUE UN DOPOST()
-      function crearTablaConsulta(){
-        <%Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");%>
-        let tabla = document.getElementById("cuerpoTabla");
-        let nuevaFila = document.createElement("tr");
-        let celdaEspectaculo = document.createElement("td");
-        let celdaArtista = document.createElement("td");
-        <%for (Espectaculo elem : espectaculos.values()) {%>
-        nuevaFila = tabla.insertRow(-1);
-        celdaEspectaculo = nuevaFila.insertCell(0);
-        celdaArtista = nuevaFila.insertCell(1);
-
-        celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
-        celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
-
-        celdaEspectaculo.setAttribute('onClick',"location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'");
-        //celdaEspectaculo.setAttribute('onClick','window.location.href = \'detalle-espectaculo.jsp\';');
-        <% } %>
-        }
-    <% } %>
-
-    function cargarPlataformas(){
-      <%Map<String, Plataforma> plataformas = (Map<String, Plataforma>) request.getAttribute("plataformas");%>
-      let select = document.getElementById("plataforma");
-      let opt;
-      <%for (Plataforma elem : plataformas.values()) {%>
-        opt = document.createElement('option');
-        opt.value = "<%=elem.getNombre()%>";
+        celdaCategorias.innerHTML = "";
         <%
-        String s2 = elem.getNombre();
-        String s1 = request.getParameter("plataforma") instanceof String ? request.getParameter("plataforma") : "";
-        if (s1.equals(s2)){%>
-          opt.selected="selected"
-        <%}%>
-        opt.innerHTML = "<%=elem.getNombre()%>";
-        select.appendChild(opt);
+        Collection<Categoria> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();
+        for (Categoria categoria : categoriasEspectaculoFiltrado) { %>
+          celdaCategorias.innerHTML += "<%=categoria.getNombre()%> ";
+        <% } %>
+          celdaPlataforma.innerHTML = "<%=elem.getPlataforma().getNombre()%>";
+          celdaArtista.innerHTML = "<%=elem.getArtista().getNickname()%>";
+
+          nuevaFila.addEventListener("click", function(){
+            window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
+          });
       <% } %>
     }
 
     //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL
-    $("#txtBuscar").on("keyup", function() {
+    TXT_BUSCAR.on("keyup", function() {
       var keyword = this.value;
       keyword = keyword.toUpperCase();
       var table_1 = document.getElementById("tabla");
@@ -170,8 +172,8 @@
       }
     });
     //limpiar textbox
-    $("#txtBuscar").click(function(){
-      $("#txtBuscar").val("");
+    TXT_BUSCAR.click(function(){
+      TXT_BUSCAR.val("");
     });
 
   </script>

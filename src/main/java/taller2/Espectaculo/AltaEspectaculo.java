@@ -6,12 +6,14 @@ import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
-import javax.swing.*;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @WebServlet(name = "AltaEspectaculo", value = "/alta-espectaculo")
+@MultipartConfig
 public class AltaEspectaculo extends HttpServlet {
 
     Fabrica fabrica;
@@ -29,7 +31,9 @@ public class AltaEspectaculo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        Map<String,Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
         request.setAttribute("plataformas", plataformas);
+        request.setAttribute("categorias", categorias);
         dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
     }
 
@@ -43,19 +47,22 @@ public class AltaEspectaculo extends HttpServlet {
         String espMinimosstr = request.getParameter("espMinimos");
         String url = request.getParameter("url");
         String costostr = request.getParameter("costo");
-        String imagen = request.getParameter("imagen");
+        String urlImagen="";
+        Part part=request.getPart("imagen");
+        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         String[] categorias = request.getParameterValues("catElegidas");
-        request.setAttribute("plataformas",fabrica.getIPlataforma().obtenerPlataformas());
+        request.setAttribute("plataformas",plataformas);
+        request.setAttribute("categorias",fabrica.getICategoria().obtenerCategorias());
         //String nombArtista=(String)request.getSession().getAttribute("nickname");
-        String nombArtista = "Kanlam";
+        String nombArtista = "Domainer2";
         if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr,nombArtista)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
         }
-        int duracion= Integer.parseInt(duracionstr);
+        double duracion= Double.parseDouble(duracionstr);
         int espMaximos= Integer.parseInt(espMaximosstr);
         int espMinimos= Integer.parseInt(espMinimosstr);
-        int costo= Integer.parseInt(costostr);
+        double costo= Double.parseDouble(costostr);
         if(nombreExistente(nombre,nombplataforma)){
             request.setAttribute("error", "El nombre ingresado ya existe");
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
@@ -69,14 +76,21 @@ public class AltaEspectaculo extends HttpServlet {
             dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
         }
 
-        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Plataforma p = plataformas.get(nombplataforma);
         Map<String, Usuario> usuarios = fabrica.getIUsuario().obtenerUsuarios();
         Artista art = (Artista) usuarios.get(nombArtista);
-        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), "", p, art);
-
+        if(part.getSize()!=0){
+            InputStream inputImagen=part.getInputStream();
+            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+        }
+        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO,LocalDateTime.now(), urlImagen, p, art);
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevo);
+            if (categorias!=null) {
+                for(String cat:categorias){
+                    fabrica.getICategoria().altaCategoriaAEspectaculo(cat,nuevo.getNombre(),nuevo.getPlataforma().getNombre());
+                }
+            }
             response.sendRedirect("home"); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());

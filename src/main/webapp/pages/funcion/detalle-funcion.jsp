@@ -21,12 +21,20 @@
 
                 <h1 class="title">Detalle de función</h1>
 
-                    <img src="https://img.europapress.es/fotoweb/fotonoticia_20211027165949_420.jpg" alt="Foto de perfil" class="img_perfil">
+                    <img src="<%=funcion.getImagen()%>" alt="Foto de la funcion" class="img_perfil">
             <div class="first-data">
                 <h2><%=funcion.getNombre()%></h2>
                 <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
-                <button class="btn" onClick="location.href='registroAFuncion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrar espectador</button>
+            <%
 
+                if((Boolean) session.getAttribute("esEspectador")){
+
+            %>
+
+                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&nombre_espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrarme a función</button>
+            <%
+                }
+            %>
             </div>
             <div class="tabs">
                 <div class="menu">

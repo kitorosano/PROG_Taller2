@@ -26,6 +26,7 @@
                 <a href="alta-paquete">Alta Paquete</a>
                 <a href="listado-paquetes">Listado Paquetes</a>
                 <a href="registroAFuncion">RegistroAFuncion</a>
+                <a href="espectaculoAPaquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
 <%--                AGREGAR COMPONENTES ACA--%>
             </div>
         </section>

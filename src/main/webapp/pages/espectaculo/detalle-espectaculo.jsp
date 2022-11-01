@@ -1,5 +1,6 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
+<%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
@@ -21,18 +22,30 @@
 
                 <h1 class="title">Detalle de espectaculo</h1>
 
-                    <img src="https://cloudfront-us-east-1.images.arcpublishing.com/infobae/252IOWPHVVHDTAP73WPMQ4F62Q.jpg" alt="Foto de perfil" class="img_perfil">
+                    <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
             <div class="first-data">
                 <h2><%=espectaculo.getNombre()%></h2>
                 <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
+                <%
+
+                    Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
+                    for (Categoria categoria : categorias.values()) {
+                %>
+
+                    <h5 class="sticker"><%=categoria.getNombre()%></h5>
+
+                <%
+                    }
+                %>
             </div>
+            <button class="btn2" onClick="location.href='alta-funcion?espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'">Añadir funcion</button>
             <div class="tabs">
                 <div class="menu">
                         <p data-target="#datos_generales" class="active">Datos Generales</p>
                         <p data-target="#descripcion">Descripcion</p>
-                        <p data-target="#funciones">Funciones del espectaculo</p>
-                        <p data-target="#paquetes">Paquetes del espectaculo</p>
-                        <p data-target="#categorias">Categorias asociadas</p>
+                        <p data-target="#funciones">Funciones</p>
+                        <p data-target="#paquetes">Paquetes</p>
+
 
                 </div>
 
@@ -47,11 +60,11 @@
                         <h4>Costo:<%=espectaculo.getCosto()%></h4>
                         <h4>Fecha de registro:<%=espectaculo.getFechaRegistro()%></h4>
                         <h4>Nombre de plataforma:<%=espectaculo.getPlataforma().getNombre()%></h4>
-                        <h4 class="seleccion" onClick="location.href='detalle-usuario?nickname=<%=espectaculo.getArtista().getNickname()%>'">Artista organizador:<%=espectaculo.getArtista().getNickname()%></h4>
+                        <h4 >Artista organizador: <span class="seleccion" onClick="location.href='detalle-usuario?nickname=<%=espectaculo.getArtista().getNickname()%>'"><%=espectaculo.getArtista().getNickname()%> </span></h4>
 
                     </div>
                     <div data-content id="descripcion">
-                        <h4>Descripcion:<%=espectaculo.getDescripcion()%></h4>
+                        <h4><%=espectaculo.getDescripcion()%></h4>
                     </div>
 
                     <div data-content id="funciones">
@@ -61,11 +74,17 @@
 
                                 Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
                                 for (Funcion funcion : funciones.values()) {
+                                    if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){
+
                             %>
-                            <tr>
-                                <th onClick="location.href='detalle-funcion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=espectaculo.getNombre()%>&nombre_plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>  </th>
-                            </tr>
+                                        <tr>
+                                            <th onClick="location.href='detalle-funcion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=espectaculo.getNombre()%>&nombre_plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%> %>  </th>
+                                        </tr>
                             <%
+                                    }
+                                    System.out.println(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isBefore(LocalDateTime.now()));
+                                    System.out.println(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()));
+                                    System.out.println(LocalDateTime.now());
                                 }
                             %>
 
@@ -90,24 +109,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div data-content id="categorias">
-                        <table >
-                            <tbody>
-                            <%
-                                //queda esperar a que este el estado de aceptado o cancelado para e filtro
-                                // Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
-                                // for (Espectaculo elem : espectaculos.values()) {
-                            %>
-                            <tr>
-                                <th> aca van las categorias </th>
-                            </tr>
-                            <%
-                                //  }
-                            %>
 
-                            </tbody>
-                        </table>
-                    </div>
 
                 </div>
             </div>
