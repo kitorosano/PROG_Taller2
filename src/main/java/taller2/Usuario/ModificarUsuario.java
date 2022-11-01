@@ -119,7 +119,8 @@ public class ModificarUsuario extends HttpServlet {
             usu.setNombre(nombre);
             usu.setApellido(apellido);
             usu.setFechaNacimiento(fechaNac);
-            usu.setImagen(urlImagen);
+            if(!urlImagen.equals(""))
+                usu.setImagen(urlImagen);
         }
 
         // Se especifica el tipo de usuario a crear
@@ -129,11 +130,11 @@ public class ModificarUsuario extends HttpServlet {
                 dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
                 return;
             }
-            if (esFormatoUrl(url)){
+            /*if (esFormatoUrl(url)){
                 request.setAttribute("error", "Formato de url invalida");
                 dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
                 return;
-            }
+            }*/
             ((Artista) usu).setDescripcion(descripcion);
             ((Artista) usu).setBiografia(biografia);
             ((Artista) usu).setSitioWeb(url);
@@ -171,9 +172,5 @@ public class ModificarUsuario extends HttpServlet {
     private boolean esFormatoUrl(String url){
         String regexURL = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
         return regexURL.matches(url);
-    }
-
-    private void setDatosenRequest(String nombre,String apellido,LocalDate fechanacimiento,String contrasenia,String contrasenia2,String descripcion,String biografia,String url){
-
     }
 }
