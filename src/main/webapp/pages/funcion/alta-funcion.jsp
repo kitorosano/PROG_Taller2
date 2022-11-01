@@ -23,7 +23,6 @@
   <style><%@ include file="/pages/altas.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>JSP - Hello World</title>
-  
 </head>
 <body>
     <%@ include file="/pages/header.jsp" %>
