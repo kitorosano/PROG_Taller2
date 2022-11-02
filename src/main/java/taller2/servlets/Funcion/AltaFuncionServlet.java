@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.Funcion;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -45,18 +42,27 @@ public class AltaFuncionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String artista="Domainer2";
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-        /* for(Espectaculo esp:espectaculos.values()){
-            if(esp.getEstado()!=E_EstadoEspectaculo.ACEPTADO){
-                espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
-            }
-        }   COMENTADO HASTA IMPLEMENTAR EL CAMBIO DE ESTADO*/
+        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
+        if(esArtista){
+            Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+            String artista=art.getNickname();
+            Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+            for(Espectaculo esp:espectaculos.values()){
+                if(esp.getEstado()!=E_EstadoEspectaculo.ACEPTADO){
+                    espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+                }
+             }
 
-        List<String> artistas=obtenerArtistas(artista);
-        request.setAttribute("espectaculos", espectaculos);
-        request.setAttribute("artistas",artistas);
-        dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            List<String> artistas=obtenerArtistas(artista);
+            request.setAttribute("espectaculos", espectaculos);
+            request.setAttribute("artistas",artistas);
+            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+        }else{
+            System.out.println("No puede acceder a esta pagina");
+            request.setAttribute("error", "No puede acceder a esta pagina");
+            dispatchPage("/pages/index.jsp", request, response);
+        }
+
     }
 
     @Override
@@ -67,8 +73,9 @@ public class AltaFuncionServlet extends HttpServlet {
         String hora = request.getParameter("horaInicio");
         String urlImagen="";
         Part part=request.getPart("imagen");
-        String artista="Domainer2";
         String[] artistasInvitados = request.getParameterValues("artInvitado");
+        Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+        String artista=art.getNickname();
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
@@ -77,11 +84,11 @@ public class AltaFuncionServlet extends HttpServlet {
             }
         }
         request.setAttribute("artistas",artistas);
-       /* for(Espectaculo esp:espectaculos.values()){
-            if(esp.getEstado()!=E_EstadoEspectaculo.ACEPTADO){
+       for(Espectaculo esp:espectaculos.values()){
+            if(esp.getEstado()!= E_EstadoEspectaculo.ACEPTADO){
                 espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
             }
-        }   COMENTADO HASTA IMPLEMENTAR EL CAMBIO DE ESTADO*/
+        }
         request.setAttribute("espectaculos", espectaculos);
 
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
