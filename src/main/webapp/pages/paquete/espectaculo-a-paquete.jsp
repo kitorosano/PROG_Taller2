@@ -58,6 +58,17 @@
             <button type="button" id="btnEliminar">Quitar espectaculo</button>
             <button type="button" onclick="enviarForm()">Registrar!</button>
           </form>
+
+            <%
+                String error = (String) request.getAttribute("error");
+                if (error != "") {
+            %>
+            <div role="alert">
+                ${error}
+            </div>
+            <%
+                }
+            %>
     
           <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     
