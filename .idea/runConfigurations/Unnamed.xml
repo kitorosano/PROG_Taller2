@@ -18,7 +18,7 @@
         <option name="version" value="10.0.23.0" />
       </TomcatInfo>
     </option>
-    <option name="vmOptions" value="-DDB_URL=jdbc:mysql://localhost:3306/prog_taller1 -DDB_USER=root -DDB_PASS=usbw" />
+    <option name="vmOptions" value="-DDB_URL=jdbc:mysql://sql10.freesqldatabase.com:3306/sql10536075 -DDB_USER=sql10536075 -DDB_PASS=yI5Fc1xSZ4" />
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="LaunchBrowser.Before.Run" />
