@@ -144,11 +144,13 @@
                     formularioValido = false;
                 }
                 //validar espectadores minimos mayores a 0
-                if(espMinimos<0){
+                let espMinimosInt = parseInt(espMinimos, 10);
+                let espMaximosInt=parseInt(espMaximos,10);
+                if(espMinimosInt<0){
                     error="Espectadores minimos no puede ser menor a 0";
                     formularioValido=false;
                 }
-                if(espMinimos>espMaximos){
+                if(espMinimosInt>espMaximosInt){
                     error="Espectadores minimos no pueden ser mas que los maximos";
                     formularioValido=false;
                 }

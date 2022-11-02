@@ -35,11 +35,18 @@ public class AltaEspectaculoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
-        request.setAttribute("plataformas", plataformas);
-        request.setAttribute("categorias", categorias);
-        dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
+        if(esArtista){
+            Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+            Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
+            request.setAttribute("plataformas", plataformas);
+            request.setAttribute("categorias", categorias);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+        }else{
+            System.out.println("No puede acceder a esta pagina");
+            request.setAttribute("error", "No puede acceder a esta pagina");
+            dispatchPage("/pages/index.jsp", request, response);
+        }
     }
 
     @Override
@@ -58,9 +65,12 @@ public class AltaEspectaculoServlet extends HttpServlet {
         String[] categorias = request.getParameterValues("catElegidas");
         request.setAttribute("plataformas",plataformas);
         request.setAttribute("categorias",fabrica.getICategoria().obtenerCategorias());
-        //String nombArtista=(String)request.getSession().getAttribute("nickname");
-        String nombArtista = "Domainer2";
-        if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr,nombArtista)){
+        Artista art=(Artista)request.getSession().getAttribute("usuarioLogueado");
+        if(art==null){
+            request.setAttribute("error", "Usuario no valido para agregar espectaculo");
+            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+        }
+        if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }
@@ -82,8 +92,6 @@ public class AltaEspectaculoServlet extends HttpServlet {
         }
 
         Plataforma p = plataformas.get(nombplataforma);
-        Map<String, Usuario> usuarios = fabrica.getIUsuario().obtenerUsuarios();
-        Artista art = (Artista) usuarios.get(nombArtista);
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
             urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
@@ -105,9 +113,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         }
     }
 
-    private boolean camposVacios(String nombre, String nombplataforma, String descripcion, String duracion, String espMaximos, String espMinimos, String url, String costo, String nombArtista) {
-        return nombre == null || nombplataforma == null || descripcion == null || nombArtista == null || espMinimos == null || espMaximos == null || url == null || costo == null ||
-                nombre.isEmpty() || nombplataforma.isEmpty() || descripcion.isEmpty() || duracion.isEmpty() || espMaximos.isEmpty() || espMinimos.isEmpty() || url.isEmpty() || costo.isEmpty() || nombArtista.isEmpty();
+    private boolean camposVacios(String nombre, String nombplataforma, String descripcion, String duracion, String espMaximos, String espMinimos, String url, String costo) {
+        return nombre == null || nombplataforma == null || descripcion == null || espMinimos == null || espMaximos == null || url == null || costo == null ||
+                nombre.isEmpty() || nombplataforma.isEmpty() || descripcion.isEmpty() || duracion.isEmpty() || espMaximos.isEmpty() || espMinimos.isEmpty() || url.isEmpty() || costo.isEmpty();
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error

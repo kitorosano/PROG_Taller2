@@ -28,17 +28,27 @@ public class RegistroAFuncion extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String espectaculo=request.getParameter("nombre_espectaculo");
-        String funcion=request.getParameter("nombre");
-        String plataforma=request.getParameter("nombre_plataforma");
-        Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma,espectaculo,funcion).get();
-        Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador("Domainer");
-        Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,"Domainer");
-
-        request.setAttribute("funcion",fun);
-        request.setAttribute("registros",registros);
-        request.setAttribute("paquetes", paquetes);
-        dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
+        boolean esEspectador= (boolean) request.getSession().getAttribute("esEspectador");
+        if(esEspectador) {
+            String espectaculo = request.getParameter("espectaculo");
+            String funcion = request.getParameter("nombre");
+            String plataforma = request.getParameter("plataforma");
+            Espectador esp=(Espectador)request.getSession().getAttribute("usuarioLogueado");
+            String nombreEsp=esp.getNickname();
+            Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
+            Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
+            //Obtengo los paquetes del espectador que tienen el espectaculo asociado
+            Map<String, Paquete> paquetes = obtenerPaquetesEspectadorEspectaculo(espectaculo, plataforma, nombreEsp);
+            
+            request.setAttribute("funcion", fun);
+            request.setAttribute("registros", registros);
+            request.setAttribute("paquetes", paquetes);
+            dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
+        }else{
+            System.out.println("No puede acceder a esta pagina");
+            request.setAttribute("error", "No puede acceder a esta pagina");
+            dispatchPage("/pages/index.jsp", request, response);
+        }
     }
 
     @Override
@@ -47,14 +57,16 @@ public class RegistroAFuncion extends HttpServlet {
         String funcion = request.getParameter("funcion");
         String plataforma = request.getParameter("plataforma");
         String paquete = request.getParameter("paquete");
-        String espectador = "Domainer";
+        //String espectador = "Domainer";
+        Espectador esp=(Espectador)request.getSession().getAttribute("usuarioLogueado");
+        String espectador=esp.getNickname();
         double costo=0;
         String[] registrosCanjeados = request.getParameterValues("registrosCanjeados");
 
-        Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
+        //Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
         Funcion fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
-        Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador("Domainer");
-        Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,"Domainer");
+        Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(espectador);
+        Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,espectador);
         Paquete paq=null;
 
         request.setAttribute("funcion",fun);
