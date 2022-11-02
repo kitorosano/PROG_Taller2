@@ -10,21 +10,22 @@ import main.java.taller1.Logica.Fabrica;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet(name = "EspectaculoAPaquete", value = "/espectaculoAPaquete")
+
+@WebServlet(name = "EspectaculoAPaquete", value = "/registro-espectaculo-a-paquete")
 public class EspectaculoAPaqueteServlet extends HttpServlet {
-
+    
     Fabrica fabrica;
-
+    
     public void init() {
         fabrica = Fabrica.getInstance();
     }
-
+    
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paquete=request.getParameter("paquete");
@@ -40,9 +41,9 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         request.setAttribute("plataformas",plataformas);
         request.setAttribute("espectaculos",espectaculos);
         request.setAttribute("paquete",paquete);
-        dispatchPage("/pages/espectaculo-a-paquete.jsp", request, response);
+        dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] espectaculosAagregar = request.getParameterValues("espAgregar");
@@ -57,7 +58,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                     } catch (Exception e) {
                         System.out.println(e);
                         request.setAttribute("error", "Error al agregar los paquetes");
-                        dispatchPage("/pages/espectaculo-a-paquete.jsp", request, response);
+                        dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
                     }
                 }
             }

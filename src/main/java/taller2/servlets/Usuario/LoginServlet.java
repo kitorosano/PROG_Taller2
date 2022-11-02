@@ -64,19 +64,28 @@ public class LoginServlet extends HttpServlet {
     
     // Buscar el usuario en la base de datos
     Usuario usuario;
-    boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-    if(!usuarioExistePorNickname) { // Si el usuario no existe
-      boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-      if(!usuarioExistePorCorreo) {
-        //error cuando el usuario no existe
-        request.setAttribute("message", "El usuario no existe");
-        request.setAttribute("messageType", "error");
-        dispatchPage("/pages/usuario/login.jsp", request, response);
-        return;
+    
+    try {
+      boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
+      if (!usuarioExistePorNickname) { // Si el usuario no existe
+        boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
+        if (!usuarioExistePorCorreo) {
+          //error cuando el usuario no existe
+          request.setAttribute("message", "El usuario no existe");
+          request.setAttribute("messageType", "error");
+          dispatchPage("/pages/usuario/login.jsp", request, response);
+          return;
+        }
+        usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
+      } else {
+        usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).get();
       }
-      usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
-    } else {
-      usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).get();
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+      request.setAttribute("message", "Error al obtener el usuario");
+      request.setAttribute("messageType", "error");
+      dispatchPage("/pages/usuario/login.jsp", request, response);
+      return;
     }
     
     //error cuando la contraseña es incorrecta

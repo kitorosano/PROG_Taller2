@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@WebServlet(name = "AltaEspectaculo", value = "/alta-espectaculo")
+@WebServlet(name = "AltaEspectaculo", value = "/registro-espectaculo")
 @MultipartConfig
 public class AltaEspectaculoServlet extends HttpServlet {
 
@@ -39,7 +39,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
         request.setAttribute("plataformas", plataformas);
         request.setAttribute("categorias", categorias);
-        dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+        dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         String nombArtista = "Domainer2";
         if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr,nombArtista)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }
         double duracion= Double.parseDouble(duracionstr);
         int espMaximos= Integer.parseInt(espMaximosstr);
@@ -70,15 +70,15 @@ public class AltaEspectaculoServlet extends HttpServlet {
         double costo= Double.parseDouble(costostr);
         if(nombreExistente(nombre,nombplataforma)){
             request.setAttribute("error", "El nombre ingresado ya existe");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }
         if(cantidadEspectadores(espMaximos,espMinimos)){
             request.setAttribute("error", "Error con la cantidad de espectadores");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }
         if (!esFormatoUrl(url)){
             request.setAttribute("error", "Formato de url invalida");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }
 
         Plataforma p = plataformas.get(nombplataforma);
@@ -101,7 +101,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
             System.out.println(e.getMessage());
             // Error al crear el usuario
             request.setAttribute("error", "Error al crear el usuario");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 
