@@ -12,14 +12,15 @@
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
         <%
-            EspectadorPaquete espectadorPaquete= (EspectadorPaquete) request.getAttribute("datos");
-            Paquete paquete = espectadorPaquete.getPaquete();
+            //EspectadorPaquete espectadorPaquete= (EspectadorPaquete) request.getAttribute("datos");
+            //Paquete paquete = espectadorPaquete.getPaquete();
+            Paquete paquete = (Paquete)request.getAttribute("datos");
             String respuesta = (String) request.getAttribute("respuesta");
         %>
         <div class="grid-container">
             <%-- AGREGAR COMPONENTES ABAJO--%>
             <h1 class="title">Detalle de paquete</h1>
-            <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto de perfil" class="img_perfil">
+            <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto del paquete" class="img_perfil">
             <div class="first-data">
                 <h2><%=paquete.getNombre()%></h2>
                 <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
