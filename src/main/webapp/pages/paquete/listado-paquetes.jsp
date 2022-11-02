@@ -12,7 +12,7 @@
     <style><%@ include file="../global.css" %></style>
     <style><%@ include file="/pages/paquete/listado-paquetes.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>JSP - Hello World</title>
+    <title>CoronaTicketsUY</title>
 </head>
 <body>
     <%@ include file="/pages/header.jsp" %>

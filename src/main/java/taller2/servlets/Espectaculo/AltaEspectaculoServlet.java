@@ -4,18 +4,16 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet(name = "AltaEspectaculo", value = "/registro-espectaculo")
 @MultipartConfig
@@ -32,10 +30,21 @@ public class AltaEspectaculoServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
+    
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        view.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
+        HttpSession session = request.getSession();
+        boolean esArtista = session.getAttribute("esArtista") != null && (boolean) session.getAttribute("esArtista");
+        
+        // Si no es artista, redirigir a la página 404
         if(esArtista){
             Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
             Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
@@ -43,89 +52,130 @@ public class AltaEspectaculoServlet extends HttpServlet {
             request.setAttribute("categorias", categorias);
             dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         }else{
-            System.out.println("No puede acceder a esta pagina");
-            request.setAttribute("error", "No puede acceder a esta pagina");
-            dispatchPage("/pages/index.jsp", request, response);
+            dispatchPage("/pages/404.jsp", request, response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Artista artistaLogueado = (Artista) session.getAttribute("usuarioLogueado");
+        
         String nombre = request.getParameter("nombre");
         String nombplataforma = request.getParameter("plataforma");
         String descripcion = request.getParameter("descripcion");
         String duracionstr = request.getParameter("duracion");
-        String  espMaximosstr = request.getParameter("espMaximos");
+        String espMaximosstr = request.getParameter("espMaximos");
         String espMinimosstr = request.getParameter("espMinimos");
         String url = request.getParameter("url");
         String costostr = request.getParameter("costo");
-        String urlImagen="";
         Part part=request.getPart("imagen");
-        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        String[] categorias = request.getParameterValues("catElegidas");
-        request.setAttribute("plataformas",plataformas);
-        request.setAttribute("categorias",fabrica.getICategoria().obtenerCategorias());
-        Artista art=(Artista)request.getSession().getAttribute("usuarioLogueado");
-        if(art==null){
-            request.setAttribute("error", "Usuario no valido para agregar espectaculo");
-            dispatchPage("/pages/espectaculo/altaEspectaculo.jsp", request, response);
+        String[] str_categoriasElegidas = request.getParameterValues("catElegidas");
+        List<String> categoriasElegidas = new ArrayList<>(
+                Arrays.asList(str_categoriasElegidas)
+        );
+        categoriasElegidas.forEach(System.out::println);
+        
+        // Seteo valores para los campos select del formulario
+        try {
+            Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+            request.setAttribute("plataformas", plataformas);
+            Map<String, Categoria> categorias = fabrica.getICategoria().obtenerCategorias();
+            request.setAttribute("categorias", categorias);
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener las plataformas y categorias", request, response);
+            return;
+        }
+        
+        // Validaciones
+        if(artistaLogueado==null){
+            dispatchError("Usuario no valido para agregar espectaculo", request, response);
+            return;
         }
         if(camposVacios(nombre,nombplataforma,descripcion,duracionstr,espMaximosstr,espMinimosstr,url,costostr)){
-            request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+            dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
+            return;
         }
+        
+        // Convertir a numeros
         double duracion= Double.parseDouble(duracionstr);
         int espMaximos= Integer.parseInt(espMaximosstr);
         int espMinimos= Integer.parseInt(espMinimosstr);
         double costo= Double.parseDouble(costostr);
-        if(nombreExistente(nombre,nombplataforma)){
-            request.setAttribute("error", "El nombre ingresado ya existe");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+        
+        // + Validaciones
+        try {
+            if (nombreExistente(nombre, nombplataforma)) {
+                dispatchError("El nombre ingresado ya existe", request, response);
+                return;
+            }
+        } catch (RuntimeException e){
+            dispatchError("Error al validar nombre existente", request, response);
+            return;
         }
+        
         if(cantidadEspectadores(espMaximos,espMinimos)){
-            request.setAttribute("error", "Error con la cantidad de espectadores");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+            dispatchError("Error con la cantidad de espectadores", request, response);
+            return;
         }
         if (!esFormatoUrl(url)){
-            request.setAttribute("error", "Formato de url invalida");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+            dispatchError("Formato de url invalida", request, response);
+            return;
         }
-
-        Plataforma p = plataformas.get(nombplataforma);
-        if(part.getSize()!=0){
-            InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
-        }
-        Espectaculo nuevo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, p, art);
+        
+        String urlImagen="";
         try {
-            fabrica.getIEspectaculo().altaEspectaculo(nuevo);
-            if (categorias!=null) {
-                for(String cat:categorias){
-                    fabrica.getICategoria().altaCategoriaAEspectaculo(cat,nuevo.getNombre(),nuevo.getPlataforma().getNombre());
-                }
+            if(part.getSize()!=0){
+                InputStream inputImagen=part.getInputStream();
+                urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
             }
-            response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            dispatchError("Error al guardar la imagen", request, response);
+            return;
+        }
+    
+        // Obtener plataforma
+        Plataforma plataforma;
+        try {
+            Optional<Plataforma> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
+            if (!optional.isPresent()) {
+                dispatchError("Error, plataforma no encontrada", request, response);
+                return;
+            }
+            plataforma = optional.get();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            dispatchError("Error al crear el espectaculo", request, response);
+            return;
+        }
+        
+        Espectaculo nuevoEspectaculo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, plataforma, artistaLogueado);
+        try {
+            fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
+            for(String categoria : categoriasElegidas){
+                fabrica.getICategoria().altaCategoriaAEspectaculo(categoria, nuevoEspectaculo.getNombre(), nuevoEspectaculo.getPlataforma().getNombre());
+            }
+            
+            // No hacer un redirect, mas bien un dispatch a la pagina, para mostrar el mensaje de exito
+            request.setAttribute("message", "Espectaculo creado con exito");
+            request.setAttribute("messageType", "success");
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            // Error al crear el usuario
-            request.setAttribute("error", "Error al crear el usuario");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchError("Error al crear el espectaculo", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 
+    // METODOS AUXILIARES PARA VALIDACIONES
     private boolean camposVacios(String nombre, String nombplataforma, String descripcion, String duracion, String espMaximos, String espMinimos, String url, String costo) {
         return nombre == null || nombplataforma == null || descripcion == null || espMinimos == null || espMaximos == null || url == null || costo == null ||
                 nombre.isEmpty() || nombplataforma.isEmpty() || descripcion.isEmpty() || duracion.isEmpty() || espMaximos.isEmpty() || espMinimos.isEmpty() || url.isEmpty() || costo.isEmpty();
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(plataforma);
-        for (Espectaculo esp : espectaculos.values()) {
-            if (esp.getNombre().equals(nombreesp)) {
-                return true;
-            }
-        }
-        return false;
+        Optional<Espectaculo> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
+        return espectaculo.isPresent();
     }
 
     private boolean cantidadEspectadores(int maximo, int minimo) {      //Devuelve true si hay error

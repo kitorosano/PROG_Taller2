@@ -14,7 +14,7 @@
 <head>
   <style><%@ include file="../global.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>JSP - Hello World</title>
+  <title>CoronaTicketsUY</title>
 </head>
 <body>
     <%@ include file="../header.jsp" %>
@@ -24,7 +24,7 @@
         <div class="main-container">
         <%-- AGREGAR COMPONENTES ABAJO--%>
           <h1>Registro de paquete de espectaculos</h1>
-          <button class="volver" onclick="history.back()">Volver</button>
+<%--          <button class="volver" onclick="history.back()">Volver</button>--%>
   
           <select name="plataforma" id="plataforma">
             <option value="" selected disabled hidden>Plataforma</option>
