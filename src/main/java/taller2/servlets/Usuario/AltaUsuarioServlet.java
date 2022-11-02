@@ -114,7 +114,7 @@ public class AltaUsuarioServlet extends HttpServlet {
       return;
     }
   
-    String urlImagen="";
+    String urlImagen="https://i.imgur.com/e4W1PV0.png";
     try {
       if (part.getSize() != 0) {
         InputStream inputImagen = part.getInputStream();
