@@ -55,7 +55,7 @@
   <div class="main-container">
     <%--                AGREGAR COMPONENTES ACA--%>
     <div id="datos-principales">
-      <img src="https://hoy.com.do/wp-content/uploads/2022/04/Kooza.jpeg?mrf-size=m" alt="Foto de perfil" class="img_perfil" style="width: 150px; height: 150px">
+      <img src="<%=funcion.getImagen()%>" alt="Foto de perfil" class="img_perfil" style="width: 150px; height: 150px">
       <div>
         <div class="info-container">
         <label class="subtitulos">Nombre</label>
@@ -92,7 +92,7 @@
                 if(!registro.isCanjeado()){
 
           %>
-          <option value="<%=registro.getFuncion().getNombre()%>"><%=registro.getFuncion().getNombre()%></option>
+          <option value="<%=registro.getFuncion().getNombre()+"-"+registro.getFuncion().getEspectaculo().getNombre()+"-"+registro.getFuncion().getEspectaculo().getPlataforma().getNombre()%>"><%=registro.getFuncion().getNombre()%></option>
           <%
                 }
               }

@@ -31,7 +31,7 @@
 
             %>
 
-                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>'">Registrarme a función</button>
+                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
             <%
                 }
             %>
