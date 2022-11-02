@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "AltaUsuario", value = "/registro")
 @MultipartConfig
@@ -53,7 +55,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     String biografia = request.getParameter("biografia");
     String url = request.getParameter("url");
     String tipo = request.getParameter("tipo");
-  
+    
     // Validar los datos traidos del formulario:
     //TODO: Pensar si vale la pena verificar el tamaño de string de los campos
 
@@ -126,6 +128,7 @@ public class AltaUsuarioServlet extends HttpServlet {
       if (!esFormatoUrl(url)){
         request.setAttribute("message", "Formato de url invalida");
         request.setAttribute("messageType", "error");
+        dispatchPage("/pages/usuario/registro.jsp", request, response);
         return;
       }
       
@@ -140,6 +143,7 @@ public class AltaUsuarioServlet extends HttpServlet {
 
       // Redireccionar a la pantalla de login
       request.getSession().setAttribute("message", "Usuario creado exitosamente");
+      request.setAttribute("messageType", "success");
       response.sendRedirect("login"); // redirigir a otro servlet (por url)
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
@@ -171,8 +175,9 @@ public class AltaUsuarioServlet extends HttpServlet {
     return fecha.isEqual(hoy) || fecha.isBefore(hoy);
   }
   private boolean esFormatoUrl(String url){
-    String regexURL = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
-    return regexURL.matches(url);
+    //TODO: Arreglar esto
+    String pattern = "[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+    return url.matches(pattern);
   }
 
 }

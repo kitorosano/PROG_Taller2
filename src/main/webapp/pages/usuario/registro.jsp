@@ -5,6 +5,7 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
+    String tipo = "";
     String nickname = "";
     String nombre = "";
     String apellido = "";
@@ -17,8 +18,10 @@
     String biografia = "";
     String url = "";
     
+    
     //Traer datos precargados del request anterior
     if(messageType.equals("error")) {
+        tipo = request.getParameter("tipo") != null ? request.getParameter("tipo") : "";
         nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
         nombre = request.getParameter("nombre") != null ? request.getParameter("nombre") : "";
         apellido = request.getParameter("apellido") != null ? request.getParameter("apellido") : "";
@@ -55,9 +58,9 @@
                 <form id="idform" name="myform" method="POST" action="registro" enctype="multipart/form-data">
                     <div class="tipoUsuario">
                         <label for="tipoEspectador">Espectador</label>
-                        <input type="radio" name="tipo" value="Espectador" id="tipoEspectador" checked>
+                        <input type="radio" name="tipo" value="Espectador" id="tipoEspectador" <%= tipo.equals("Espectador") || tipo.isEmpty() ? "checked" : ""%> />
                         <label for="tipoArtista">Artista</label>
-                        <input type="radio" name="tipo" value="Artista" id="tipoArtista">
+                        <input type="radio" name="tipo" value="Artista" id="tipoArtista" <%= tipo.equals("Artista") ? "checked" : ""%> />
                     </div>
                     <div id="camposComunes">
                         <div class="input-container">
@@ -118,7 +121,7 @@
                             <input type="url" id="url" name="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
                         </div>
                     </div>
-                    <button type="button" onclick="enviarForm()">Registrarse!</button>
+                    <button id="submitBtn" type="button" onclick="enviarForm()">Registrarse!</button>
                 </form>
                 <a href="login">Ya tienes una cuenta? Inicia Sesion!</a>
             </div>
@@ -141,11 +144,13 @@
             } else {
                 MESSAGE.addClass("hidden");
             }
-            
-            $("#camposArtista").hide();
 
             let tipoArtista = document.getElementById("tipoArtista");
             let tipoEspectador = document.getElementById("tipoEspectador");
+            
+            if(tipoEspectador.checked){
+                $("#camposArtista").hide()
+            }
 
             tipoArtista.onclick = () => {
                 $("#camposArtista").slideDown();
@@ -156,6 +161,7 @@
         });
 
         function mensaje(msg) {
+            const SUBMITBUTTON = $("#submitBtn");
             const MESSAGE = $("#message");
             MESSAGE.text(msg);
             MESSAGE.addClass("error");
@@ -166,6 +172,8 @@
                 MESSAGE.addClass("hidden");
                 MESSAGE.removeClass("error");
             }, 5000);
+            
+            SUBMITBUTTON.prop("disabled", false);
         }
         
         function validarCamposVacios() {
@@ -285,7 +293,7 @@
         
         function enviarForm() {
             let tipo = $("#tipo").val();
-            let button = $("#button");
+            let button = $("#submitBtn");
             button.prop("disabled", true);
             
             let formularioValido = validarCamposVacios() && validarContrasenias() && validarFormatoNickname() && validarFormatoCorreo() && validarFechaNac();
@@ -296,8 +304,6 @@
             //Enviar formulario con jquery
             if (formularioValido) {
                 document.getElementById("idform").submit();
-            } else {
-                button.prop("disabled", false);
             }
 
         }

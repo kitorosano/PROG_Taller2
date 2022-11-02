@@ -9,6 +9,7 @@
 <%  //Traer datos precargados del request anterior
     String nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
     String contrasenia = request.getParameter("contrasenia") != null ? request.getParameter("contrasenia") : "";
+    
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
 %>
@@ -49,7 +50,7 @@
 
                         <a href="#" onclick="alert('una pena brother')" class="forgot">¿Olvidaste tu contraseña?</a>
 
-                        <button type="button" onclick="enviarForm()">INGRESAR </button>
+                        <button id="submitBtn" type="button" onclick="enviarForm()">INGRESAR </button>
                     </form>
                     <a href="registro">No tienes una cuenta? Registrarte!</a>
                 </div>
@@ -88,6 +89,7 @@
         });
     
         function mensaje(msg) {
+            const SUBMITBUTTON = $("#submitBtn");
             const MESSAGE = $("#message");
             MESSAGE.text(msg);
             MESSAGE.addClass("error");
@@ -98,12 +100,15 @@
                 MESSAGE.addClass("hidden");
                 MESSAGE.removeClass("error");;
             }, 5000);
+    
+    
+            SUBMITBUTTON.prop("disabled", false);
         }
     
         function validarNickname(){
             const NICKNAME_INPUT = $("#nickname");
             const NICKNAME = NICKNAME_INPUT.val();
-            const REGEX_NICKNAME = /^[a-zA-Z0-9_]{3,30}$/;
+            const REGEX_NICKNAME = /^[a-zA-Z0-9_]{1,30}$/;
             const REGEX_CORREO = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     
             if (NICKNAME == "") {
@@ -137,7 +142,11 @@
         }
     
         function enviarForm() {
-            if (validarNickname() && validarContrasenia()) {
+            const SUBMITBUTTON = $("#submitBtn");
+            SUBMITBUTTON.prop("disabled", true);
+    
+            let formularioValido = validarNickname() && validarContrasenia();
+            if (formularioValido) {
                 $("#idform").submit();
             }
         }
