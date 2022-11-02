@@ -15,7 +15,7 @@
 <html>
 <head>
     <style><%@ include file="../global.css" %></style>
-    <style><%@ include file="login.css" %></style>
+    <style><%@ include file="/pages/usuario/login.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Login</title>
 </head>

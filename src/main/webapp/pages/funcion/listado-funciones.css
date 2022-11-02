@@ -28,3 +28,7 @@ select{
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+tbody td:hover {
+    cursor: pointer;
+}

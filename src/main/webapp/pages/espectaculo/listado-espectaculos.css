@@ -22,3 +22,7 @@ select{
     margin-top: 5px;
     gap: 10px;
 }
+
+tbody td:hover {
+    cursor: pointer;
+}
