@@ -100,11 +100,18 @@ public class AltaUsuarioServlet extends HttpServlet {
       return;
     }
   
-    // TODO: Verificar que es una imagen
     String urlImagen="";
-    if(part.getSize()!=0){
-      InputStream inputImagen=part.getInputStream();
-      urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
+    try {
+      if (part.getSize() != 0) {
+        InputStream inputImagen = part.getInputStream();
+        urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
+      }
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+      request.setAttribute("message", "Error al guardar la imagen");
+      request.setAttribute("messageType", "error");
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
+      return;
     }
 
     // Se especifica el tipo de usuario a crear
@@ -133,7 +140,7 @@ public class AltaUsuarioServlet extends HttpServlet {
 
       // Redireccionar a la pantalla de login
       request.getSession().setAttribute("message", "Usuario creado exitosamente");
-      response.sendRedirect("login"); // redirijir a un servlet (por url)
+      response.sendRedirect("login"); // redirigir a otro servlet (por url)
     } catch (RuntimeException e){
       System.out.println(e.getMessage());
       // Error al crear el usuario

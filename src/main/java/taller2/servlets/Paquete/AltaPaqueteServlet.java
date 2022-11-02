@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
-@WebServlet(name = "AltaPaquete", value = "/alta-paquete")
+@WebServlet(name = "AltaPaquete", value = "/registro-paquete")
 @MultipartConfig
 public class AltaPaqueteServlet extends HttpServlet {
     Fabrica fabrica;
@@ -38,7 +38,7 @@ public class AltaPaqueteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
         if(esArtista) {
-            dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
+            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
         }else{
             System.out.println("No puede acceder a esta pagina");
             request.setAttribute("error", "No puede acceder a esta pagina");
@@ -52,23 +52,33 @@ public class AltaPaqueteServlet extends HttpServlet {
         String descripcion = request.getParameter("descripcion");
         String vigencia = request.getParameter("vigencia");
         String descuento = request.getParameter("descuento");
-        String urlImagen="";
         Part part=request.getPart("imagen");
 
         if(camposVacios(nombre,descripcion,vigencia,descuento)){
-            request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
+            request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
+            request.setAttribute("messageType", "error");
+            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
         }
         double descuentoDb= Double.parseDouble(descuento);
         LocalDate vigenciaDate=LocalDate.parse(vigencia);
         if(nombreExistente(nombre)){
-            request.setAttribute("error", "El nombre ingresado ya existe");
-            dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
+            request.setAttribute("message", "El nombre ingresado ya existe");
+            request.setAttribute("messageType", "error");
+            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
         }
-
-        if(part.getSize()!=0){
-            InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+    
+        String urlImagen="";
+        try {
+            if(part.getSize()!=0){
+                InputStream inputImagen=part.getInputStream();
+                urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            request.setAttribute("message", "Error al guardar la imagen");
+            request.setAttribute("messageType", "error");
+            dispatchPage("/pages/usuario/registro.jsp", request, response);
+            return;
         }
         Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 
@@ -77,9 +87,9 @@ public class AltaPaqueteServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            // Error al crear el usuario
-            request.setAttribute("error", "Error al crear el paquete");
-            dispatchPage("/pages/paquete/altaPaquete.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            request.setAttribute("message", "Error al crear el paquete");
+            request.setAttribute("messageType", "error");
+            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 

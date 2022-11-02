@@ -16,7 +16,7 @@
 <html>
 <head>
     <style><%@ include file="/pages/global.css" %></style>
-    <style><%@ include file="/pages/altas.css" %></style>
+    <style><%@ include file="/pages/registros.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP - Hello World</title>
 </head>
@@ -29,7 +29,7 @@
             <%-- AGREGAR COMPONENTES ABAJO--%>
             <h1>Registro de paquete de espectaculos</h1>
             <button class="volver" onclick="history.back()">Volver</button>
-            <form id="idform" name="formEspectaculo" method="POST" action="alta-paquete" enctype="multipart/form-data">
+            <form id="idform" name="formEspectaculo" method="POST" action="registro-paquete" enctype="multipart/form-data">
                 <div style="display: flex; flex-direction: column; align-items: flex-start">
                     <div class="input-container">
                         <label class="subtitulos">Nombre</label>

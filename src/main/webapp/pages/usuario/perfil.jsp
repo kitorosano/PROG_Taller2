@@ -42,7 +42,9 @@
             <div class="first-data">
                 <h2><%=usuario.getNombre() + " " + usuario.getApellido()%></h2>
                 <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
-                <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
+                <% if(esPerfilPropio) {%>
+                    <a class="btn" href="modificar-usuario">Modificar usuario</a>
+                <% } %>
             </div>
             <div class="tabs">
                 <div class="menu">
@@ -153,8 +155,8 @@
             </div>
     
             <button class="volver" onclick="history.back()">Volver</button>
+            <%-- AGREGAR COMPONENTES ARRIBA--%>
         </div>
-        <%-- AGREGAR COMPONENTES ARRIBA--%>
     </section>
     
     <%--    Javascript--%>

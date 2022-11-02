@@ -9,7 +9,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-    System.out.println(usuarioLogueado);
+    Boolean esArtista = (Boolean) session.getAttribute("esArtista");
 %>
 <!DOCTYPE html>
 <div class="header">

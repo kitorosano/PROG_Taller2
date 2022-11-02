@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@WebServlet(name = "RegistroAFuncion", value = "/registroAFuncion")
+@WebServlet(name = "RegistroAFuncion", value = "/registro-espectadores-a-funcion")
 public class RegistroAFuncion extends HttpServlet {
 
     Fabrica fabrica;
@@ -39,11 +39,11 @@ public class RegistroAFuncion extends HttpServlet {
             Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
             //Obtengo los paquetes del espectador que tienen el espectaculo asociado
             Map<String, Paquete> paquetes = obtenerPaquetesEspectadorEspectaculo(espectaculo, plataforma, nombreEsp);
-
+            
             request.setAttribute("funcion", fun);
             request.setAttribute("registros", registros);
             request.setAttribute("paquetes", paquetes);
-            dispatchPage("/pages/funcion/registroEspectadores.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
         }else{
             System.out.println("No puede acceder a esta pagina");
             request.setAttribute("error", "No puede acceder a esta pagina");
@@ -78,10 +78,10 @@ public class RegistroAFuncion extends HttpServlet {
 
         if (cantMaxEspect == fun.getEspectaculo().getMaxEspectadores()) {
             request.setAttribute("error", "No se puede registrar, cantidad maxima alcanzada");
-            dispatchPage("/pages/funcion/registroEspectadores.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
         } else if (fabrica.getIFuncion().obtenerEspectadoresRegistradosAFuncion(funcion).get(espectador) != null) {
             request.setAttribute("error", "No se puede, ya esta registrado");
-            dispatchPage("/pages/funcion/registroEspectadores.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
         } else {
             if (registrosCanjeados != null) {
                 if (registrosCanjeados.length == 3) {
@@ -92,8 +92,8 @@ public class RegistroAFuncion extends HttpServlet {
                     }
                     costo = 0;
                 } else{
-                    request.setAttribute("error", "La cantidad de registros debe ser tres(3) para qeu el costo sea 0");
-                    dispatchPage("/pages/funcion/registroEspectadores.jsp", request, response);
+                    request.setAttribute("error", "La cantidad de registros debe ser tres(3) para que el costo sea 0");
+                    dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
                 }
             }else {
                 costo = fun.getEspectaculo().getCosto();
@@ -109,7 +109,7 @@ public class RegistroAFuncion extends HttpServlet {
             } catch (Exception e) {
                 System.out.println(e);
                 request.setAttribute("error", "No se pudo registrar a la funcion");
-                dispatchPage("/pages/funcion/registroEspectadores.jsp", request, response);
+                dispatchPage("/pages/funcion/registro-espectadores-a-funcion.jsp", request, response);
             }
         }
     }

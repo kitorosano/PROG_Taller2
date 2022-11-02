@@ -31,29 +31,7 @@ public class ModificarUsuario extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nickname=request.getParameter("nickname");
-        String nicknameSession= (String) request.getSession().getAttribute("nickname");
-        Usuario usuario=null;
-        if(fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent() && nickname.equals(nicknameSession)){
-            usuario= fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
-            request.setAttribute("nombre",usuario.getNombre());
-            request.setAttribute("apellido",usuario.getApellido());
-            request.setAttribute("contrasenia",usuario.getContrasenia());
-            request.setAttribute("fechaNac",usuario.getFechaNacimiento().toString());
-            request.setAttribute("tipo","espectador");
-            if(usuario instanceof Artista){
-                request.setAttribute("descripcion",((Artista) usuario).getDescripcion());
-                request.setAttribute("biografia", ((Artista) usuario).getBiografia());
-                request.setAttribute("url",((Artista) usuario).getSitioWeb());
-                request.setAttribute("tipo","artista");
-            }
-            request.setAttribute("peticion","get");
-            dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
-        }else{
-            System.out.println("Nickname no valido");
-            request.setAttribute("error", "Nickname no valido");
-            dispatchPage("/pages/home.jsp", request, response);
-        }
+        dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
     }
 
     @Override
@@ -68,7 +46,7 @@ public class ModificarUsuario extends HttpServlet {
             }
         }else{
             request.setAttribute("error", "Nickname no valido");
-            dispatchPage("/pages/home.jsp", request, response);
+            dispatchPage("/pages/index.jsp", request, response);
         }
         String nombre = request.getParameter("nombre");
         String hola= request.getParameter("hola");

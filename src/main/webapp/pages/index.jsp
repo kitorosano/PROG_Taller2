@@ -13,15 +13,16 @@
             <%@ include file="sidebar.jsp" %>
             <div class="main-container">
 <%--                AGREGAR COMPONENTES ACA--%>
-                <a href="listado-usuario">Listado Usuario</a>
                 <a href="perfil">Perfil</a>
-                <a href="alta-espectaculo">Alta Espectaculo</a>
-                <a href="listado-espectaculos">Listado Espectáculo</a>
-                <a href="alta-funcion">Registro de funcion</a>
-                <a href="listado-funciones">Listado Funciones</a>
-                <a href="alta-paquete">Alta Paquete</a>
-                <a href="listado-paquetes">Listado Paquetes</a>
-                <a href="espectaculoAPaquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
+                <a href="registro-espectaculo">Alta de Espectaculo</a>
+                <a href="registro-funcion">Alta de funcion</a>
+                <a href="registro-paquete">Alta de Paquete</a>
+                <a href="registro-espectaculo-a-paquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
+                <a href='registro-espectadores-a-funcion?nombre=Casados+y+complicated&nombre_espectaculo=La+boda+de+tu+tia&nombre_plataforma=Twitch'>RegistroAFuncion</a>
+                <a href="listado-usuario">Listado de Usuarios</a>
+                <a href="listado-espectaculos">Listado de Espectáculos</a>
+                <a href="listado-funciones">Listado de Funciones</a>
+                <a href="listado-paquetes">Listado de Paquetes</a>
 <%--                AGREGAR COMPONENTES ACA--%>
             </div>
         </section>

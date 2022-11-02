@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "AltaFuncion", value = "/alta-funcion")
+@WebServlet(name = "AltaFuncion", value = "/registro-funcion")
 @MultipartConfig
 public class AltaFuncionServlet extends HttpServlet {
 
@@ -56,13 +56,12 @@ public class AltaFuncionServlet extends HttpServlet {
             List<String> artistas=obtenerArtistas(artista);
             request.setAttribute("espectaculos", espectaculos);
             request.setAttribute("artistas",artistas);
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }else{
             System.out.println("No puede acceder a esta pagina");
             request.setAttribute("error", "No puede acceder a esta pagina");
             dispatchPage("/pages/index.jsp", request, response);
         }
-
     }
 
     @Override
@@ -93,20 +92,20 @@ public class AltaFuncionServlet extends HttpServlet {
 
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }
         Espectaculo esp=espectaculos.get(nombrespectaculo);
         if(nombreExistente(nombrefuncion,esp)){
             request.setAttribute("error", "El nombre ingresado ya existe");
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }
         if(fechaInvalida(fecha)){
             request.setAttribute("error", "Fecha invalida");
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }
         if(horaInvalida(hora)){
             request.setAttribute("error", "Hora invalida");
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response);
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
@@ -121,7 +120,7 @@ public class AltaFuncionServlet extends HttpServlet {
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             request.setAttribute("error", "Error al crear la funcion");
-            dispatchPage("/pages/funcion/alta-funcion.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 
