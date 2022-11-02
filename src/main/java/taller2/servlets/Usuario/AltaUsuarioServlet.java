@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import main.java.taller1.Logica.Clases.Artista;
+import main.java.taller1.Logica.Clases.Espectaculo;
 import main.java.taller1.Logica.Clases.Espectador;
 import main.java.taller1.Logica.Clases.Usuario;
 import main.java.taller1.Logica.Fabrica;
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @WebServlet(name = "AltaUsuario", value = "/registro")
 @MultipartConfig
@@ -78,6 +80,18 @@ public class AltaUsuarioServlet extends HttpServlet {
       dispatchPage("/pages/usuario/registro.jsp", request, response);
       return;
     }
+    if(nombreExistenteNickname(nickname)){
+      request.setAttribute("message", "El nickname ingresado ya existe en la base de datos");
+      request.setAttribute("messageType", "error");
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
+      return;
+    }
+    if(nombreExistenteCorreo(correo)){
+      request.setAttribute("message", "El correo ingresado ya existe en la base de datos");
+      request.setAttribute("messageType", "error");
+      dispatchPage("/pages/usuario/registro.jsp", request, response);
+      return;
+    }
     //error para cuando el correo NO posea un formato de correo
     if(!esFormatoCorreo(correo)){
       request.setAttribute("message", "Formato de correo invalido");
@@ -123,10 +137,10 @@ public class AltaUsuarioServlet extends HttpServlet {
         dispatchPage("/pages/usuario/registro.jsp", request, response);
         return;
       }
-      if (!esFormatoUrl(url)){
+      if (!url.equals("") && !esFormatoUrl(url)){
         request.setAttribute("message", "Formato de url invalida");
         request.setAttribute("messageType", "error");
-        return;
+        dispatchPage("/pages/usuario/registro.jsp", request, response);
       }
       
       usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
@@ -173,6 +187,16 @@ public class AltaUsuarioServlet extends HttpServlet {
   private boolean esFormatoUrl(String url){
     String regexURL = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
     return regexURL.matches(url);
+  }
+
+  private boolean nombreExistenteNickname(String nombreUsuario) {      //Devuelve true si hay error
+    Optional<Usuario> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
+    return usuario.isPresent();
+  }
+
+  private boolean nombreExistenteCorreo(String correo) {      //Devuelve true si hay error
+    Optional<Usuario> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
+    return usuario.isPresent();
   }
 
 }
