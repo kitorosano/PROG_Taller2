@@ -78,12 +78,13 @@
                 let vigencia = $("input[name='vigencia']").val();
                 let descuento = $("input[name='descuento']").val();
                 let imagen = $("input[name='imagen']").val();
+                let error;
     
                 let formularioValido = true;
     
                 // Validar campos vacios comunes
                 if (nombre === "" || descripcion === "" || vigencia === "" || descuento === "" ) {
-                    alert("Complete todos los campos obligatorios");
+                    error="Complete todos los campos obligatorios";
                     formularioValido = false;
                 }
     
@@ -91,7 +92,7 @@
                 if (formularioValido) {
                     document.getElementById("idform").submit();
                 } else {
-                    alert("EL FORMULARIO NO SE ENVIO POR INVALIDO");
+                    alert(error);
                 }
             }
         </script>

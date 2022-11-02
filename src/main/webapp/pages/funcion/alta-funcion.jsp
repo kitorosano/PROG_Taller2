@@ -127,12 +127,13 @@
               let hora = $("input[name='horaInicio']").val();
               let imagen = $("input[name='imagen']").val();
               let invitadosSelector = document.getElementById("artistasInvitados");
+              let error;
         
               let formularioValido = true;
         
               // Validar campos vacios
               if (espectaculo === "" || nombre === "" || fecha === "" || hora === "") {
-                alert("Complete todos los campos obligatorios");
+                error="Complete todos los campos obligatorios";
                 formularioValido = false;
               }
         
@@ -149,7 +150,7 @@
               if (formularioValido) {
                 document.getElementById("idform").submit();
               } else {
-                alert("EL FORMULARIO NO SE ENVIO POR INVALIDO")
+                alert(error);
               }
             }
         
