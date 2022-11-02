@@ -36,7 +36,14 @@ public class AltaPaqueteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
+        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
+        if(esArtista) {
+            dispatchPage("/pages/paquete/altaPaquete.jsp", request, response);
+        }else{
+            System.out.println("No puede acceder a esta pagina");
+            request.setAttribute("error", "No puede acceder a esta pagina");
+            dispatchPage("/pages/index.jsp", request, response);
+        }
     }
 
     @Override
