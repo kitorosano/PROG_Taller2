@@ -72,7 +72,7 @@
                 <%}else{%>
                     celdaTipo.innerHTML = "Espectador";
                 <%}%>
-    
+
                 nuevaFila.addEventListener("click", function(){
                     window.location.href = "perfil?nickname=<%=elem.getNickname()%>";
                 });
