@@ -22,7 +22,7 @@
   <style><%@ include file="/pages/global.css" %></style>
   <style><%@ include file="/pages/registros.css" %></style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>JSP - Hello World</title>
+  <title>CoronaTicketsUY</title>
 </head>
 <body>
     <%@ include file="/pages/header.jsp" %>
@@ -32,7 +32,7 @@
         <div class="main-container">
             <%-- AGREGAR COMPONENTES ABAJO--%>
             <h1>Registro de funcion de espectaculo</h1>
-            <button class="volver" onclick="history.back()">Volver</button>
+<%--            <button class="volver" onclick="history.back()">Volver</button>--%>
             <form id="idform" name="formEspectaculo" method="POST" action="registro-funcion" enctype="multipart/form-data">
               <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">

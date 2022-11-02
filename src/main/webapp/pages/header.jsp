@@ -10,6 +10,12 @@
 <%
     Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     Boolean esArtista = (Boolean) session.getAttribute("esArtista");
+    
+    //Si no hay usuario logueado, se redirige a la página de login
+    if(usuarioLogueado == null){
+        response.sendRedirect("home");
+        return;
+    }
 %>
 <!DOCTYPE html>
 <div class="header">

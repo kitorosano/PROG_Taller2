@@ -1,22 +1,37 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<% //Traer datos precargados del request anterior
-    String nickname = request.getParameter("nickname") instanceof String ? request.getParameter("nickname") : "";
-    String nombre = request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";
-    String apellido = request.getParameter("apellido") instanceof String ? request.getParameter("apellido") : "";
-    String correo = request.getParameter("correo") instanceof String ? request.getParameter("correo") : "";
-    String fechaNac = request.getParameter("fechaNac") instanceof String ? request.getParameter("fechaNac") : "";
-    String contrasenia = request.getParameter("contrasenia") instanceof String ? request.getParameter("contrasenia") : "";
-    String contrasenia2 = request.getParameter("contrasenia2") instanceof String ? request.getParameter("contrasenia2") : "";
-    String imagen = request.getParameter("imagen") instanceof String ? request.getParameter("imagen") : "";
-
-    String descripcion = request.getParameter("descripcion") instanceof String ? request.getParameter("descripcion") : "";
-    String biografia = request.getParameter("biografia") instanceof String ? request.getParameter("biografia") : "";
-    String url = request.getParameter("url") instanceof String ? request.getParameter("url") : "";
-    
+<%
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    String nickname = "";
+    String nombre = "";
+    String apellido = "";
+    String correo = "";
+    String fechaNac = "";
+    String contrasenia = "";
+    String contrasenia2 = "";
+    String imagen = "";
+    String descripcion = "";
+    String biografia = "";
+    String url = "";
+    
+    //Traer datos precargados del request anterior
+    if(messageType.equals("error")) {
+        nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
+        nombre = request.getParameter("nombre") != null ? request.getParameter("nombre") : "";
+        apellido = request.getParameter("apellido") != null ? request.getParameter("apellido") : "";
+        correo = request.getParameter("correo") != null ? request.getParameter("correo") : "";
+        fechaNac = request.getParameter("fechaNac") != null ? request.getParameter("fechaNac") : "";
+        contrasenia = request.getParameter("contrasenia") != null ? request.getParameter("contrasenia") : "";
+        contrasenia2 = request.getParameter("contrasenia2") != null ? request.getParameter("contrasenia2") : "";
+        imagen = request.getParameter("imagen") != null ? request.getParameter("imagen") : "";
+    
+        descripcion = request.getParameter("descripcion") != null ? request.getParameter("descripcion") : "";
+        biografia = request.getParameter("biografia") != null ? request.getParameter("biografia") : "";
+        url = request.getParameter("url") != null ? request.getParameter("url") : "";
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -24,7 +39,7 @@
     <style><%@ include file="/pages/global.css" %></style>
     <style><%@ include file="/pages/usuario/registro.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>JSP - Hello World</title>
+    <title>CoronaTicketsUY</title>
 </head>
 <body>
     <div class="registro-container">
@@ -154,45 +169,45 @@
         }
         
         function validarCamposVacios() {
-            const NICKNAME = $("#nickname");
-            const NOMBRE = $("#nombre");
-            const APELLIDO = $("#apellido");
-            const CORREO = $("#correo");
-            const CONTRASENIA = $("#contrasenia");
-            const CONTRASENIA2 = $("#contrasenia2");
-            const FECHA_NAC = $("#fechaNac");
-            
-            if (NICKNAME.val().trim() == "") {
+            const NICKNAME = $("#nickname").val().trim()
+            const NOMBRE = $("#nombre").val().trim()
+            const APELLIDO = $("#apellido").val().trim()
+            const CORREO = $("#correo").val().trim()
+            const CONTRASENIA = $("#contrasenia").val().trim()
+            const CONTRASENIA2 = $("#contrasenia2").val().trim()
+            const FECHA_NAC = $("#fechaNac").val().trim()
+    
+            if (NICKNAME == "") {
                 mensaje("El campo 'Nickname' no puede estar vacio");
                 NICKNAME.addClass("invalid-input");
                 return false;
             }
-            if (NOMBRE.val().trim() == "") {
+            if (NOMBRE == "") {
                 mensaje("El campo 'Nombre' no puede estar vacio");
                 NOMBRE.addClass("invalid-input");
                 return false;
             }
-            if (APELLIDO.val().trim() == "") {
+            if (APELLIDO == "") {
                 mensaje("El campo 'Apellido' no puede estar vacio");
                 APELLIDO.addClass("invalid-input");
                 return false;
             }
-            if (CORREO.val().trim() == "") {
+            if (CORREO == "") {
                 mensaje("El campo 'Correo' no puede estar vacio");
                 CORREO.addClass("invalid-input");
                 return false;
             }
-            if (CONTRASENIA.val().trim() == "") {
+            if (CONTRASENIA == "") {
                 mensaje("El campo 'Contraseña' no puede estar vacio");
                 CONTRASENIA.addClass("invalid-input");
                 return false;
             }
-            if (CONTRASENIA2.val().trim() == "") {
+            if (CONTRASENIA2 == "") {
                 mensaje("El campo 'Repetir Contraseña' no puede estar vacio");
                 CONTRASENIA2.addClass("invalid-input");
                 return false;
             }
-            if (FECHA_NAC.val().trim() == "") {
+            if (FECHA_NAC == "") {
                 mensaje("El campo 'Fecha de nacimiento' no puede estar vacio");
                 FECHA_NAC.addClass("invalid-input");
                 return false;
@@ -226,10 +241,10 @@
         }
         
         function validarFormatoCorreo() {
-            const CORREO = $("#correo");
+            const CORREO = $("#correo").val().trim()
             const PATTERN = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$"
             
-            if (!CORREO.val().trim().match(PATTERN)) {
+            if (!CORREO.match(PATTERN)) {
                 mensaje("El campo 'Correo' no tiene un formato valido");
                 CORREO.addClass("invalid-input");
                 return false;
@@ -277,8 +292,6 @@
             if(tipo == "Artista") {
                 formularioValido = formularioValido && validarArtista();
             }
-            
-            console.log(formularioValido);
             
             //Enviar formulario con jquery
             if (formularioValido) {
