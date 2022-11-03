@@ -16,6 +16,7 @@
             //Paquete paquete = espectadorPaquete.getPaquete();
             Paquete paquete = (Paquete)request.getAttribute("datos");
             String respuesta = (String) request.getAttribute("respuesta");
+            Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
         %>
         <div class="grid-container">
             <%-- AGREGAR COMPONENTES ABAJO--%>
@@ -25,12 +26,12 @@
                 <h2><%=paquete.getNombre()%></h2>
                 <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
             </div>
-            <%  if(respuesta != "Paquete Adquirido"){ %>
+            <%  if(respuesta != "Paquete Adquirido" && esEspectador.equals(true) ){ %>
                     <form class="form" action="detalle-paquete" method="POST">
                         <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
                         <button class="btn2">Comprar Paquete</button>
                     </form>
-            <%  }else  { %>
+            <%  }else if((respuesta == "Paquete Adquirido") || (respuesta=="Paquete no encontrado")) { %>
                     <h4 class="respuesta"><%=respuesta%></h4>
             <%  } %>
             <div class="tabs">

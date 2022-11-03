@@ -28,9 +28,7 @@
             <%
 
                 if((Boolean) session.getAttribute("esEspectador")){
-
             %>
-
                     <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
             <%
                 }

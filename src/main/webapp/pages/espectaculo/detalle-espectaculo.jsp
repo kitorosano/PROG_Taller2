@@ -50,7 +50,6 @@
                         <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
                         <h4>Mínimo de espectadores:<%=espectaculo.getMinEspectadores()%></h4>
                         <h4>Máximo de espectadores:<%=espectaculo.getMaxEspectadores()%></h4>
-                        <h4>Estado:<%=espectaculo.getEstado()%></h4>
                         <h4>Url:<%=espectaculo.getUrl()%></h4>
                         <h4>Costo:<%=espectaculo.getCosto()%></h4>
                         <h4>Fecha de registro:<%=espectaculo.getFechaRegistro()%></h4>
@@ -67,7 +66,7 @@
                                 for (Funcion funcion : funciones.values()) {
                                     if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
                                         <tr>
-                                            <th onClick="location.href='detalle-funcion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=espectaculo.getNombre()%>&nombre_plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
+                                            <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
                                         </tr>
                             <%      }
                                 }   %>

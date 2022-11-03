@@ -33,9 +33,9 @@ public class DetallePaqueteServlet extends HttpServlet {
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     String nombre = request.getParameter("nombre");
-    System.out.println(nombre);
+
     boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
-    System.out.println(paqueteExiste);
+
     if(!paqueteExiste) { // Si el paquete no existe
       request.setAttribute("respuesta","Paquete no encontrado");
       response.sendRedirect("listado-paquetes");
