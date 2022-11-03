@@ -122,8 +122,8 @@ public class AltaEspectaculoServlet extends HttpServlet {
             dispatchError("Formato de url invalida", request, response);
             return;
         }
-        
-        String urlImagen="";
+
+        String urlImagen="https://i.imgur.com/BeJ3HuS.png";
         try {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();

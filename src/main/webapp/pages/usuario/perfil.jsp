@@ -131,7 +131,7 @@
                         <div data-content id="paquetes">
                             <table class="table">
                                 <tbody>
-                                <% if (espectaculos.size() == 0) { %>
+                                <% if (paquetes.size() == 0) { %>
                                     <tr>
                                         <th>
                                             <h4>No tienes paquetes comprados</h4>
