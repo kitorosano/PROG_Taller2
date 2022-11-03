@@ -23,62 +23,79 @@
     <style><%@ include file="/pages/detalles.css" %></style>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="grid-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <h1 class="title">Detalle de paquete</h1>
-            <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto del paquete" class="img_perfil">
-            <div class="first-data">
-                <h2><%=paquete.getNombre()%></h2>
-                <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
+        </div>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Detalle de paquete</h3>
             </div>
-            <%  if(respuesta != "Paquete Adquirido" && esEspectador.equals(true) ){ %>
-                    <form class="form" action="detalle-paquete" method="POST">
-                        <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
-                        <button class="btn2">Comprar Paquete</button>
-                    </form>
-            <%  }else if((respuesta == "Paquete Adquirido") || (respuesta=="Paquete no encontrado")) { %>
-                    <h4 class="respuesta"><%=respuesta%></h4>
-            <%  } %>
-            <div class="tabs">
-                <div class="menu">
-                    <p data-target="#datos_generales" class="active">Datos Generales</p>
-                    <p data-target="#descripcion">Descripcion</p>
-                    <p data-target="#espectaculos">Espectaculos</p>
-                </div>
-
-                <div class="content">
-                    <div data-content id="datos_generales" class="active">
-                        <h4>Nombre:<%=paquete.getNombre()%></h4>
-                        <h4>Descuento:<%=paquete.getDescuento()%></h4>
-                        <h4>Fecha de registro:<%=paquete.getFechaRegistro()%></h4>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="grid-container">
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto del paquete" class="img_perfil">
+                    <div class="first-data">
+                        <h2><%=paquete.getNombre()%></h2>
                         <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
                     </div>
-
-                    <div data-content id="descripcion">
-                        <h4><%=paquete.getDescripcion()%></h4>
-                    </div>
-                    
-                    <div data-content id="espectaculos">
-                        <table >
-                            <tbody>
-                            <%  for (Espectaculo espectaculo : espectaculos.values()) { %>
-                                    <tr>
-                                        <th onClick="location.href='detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=espectaculo.getNombre()%> </th>
-                                    </tr>
-                            <%  }   %>
-                            </tbody>
-                        </table>
+                    <%  if(respuesta != "Paquete Adquirido" && esEspectador.equals(true) ){ %>
+                            <form class="form" action="detalle-paquete" method="POST">
+                                <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
+                                <button class="btn2">Comprar Paquete</button>
+                            </form>
+                    <%  }else if((respuesta == "Paquete Adquirido") || (respuesta=="Paquete no encontrado")) { %>
+                            <h4 class="respuesta"><%=respuesta%></h4>
+                    <%  } %>
+                    <div class="tabs">
+                        <div class="menu">
+                            <p data-target="#datos_generales" class="active">Datos Generales</p>
+                            <p data-target="#descripcion">Descripcion</p>
+                            <p data-target="#espectaculos">Espectaculos</p>
+                        </div>
+        
+                        <div class="content">
+                            <div data-content id="datos_generales" class="active">
+                                <h4>Nombre:<%=paquete.getNombre()%></h4>
+                                <h4>Descuento:<%=paquete.getDescuento()%></h4>
+                                <h4>Fecha de registro:<%=paquete.getFechaRegistro()%></h4>
+                                <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+                            </div>
+        
+                            <div data-content id="descripcion">
+                                <h4><%=paquete.getDescripcion()%></h4>
+                            </div>
+                            
+                            <div data-content id="espectaculos">
+                                <table>
+                                    <tbody>
+                                    <% if (espectaculos.size() == 0) { %>
+                                        <tr>
+                                            <th>
+                                                <h4>No tiene espectaculos</h4>
+                                            </th>
+                                        </tr>
+                                    <% } else {
+                                            for (Espectaculo espectaculo : espectaculos.values()) { %>
+                                                <tr  onclick="location.href='detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'">
+                                                    <th> <%=espectaculo.getNombre()%> </th>
+                                                    <th> <%=espectaculo.getPlataforma().getNombre()%> </th>
+                                                </tr>
+                                     <%     }
+                                        }   %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-    
-            <button class="volver" onclick="history.back()">Volver</button>
+                <%-- AGREGAR COMPONENTES ARRIBA--%>
+            </section>
+            </main>
         </div>
-        <%-- AGREGAR COMPONENTES ARRIBA--%>
-    </section>
 
     <%--    Javascript--%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
