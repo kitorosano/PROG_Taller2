@@ -6,12 +6,17 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%  //Traer datos precargados del request anterior
-    String nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
-    String contrasenia = request.getParameter("contrasenia") != null ? request.getParameter("contrasenia") : "";
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    //Traer datos precargados del request anterior
+    String nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : "";
+    String contrasenia = request.getParameter("contrasenia") != null ? request.getParameter("contrasenia") : "";
 %>
 <html>
 <head>

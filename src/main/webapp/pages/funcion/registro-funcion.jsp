@@ -3,8 +3,16 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 
-<%  //Traer datos precargados del request anterior
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    
+    //Traer datos precargados del request anterior
   String nombrespectaculo = request.getParameter("espectaculo");
   String nombreplataforma = request.getParameter("plataforma");
   String nombrefuncion= request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";

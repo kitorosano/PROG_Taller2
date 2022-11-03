@@ -2,7 +2,15 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    
     Map<String, Paquete> paquetes = request.getAttribute("paquetes") != null ? (Map<String, Paquete>) request.getAttribute("paquetes") : null;
     String json = new Gson().toJson(paquetes);
 %>

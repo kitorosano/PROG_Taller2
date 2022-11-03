@@ -3,7 +3,16 @@
 <%@ page import="main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Paquete" %>
-<%  //Traer datos precargados del request anterior
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+  Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+  
+  String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+  String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+  
+  
+  //Traer datos precargados del request anterior
   Funcion funcion = (Funcion) request.getAttribute("funcion");
   Map<String, EspectadorRegistradoAFuncion> registros = (Map<String,EspectadorRegistradoAFuncion>) request.getAttribute("registros");
   Map<String, Paquete> paquetes= (Map<String, Paquete>) request.getAttribute("paquetes");

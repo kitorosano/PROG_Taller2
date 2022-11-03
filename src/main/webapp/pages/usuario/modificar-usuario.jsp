@@ -1,24 +1,39 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.time.LocalDateTime" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.Clases.Artista" %>
+<%@ page import="main.java.taller1.Logica.Clases.Espectador" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 
-<%  //Traer datos precargados del request anterior
-    String nombre = request.getAttribute("nombre") instanceof String ? (String) request.getAttribute("nombre") : "";
-    String apellido = request.getAttribute("apellido") instanceof String ? (String) request.getAttribute("apellido") : "";
-    String fechaNac = request.getAttribute("fechaNac") instanceof String ? (String) request.getAttribute("fechaNac") : "";
-    String contrasenia = request.getAttribute("contrasenia") instanceof String ? (String) request.getAttribute("contrasenia") : "";
-    String imagen = request.getAttribute("imagen") instanceof String ? (String) request.getAttribute("imagen") : "";
-
-    String descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : "";
-    String biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : "";
-    String url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : "";
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = session.getAttribute("usuarioLogueado") != null ? (Usuario) session.getAttribute("usuarioLogueado") : null;
+    boolean esArtista = session.getAttribute("esArtista") != null ? (boolean) session.getAttribute("esArtista") : false;
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
     
+    //Traer datos precargados del request anterior
+    String nombre;
+    String apellido;
+    String contrasenia;
+    String fechaNac;
+    String imagen;
+    String descripcion;
+    String biografia;
+    String url;
+    
+    nombre = request.getAttribute("nombre") instanceof String ? (String) request.getAttribute("nombre") : usuarioLogueado.getNombre();
+    apellido = request.getAttribute("apellido") instanceof String ? (String) request.getAttribute("apellido") : usuarioLogueado.getApellido();
+    fechaNac = request.getAttribute("fechaNac") instanceof String ? (String) request.getAttribute("fechaNac") : usuarioLogueado.getFechaNacimiento().toString();
+    contrasenia = request.getAttribute("contrasenia") instanceof String ? (String) request.getAttribute("contrasenia") : usuarioLogueado.getContrasenia();
+    imagen = request.getAttribute("imagen") instanceof String ? (String) request.getAttribute("imagen") : usuarioLogueado.getImagen();
+    
+    descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : ((Artista) usuarioLogueado).getDescripcion();
+    biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : ((Artista) usuarioLogueado).getBiografia();
+    url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : ((Artista) usuarioLogueado).getSitioWeb();
+
 %>
 <!DOCTYPE html>
 <html>
