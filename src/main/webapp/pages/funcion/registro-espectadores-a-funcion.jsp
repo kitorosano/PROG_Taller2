@@ -57,10 +57,10 @@
   </style>
 </head>
 <body>
-<%@ include file="../header.jsp" %>
+<%@ include file="/pages/header.jsp" %>
 
 <section>
-  <%@ include file="../sidebar.jsp" %>
+  <%@ include file="/pages/sidebar.jsp" %>
   <div class="main-container">
     <%--                AGREGAR COMPONENTES ACA--%>
     <div id="datos-principales">
@@ -191,7 +191,7 @@
       funcion.value=$("#nombreFuncion").text();
       funcion.type="hidden";
       form.method="post";
-      form.action="registroAFuncion";
+      form.action="registro-espectadores-a-funcion";
       form.appendChild(espectaculo);
       form.appendChild(funcion);
       form.appendChild(plataforma);

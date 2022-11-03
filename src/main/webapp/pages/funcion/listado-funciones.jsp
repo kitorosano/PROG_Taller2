@@ -54,7 +54,7 @@
                     <br><br>
                     <label for="filtroEspectaculo">Selecciona un espectáculo:</label>
                     <select name="filtroEspectaculo" id="filtroEspectaculo">
-                        <option value="">Todas</option>
+                        <option value="">Todos</option>
                         <% for (Espectaculo espectaculo : espectaculos.values()) { %>
                         <option data-plataforma="<%= espectaculo.getPlataforma().getNombre() %>" value="<%= espectaculo.getNombre() %>"><%= espectaculo.getNombre() %></option>
                         <% } %>
@@ -119,7 +119,6 @@
                     break;
                 }
             }
-    
             const optionsEspectaculo = SELECT_ESPECTACULO.options;
             for (let i = 0; i < optionsEspectaculo.length; i++) {
                 let option = optionsEspectaculo[i];
@@ -133,22 +132,25 @@
             filtrarEspectaculos(e.target.value);
         });
         SELECT_ESPECTACULO.addEventListener("change", function (e) {
-            SELECT_PLATAFORMA.value = e.target.options[e.target.selectedIndex].dataset.plataforma;
+            if (!(SELECT_ESPECTACULO.value === "")) {
+                SELECT_PLATAFORMA.value = e.target.options[e.target.selectedIndex].dataset.plataforma;
+            }
         });
     
         function filtrarEspectaculos(plataformaSeleccionada) {
-            for (let i = 0; i < SELECT_ESPECTACULO.options.length; i++) {
+            SELECT_ESPECTACULO.options[0].style.display = "block" // El primero siempre va, ya que es la opcion de "Todas"
+
+            for (let i = 1; i < SELECT_ESPECTACULO.options.length; i++) {
                 let option = SELECT_ESPECTACULO.options[i];
     
                 // Si no hay plataforma seleccionada, mostramos todas las opciones y seleccionamos la primera
                 if (plataformaSeleccionada === ""){
-                   SELECT_ESPECTACULO.options[0].selected = true;
+                    SELECT_ESPECTACULO.options[0].selected = true;
                     option.style.display = "block";
-                    return;
                 }
-    
+
                 // Si la plataforma de la opcion es igual a la seleccionada, mostramos la opcion
-                if (option.dataset.plataforma === plataformaSeleccionada) {
+                else if (option.dataset.plataforma === plataformaSeleccionada) {
                     option.style.display = "block";
                 } else {
                     option.style.display = "none";

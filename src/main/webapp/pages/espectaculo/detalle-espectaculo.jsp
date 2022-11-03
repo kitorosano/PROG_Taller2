@@ -39,8 +39,17 @@
                         <h5 class="sticker"><%=categoria.getNombre()%></h5>
                 <%  }   %>
             </div>
-            <button class="btn2" onClick="location.href='registro-funcion?espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'">Añadir funcion</button>
-            <div class="tabs">
+            <%
+
+                if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(((Artista)session.getAttribute("usuarioLogueado")).getNickname())){
+                    if(espectaculo.getEstado()==E_EstadoEspectaculo.ACEPTADO){
+            %>
+                        <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
+            <%
+                    }
+                }
+            %>
+                <div class="tabs">
                 <div class="menu">
                     <p data-target="#datos_generales" class="active">Datos Generales</p>
                     <p data-target="#descripcion">Descripcion</p>
@@ -68,7 +77,7 @@
                             <%  for (Funcion funcion : funciones.values()) {
                                     if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
                                         <tr>
-                                            <th onClick="location.href='detalle-funcion?nombre_funcion=<%=funcion.getNombre()%>&nombre_espectaculo=<%=espectaculo.getNombre()%>&nombre_plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%> %>  </th>
+                                            <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
                                         </tr>
                             <%      }
                                 }   %>
@@ -80,7 +89,7 @@
                             <tbody>
                             <%  for (Paquete paquete : paquetes.values()) {    %>
                                     <tr>
-                                        <th onClick="location.href='detalle-paquete?nombre_paquete=<%=paquete.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=paquete.getNombre()%></th>
+                                        <th onClick="location.href='detalle-paquete?nombre=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%></th>
                                     </tr>
                             <%  }   %>
                             </tbody>

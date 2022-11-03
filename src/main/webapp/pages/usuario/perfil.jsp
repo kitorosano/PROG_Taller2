@@ -47,7 +47,7 @@
                 <h2><%=usuario.getNombre() + " " + usuario.getApellido()%></h2>
                 <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
                 <% if(esPerfilPropio) {%>
-                    <a class="btn" href="modificar-usuario">Modificar usuario</a>
+                    <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
                 <% } %>
             </div>
             <div class="tabs">
@@ -135,7 +135,7 @@
                         <div data-content id="paquetes">
                             <table class="table">
                                 <tbody>
-                                <% if (espectaculos.size() == 0) { %>
+                                <% if (paquetes.size() == 0) { %>
                                     <tr>
                                         <th>
                                             <h4>No tienes paquetes comprados</h4>

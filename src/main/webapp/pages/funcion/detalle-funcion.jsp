@@ -21,6 +21,11 @@
         <%@ include file="/pages/sidebar.jsp" %>
         <%
             Funcion funcion= (Funcion) request.getAttribute("datos");
+            Map<String, EspectadorRegistradoAFuncion> espectador_registrado = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
+            int contador = espectador_registrado.size();
+            EspectadorRegistradoAFuncion registro = espectador_registrado.get(usuarioLogueado.getNickname());
+            System.out.println(contador);
+            System.out.println(registro);
         %>
         <div class="grid-container">
 
@@ -35,12 +40,16 @@
                 <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
             <%
 
-                if((Boolean) session.getAttribute("esEspectador")){
-
+                if((Boolean) session.getAttribute("esEspectador") && registro==null){
+                    if(contador +1 <= funcion.getEspectaculo().getMaxEspectadores()){
             %>
-
-                    <button class="btn" onClick="location.href='registroAFuncion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
+                    <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
             <%
+                    }else {
+            %>
+                        <h4>Funcion llena</h4>
+            <%
+                    }
                 }
             %>
             </div>

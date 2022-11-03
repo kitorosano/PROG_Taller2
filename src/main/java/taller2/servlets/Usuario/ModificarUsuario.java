@@ -36,7 +36,8 @@ public class ModificarUsuario extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nickname= (String) request.getSession().getAttribute("nickname");
+        Usuario usuarioSession= (Usuario) request.getSession().getAttribute("usuarioLogueado");
+        String nickname= usuarioSession.getNickname();
         Usuario usu=null;
         if(fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent()) {
             usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
@@ -47,27 +48,30 @@ public class ModificarUsuario extends HttpServlet {
         }else{
             request.setAttribute("error", "Nickname no valido");
             dispatchPage("/pages/index.jsp", request, response);
+            return;
         }
+
+        String tipo;
+        if ((boolean) request.getSession().getAttribute("esArtista") == false){
+            tipo = "espectador";
+        }else{
+            tipo = "artista";
+        }
+
         String nombre = request.getParameter("nombre");
-        String hola= request.getParameter("hola");
-        String hola2= request.getParameter("hola2");
         String apellido = request.getParameter("apellido");
         String contrasenia = request.getParameter("contrasenia");
         String fechaNac_str = request.getParameter("fechaNac");
-        String contrasenia2 = request.getParameter("contrasenia2");
         Part part=request.getPart("imagen");
         String descripcion = request.getParameter("descripcion");
         String biografia = request.getParameter("biografia");
         String url = request.getParameter("url");
-        String tipo = request.getParameter("tipo");
-        request.setAttribute("peticion","post");
-
 
 
         // Validar los datos traidos del formulario:
 
         //error cuando alguno de los campos son vacios
-        if(camposVacios(nombre, apellido, fechaNac_str, contrasenia, contrasenia2)) {
+        if(camposVacios(nombre, apellido, fechaNac_str, contrasenia)) {
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
             return;
@@ -75,12 +79,6 @@ public class ModificarUsuario extends HttpServlet {
 
         LocalDate fechaNac = LocalDate.parse(fechaNac_str); // ahora que sabemos que no es vacio, lo podemos parsear
 
-        // Error contraseñas no machean
-        if(!contraseniasIguales(contrasenia, contrasenia2)){
-            request.setAttribute("error", "Las contraseñas no coinciden");
-            dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
-            return;
-        }
         //La fecha no es valida porque no nacio mañana
         if(!fechaValida(fechaNac)){
             request.setAttribute("error", "La fecha no es valida");
@@ -97,6 +95,7 @@ public class ModificarUsuario extends HttpServlet {
             usu.setNombre(nombre);
             usu.setApellido(apellido);
             usu.setFechaNacimiento(fechaNac);
+            usu.setContrasenia(contrasenia);
             if(!urlImagen.equals(""))
                 usu.setImagen(urlImagen);
         }
@@ -108,11 +107,12 @@ public class ModificarUsuario extends HttpServlet {
                 dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
                 return;
             }
-            /*if (esFormatoUrl(url)){
-                request.setAttribute("error", "Formato de url invalida");
+            if(!esFormatoUrl(url)){
+                request.setAttribute("error", "El url no es valido");
                 dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
                 return;
-            }*/
+            }
+
             ((Artista) usu).setDescripcion(descripcion);
             ((Artista) usu).setBiografia(biografia);
             ((Artista) usu).setSitioWeb(url);
@@ -123,22 +123,19 @@ public class ModificarUsuario extends HttpServlet {
 
             // Redireccionar a la pantalla de login
             request.getSession().setAttribute("message", "Informacion modificada exitosamente");
-            response.sendRedirect("detalle-usuario"); // redirijir a un servlet (por url)
+            response.sendRedirect("perfil"); // redirijir a un servlet (por url)
         } catch (RuntimeException e){
             System.out.println(e.getMessage());
             // Error al crear el usuario
             request.setAttribute("error", "Error al crear el usuario");
             dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            return;
         }
     }
 
-
-    private boolean contraseniasIguales(String pass1, String pass2){
-        return pass1.equals(pass2);
-    }
-    private boolean camposVacios(String nombre, String apellido, String fechaNac, String contrasenia, String contrasenia2){
-        return nombre==null || apellido==null || fechaNac==null || contrasenia==null || contrasenia2==null ||
-                nombre.isEmpty() || apellido.isEmpty() || fechaNac.isEmpty() ||  contrasenia.isEmpty() || contrasenia2.isEmpty();
+    private boolean camposVacios(String nombre, String apellido, String fechaNac, String contrasenia){
+        return nombre==null || apellido==null || fechaNac==null || contrasenia==null ||
+                nombre.isEmpty() || apellido.isEmpty() || fechaNac.isEmpty() ||  contrasenia.isEmpty();
     }
     private boolean camposVaciosArtista(String descripcion){
         return descripcion==null || descripcion.isEmpty();
