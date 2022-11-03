@@ -6,9 +6,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.Funcion;
-import main.java.taller1.Logica.Clases.Plataforma;
+import jakarta.servlet.http.HttpSession;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -17,8 +16,7 @@ import java.util.Map;
 @WebServlet(name = "ListadoFunciones", value = "/listado-funciones")
 public class ListadoFuncionesServlet extends HttpServlet {
     Fabrica fabrica;
-
-
+    
     public void init() {
         fabrica = Fabrica.getInstance();
     }
@@ -27,39 +25,78 @@ public class ListadoFuncionesServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
+    
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/index.jsp");
+        view.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
-        String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
-        Map<String, Plataforma> plataformas;
-        Map<String, Espectaculo> espectaculos;
-        Map<String, Funcion> funcionesFiltradas;
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
     
-        // Cargar opciones plataformas y categorias para el filtrado
-        plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        request.setAttribute("plataformas", plataformas);
-    
-        espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        request.setAttribute("espectaculos", espectaculos);
-        
-        // Si se llega con un filtrado vacio
-        if(filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
-            funcionesFiltradas = fabrica.getIFuncion().obtenerFunciones();
-            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+                
+                String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+                String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
+                Map<String, Funcion> funcionesFiltradas;
+                
+                // Si se llega con un filtrado vacio
+                if(filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
+                    funcionesFiltradas = fabrica.getIFuncion().obtenerFunciones();
+                    request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+                }
+                // Si se llega con un filtrado de plataforma
+                else if (!filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
+                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+                    request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+                }
+                // Si llega con un filtrado espectaculo tambien llegara con uno de plataforma
+                else {
+                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+                    request.setAttribute("funcionesFiltradas", funcionesFiltradas);
+                }
+                
+                dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
+            } else {
+                response.sendRedirect("login");
+            }
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
-        // Si se llega con un filtrado de plataforma
-        else if (!filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
-            funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
-            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
-        }
-        // Si llega con un filtrado espectaculo tambien llegara con uno de plataforma
-        else {
-            funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
-            request.setAttribute("funcionesFiltradas", funcionesFiltradas);
-        }
-        
-        dispatchPage("/pages/funcion/listado-funciones.jsp", request, response);
     }
 
     @Override

@@ -10,9 +10,6 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
-    
-    Map<String, Usuario> usuarios = request.getAttribute("usuarios") != null ? (Map<String, Usuario>) request.getAttribute("usuarios") : null;
-    String json = new Gson().toJson(usuarios);
 %>
 <!DOCTYPE html>
 <html>
@@ -23,32 +20,42 @@
     <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <div class="busqueda">
-                <label for="txtBuscar">Buscar Usuario</label>
-                <input type="text" name="buscarUsuario" id="txtBuscar" value="Nombre...">
-            </div>
-            <div>
-                <h2>Usuarios</h2>
-                <button class="volver" onclick="history.back()">Volver</button>
-                <table class="tablaUsuarios" id="tabla">
-                    <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo de usuario</th>
-                    </tr>
-                    </thead>
-                    <tbody id="cuerpoTabla">
-                    </tbody>
-                </table>
-            </div>
-            <%-- AGREGAR COMPONENTES ARRIBA--%>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Listado de usuarios</h3>
+            </div>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="main-container">
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <div class="busqueda">
+                        <label for="txtBuscar">Filtrar Usuario: </label>
+                        <input type="text" name="buscarUsuario" id="txtBuscar" value="Nickname...">
+                    </div>
+                    <br />
+                    <div>
+                        <table class="tablaUsuarios" id="tabla">
+                            <thead>
+                            <tr>
+                                <th>Nickname</th>
+                                <th>Tipo de usuario</th>
+                            </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla">
+                            </tbody>
+                        </table>
+                    </div>
+                    <%-- AGREGAR COMPONENTES ARRIBA--%>
+                </div>
+            </section>
+        </main>
+    </div>
     
     <%--    Javascript--%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -68,7 +75,7 @@
             let celdaNickname;
             let celdaTipo;
     
-            <% for (Usuario elem : usuarios.values()) {%>
+            <% for (Usuario elem : usuarioMap.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
                 celdaNickname = nuevaFila.insertCell(0);
                 celdaTipo = nuevaFila.insertCell(1);

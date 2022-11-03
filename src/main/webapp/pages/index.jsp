@@ -15,7 +15,6 @@
     <title>CoronaTicketsUY</title>
 </head>
 <body>
-<%--    <img class="background_img" src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />--%>
     <div class="background_container">
         <div id="message" class="hidden <%=messageType%>" role="alert">
             <%=message%>

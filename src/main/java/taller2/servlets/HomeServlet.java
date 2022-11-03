@@ -76,7 +76,7 @@ public class HomeServlet extends HttpServlet {
                 response.sendRedirect("login");
             }
         } catch (RuntimeException e) {
-            dispatchError("Error al obtener las plataformas, espectaculos, funciones", request, response);
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
     }
     

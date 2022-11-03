@@ -7,13 +7,6 @@
 --%>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-    //Si no hay usuario logueado, se redirige a la página de login
-    if(usuarioLogueado == null){
-        response.sendRedirect("home");
-        return;
-    }
-%>
 <!DOCTYPE html>
 <div class="header">
     <div class="header__top">

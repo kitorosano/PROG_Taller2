@@ -22,11 +22,8 @@
     
   String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
   String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
-  Map<String, Plataforma> plataformas = request.getAttribute("plataformas") != null ? (Map<String, Plataforma>) request.getAttribute("plataformas") : new HashMap<>();
-  Map<String, Categoria> categorias =  request.getAttribute("categorias") != null ? (Map<String, Categoria>) request.getAttribute("categorias") : new HashMap<>();
   Map<String, Espectaculo> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
   Map<String, Map<String, Categoria>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, Categoria>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
-  String json = new Gson().toJson(espectaculosFiltrados);
 %>
 
 <!DOCTYPE html>
@@ -38,57 +35,71 @@
   <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-        <%-- AGREGAR COMPONENTES ABAJO--%>
-        <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
-            <form method="GET" action="listado-espectaculos" id="formEspectaculos">
-                <label for="filtroPlataforma">Selecciona una plataforma:</label>
-                <select name="filtroPlataforma" id="filtroPlataforma">
-                    <option value="">Todas</option>
-                    <% for (Plataforma plataforma : plataformas.values()) { %>
-                        <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
-                    <% } %>
-                </select>
-                <label for="filtroCategoria">Selecciona una categoria:</label>
-                <select name="filtroCategoria" id="filtroCategoria">
-                    <option value="">Todas</option>
-                    <% for (Categoria categoria : categorias.values()) { %>
-                        <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
-                    <% } %>
-                </select>
-                <button type="submit">Buscar</button>
-                <button onclick="resetForm()">Resetear</button>
-            </form>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    
-        <div class="busqueda">
-            <label for="txtBuscar">Buscar espectaculo</label>
-            <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
-        </div>
-    
-        <div>
-            <h2>Espectaculos</h2>
-            <button class="volver" onclick="history.back()">Volver</button>
-            <table class="tablaEspectaculos" id="tabla">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Categorias</th>
-                        <th>Plataforma</th>
-                        <th>Artista</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoTabla">
-                </tbody>
-            </table>
-        </div>
-        <%-- AGREGAR COMPONENTES ARRIBA--%>
-      </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Listado de espectaculos</h3>
+            </div>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="main-container">
+                <%-- AGREGAR COMPONENTES ABAJO--%>
+                <div class="plataformas-categorias-container" style="display: flex; flex-direction: row;">
+                    <form method="GET" action="listado-espectaculos" id="formEspectaculos" style="display: flex; gap: 20px">
+                        <div>
+                            <label for="filtroPlataforma">Selecciona una plataforma:</label>
+                            <select name="filtroPlataforma" id="filtroPlataforma">
+                                <option value="">Todas</option>
+                                <% for (Plataforma plataforma : plataformasMap.values()) { %>
+                                    <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filtroCategoria">Selecciona una categoria:</label>
+                            <select name="filtroCategoria" id="filtroCategoria">
+                                <option value="">Todas</option>
+                                <% for (Categoria categoria : categoriasMap.values()) { %>
+                                    <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="submit">Buscar</button>
+                            <button onclick="resetForm()">Resetear</button>
+                        </div>
+                    </form>
+                </div>
+            
+                <div class="busqueda">
+                    <label for="txtBuscar">Filtrar espectaculo: </label>
+                    <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
+                </div>
+            
+                <div>
+                    <table class="tablaEspectaculos" id="tabla">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Categorias</th>
+                                <th>Plataforma</th>
+                                <th>Artista</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTabla">
+                        </tbody>
+                    </table>
+                </div>
+                <%-- AGREGAR COMPONENTES ARRIBA--%>
+              </div>
+            </section>
+        </main>
+    </div>
     
     <%--Javascript--%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
