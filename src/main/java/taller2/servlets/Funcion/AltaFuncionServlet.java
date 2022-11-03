@@ -52,10 +52,9 @@ public class AltaFuncionServlet extends HttpServlet {
             System.out.println(espectaculos);
             for(Espectaculo esp:espectaculos.values()){
                 if(esp.getEstado()==E_EstadoEspectaculo.ACEPTADO){
-                    //espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
                     retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
                 }
-             }
+            }
 
             List<String> artistas=obtenerArtistas(artista);
             request.setAttribute("espectaculos", retorno);
@@ -74,12 +73,13 @@ public class AltaFuncionServlet extends HttpServlet {
         String nombrefuncion= request.getParameter("nombre");
         String fecha = request.getParameter("fechaInicio");
         String hora = request.getParameter("horaInicio");
-        String urlImagen="";
+        String urlImagen="https://i.imgur.com/EDotlnM.png";
         Part part=request.getPart("imagen");
         String[] artistasInvitados = request.getParameterValues("artInvitado");
         Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
         String artista=art.getNickname();
         Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+        Map<String, Espectaculo> retorno = new HashMap<>();
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
             for(String invitado:artistasInvitados){
@@ -88,17 +88,21 @@ public class AltaFuncionServlet extends HttpServlet {
         }
         request.setAttribute("artistas",artistas);
        for(Espectaculo esp:espectaculos.values()){
-            if(esp.getEstado()!= E_EstadoEspectaculo.ACEPTADO){
-                espectaculos.remove(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+            if(esp.getEstado()== E_EstadoEspectaculo.ACEPTADO){
+                retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
             }
         }
-        request.setAttribute("espectaculos", espectaculos);
+        request.setAttribute("espectaculos", retorno);
 
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
             request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
             dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
         }
-        Espectaculo esp=espectaculos.get(nombrespectaculo);
+        Espectaculo esp=retorno.get(nombrespectaculo);
+        if(esp==null){
+            request.setAttribute("error", "El espectaculo está en estado ingresado");
+            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+        }
         if(nombreExistente(nombrefuncion,esp)){
             request.setAttribute("error", "El nombre ingresado ya existe");
             dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
@@ -135,9 +139,11 @@ public class AltaFuncionServlet extends HttpServlet {
 
     private boolean nombreExistente(String nombrefunc, Espectaculo esp) {      //Devuelve true si hay error
         Map<String, Funcion> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
-        for (Funcion fun : funciones.values()) {
-            if (fun.getNombre().equals(nombrefunc)) {
-                return true;
+        if(funciones!=null) {
+            for (Funcion fun : funciones.values()) {
+                if (fun.getNombre().equals(nombrefunc)) {
+                    return true;
+                }
             }
         }
         return false;

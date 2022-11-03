@@ -230,9 +230,8 @@
 
         function validarFormatoNickname() {
             const NICKNAME = $("#nickname");
-            const PATTERN = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$"
-            
-            if (NICKNAME.val().trim().match(PATTERN)) {
+            const PATTERN =new RegExp(/^[A-Za-z0-9]+$/g);
+            if (!NICKNAME.val().trim().match(PATTERN)) {
                 mensaje("El campo 'Nickname' solo puede contener letras y numeros");
                 NICKNAME.addClass("invalid-input");
                 return false;
@@ -265,9 +264,8 @@
         
         function validarArtista() {
             const DESCRIPCION = $("#descripcion");
-            const URL = $("#url");
-            
-            if (DESCRIPCION.val().trim() == "") {
+            const URL = $("#url").val().trim();
+            if (DESCRIPCION.val() == "") {
                 mensaje("El campo 'Descripcion' no puede estar vacio");
                 DESCRIPCION.addClass("invalid-input");
                 return false;
@@ -275,7 +273,7 @@
             
             let regexUrl = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
     
-            if (url != "" && !url.match(regexUrl)) {
+            if (URL != "" && !URL.match(regexUrl)) {
                 mensaje("El campo 'URL' no tiene un formato valido");
                 URL.addClass("invalid-input");
                 return false;
@@ -284,12 +282,12 @@
         }
         
         function enviarForm() {
-            let tipo = $("#tipo").val();
+            let tipo = $("input[name='tipo']:checked").val();
             let button = $("#button");
             button.prop("disabled", true);
             
             let formularioValido = validarCamposVacios() && validarContrasenias() && validarFormatoNickname() && validarFormatoCorreo() && validarFechaNac();
-            if(tipo == "Artista") {
+            if(tipo === "Artista") {
                 formularioValido = formularioValido && validarArtista();
             }
             
