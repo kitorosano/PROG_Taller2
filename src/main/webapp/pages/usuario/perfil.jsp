@@ -4,8 +4,14 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-	Usuario usuario = (Usuario) request.getAttribute("datos");
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    Usuario usuario = (Usuario) request.getAttribute("datos");
     Boolean esPerfilPropio = request.getAttribute("esPerfilPropio") != null ? (Boolean) request.getAttribute("esPerfilPropio") : false;
 	Map<String, Espectaculo> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculos") : new HashMap<>();
 	Map<String, EspectadorRegistradoAFuncion> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones") : new HashMap<>();
@@ -16,9 +22,7 @@
                                                                  .stream()
                                                                  .filter(e -> e.getEstado().equals(E_EstadoEspectaculo.ACEPTADO))
                                                                  .collect(Collectors.toMap(Espectaculo::getNombre, e -> e));
-    
-    System.out.println(usuario.getNickname());
-    System.out.println(esPerfilPropio);
+
 %>
 <html>
 <head>

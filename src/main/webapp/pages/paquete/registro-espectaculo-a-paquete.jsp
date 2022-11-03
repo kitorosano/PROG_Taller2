@@ -2,9 +2,16 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 
-
-<%  //Traer datos precargados del request anterior
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    
+    //Traer datos precargados del request anterior
   Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
   Map<String, Plataforma> plataformas= (Map<String, Plataforma>) request.getAttribute("plataformas");
 %>

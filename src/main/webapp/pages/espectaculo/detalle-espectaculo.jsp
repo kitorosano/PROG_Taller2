@@ -2,6 +2,19 @@
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
+    Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
+    Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
+
+
+%>
 <html>
 <head>
     <title>Detalle de espectaculo</title>
@@ -22,8 +35,7 @@
             <div class="first-data">
                 <h2><%=espectaculo.getNombre()%></h2>
                 <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
-                <%  Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
-                    for (Categoria categoria : categorias.values()) {   %>
+                <%  for (Categoria categoria : categorias.values()) {   %>
                         <h5 class="sticker"><%=categoria.getNombre()%></h5>
                 <%  }   %>
             </div>
@@ -62,8 +74,7 @@
                     <div data-content id="funciones">
                         <table >
                             <tbody>
-                            <%  Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
-                                for (Funcion funcion : funciones.values()) {
+                            <%  for (Funcion funcion : funciones.values()) {
                                     if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
                                         <tr>
                                             <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
@@ -76,8 +87,7 @@
                     <div data-content id="paquetes">
                         <table >
                             <tbody>
-                            <%  Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
-                                 for (Paquete paquete : paquetes.values()) {    %>
+                            <%  for (Paquete paquete : paquetes.values()) {    %>
                                     <tr>
                                         <th onClick="location.href='detalle-paquete?nombre=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%></th>
                                     </tr>

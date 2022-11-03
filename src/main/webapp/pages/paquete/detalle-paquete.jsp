@@ -1,6 +1,20 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    Paquete paquete = (Paquete) request.getAttribute("datos");
+    String respuesta = (String) request.getAttribute("respuesta");
+    
+    Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+
+%>
 <html>
 <head>
     <title>Detalle de paquete</title>
@@ -56,8 +70,7 @@
                     <div data-content id="espectaculos">
                         <table >
                             <tbody>
-                            <%  Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
-                                for (Espectaculo espectaculo : espectaculos.values()) { %>
+                            <%  for (Espectaculo espectaculo : espectaculos.values()) { %>
                                     <tr>
                                         <th onClick="location.href='detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=espectaculo.getNombre()%> </th>
                                     </tr>
@@ -97,5 +110,5 @@
             })
         })
     </script>
-    </body>
+</body>
 </html>

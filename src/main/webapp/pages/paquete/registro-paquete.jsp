@@ -1,11 +1,14 @@
-<%@ page import="java.time.LocalDate" %><%--
-  Created by IntelliJ IDEA.
-  User: paulo
-  Date: 17/10/2022
-  Time: 18:06
-  To change this template use File | Settings | File Templates.
---%>
-<%  //Traer datos precargados del request anterior
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+
+<%  // Cargamos el usuarioLogueado en cada pantalla
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
+    String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
+    
+    
+    //Traer datos precargados del request anterior
     String nombre = request.getParameter("nombre") instanceof String ? request.getParameter("nombre") : "";
     String descripcion = request.getParameter("descripcion") instanceof String ? request.getParameter("descripcion") : "";
     String vigencia = request.getParameter("vigencia") instanceof String ? request.getParameter("vigencia") : "";
