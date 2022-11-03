@@ -48,7 +48,7 @@
                           }
                         }else{
                       %>
-                        <option value="<%=nombrespectaculo%>-<%=nombreplataforma%>"><%=nombrespectaculo%></option>
+                        <option value="<%=nombrespectaculo+"-"+nombreplataforma%>"><%=nombrespectaculo%></option>
                         <%
                           }
                       %>

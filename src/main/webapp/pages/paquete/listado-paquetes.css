@@ -14,5 +14,9 @@
     border-bottom: 1px solid #ddd;
 }
 
+tbody td:hover {
+    cursor: pointer;
+}
+
 
 

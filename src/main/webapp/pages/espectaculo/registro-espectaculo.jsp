@@ -236,14 +236,14 @@
             const ESPMINIMOS = $("#espMinimos")
             const ESPMAXIMOS = $("#espMaximos")
     
-            if (ESPMINIMOS.val() > ESPMAXIMOS.val()) {
+            if (Number(ESPMINIMOS.val()) > Number(ESPMAXIMOS.val())) {
                 mensaje("El campo 'Espectadores minimos' no puede ser mayor al campo 'Espectadores maximos'");
                 ESPMINIMOS.addClass("invalid-input");
                 ESPMAXIMOS.addClass("invalid-input");
                 return false;
             }
             
-            if(ESPMINIMOS.val() < 0 || ESPMAXIMOS.val() < 0) {
+            if(Number(ESPMINIMOS.val()) < 0 || Number(ESPMAXIMOS.val() < 0)) {
                 mensaje("El campo 'Espectadores minimos' y 'Espectadores maximos' no pueden ser negativos");
                 ESPMINIMOS.addClass("invalid-input");
                 ESPMAXIMOS.addClass("invalid-input");
