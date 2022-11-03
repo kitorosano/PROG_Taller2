@@ -64,9 +64,13 @@ public class HomeServlet extends HttpServlet {
                 Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
                 request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
                 dispatchPage("/pages/index.jsp", request, response);
             } else {
                 response.sendRedirect("login");

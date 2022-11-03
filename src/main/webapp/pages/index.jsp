@@ -1,6 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
-
 <%  // Cargamos el usuarioLogueado en cada pantalla
     Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     
@@ -17,7 +15,7 @@
     <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <img class="background_img" src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />
+<%--    <img class="background_img" src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />--%>
     <div class="background_container">
         <div id="message" class="hidden <%=messageType%>" role="alert">
             <%=message%>
@@ -29,20 +27,48 @@
                 <h3>Bienvenido a CoronaTickets.uy!</h3>
             </div>
             <section>
+                <%@ include file="sidebar.jsp" %>
                 <div class="main-container">
                     <%-- AGREGAR COMPONENTES ABAJO--%>
                     <article class="content-area">
                         <div class="content-area-header">
-                            <h2><a href="listado-espectaculos">Espectaculos</a></h2>
+                            <h2>Espectaculos</h2>
                             <span><a href="listado-espectaculos">Ver más</a></span>
                         </div>
                         <div class="content-area-content">
-                        
+                            <% for(Espectaculo esp : todosEspectaculos) { %>
+                                <div class="content-area-content-item">
+                                    <div class="content-area-content-item-img">
+                                        <img src="<%=esp.getImagen()%>" alt="imagen" />
+                                    </div>
+                                    <div class="content-area-content-item-name">
+                                        <h3><%=esp.getNombre()%></h3>
+                                    </div>
+                                </div>
+                            <% } %>
                         </div>
                     </article>
+    
+                        <article class="content-area">
+                            <div class="content-area-header">
+                                <h2>Paquetes</h2>
+                                <span><a href="listado-paquetes">Ver más</a></span>
+                            </div>
+                            <div class="content-area-content">
+                                <% for(Paquete paq : todosPaquetes) { %>
+                                <div class="content-area-content-item">
+                                    <div class="content-area-content-item-img">
+                                        <img src="<%=paq.getImagen()%>" alt="imagen" />
+                                    </div>
+                                    <div class="content-area-content-item-name">
+                                        <h3><%=paq.getNombre()%></h3>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </article>
                     <%-- AGREGAR COMPONENTES ARRIBA--%>
                 </div>
-                <%@ include file="sidebar.jsp" %>
                 
 <%--
                     <a href="registro-espectaculo-a-paquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
