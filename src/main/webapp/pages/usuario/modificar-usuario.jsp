@@ -38,7 +38,7 @@
     <div class="main-container">
         <%-- AGREGAR COMPONENTES ABAJO--%>
         <h3>Modifica tus datos de usuario</h3>
-        <form id="idform" name="myform" method="POST" action="registro" enctype="multipart/form-data">
+        <form id="idform" name="myform" method="POST" action="modificar-usuario" enctype="multipart/form-data">
             <div id="camposComunes">
                 <div class="input-group-container">
                     <div class="input-container">
@@ -117,15 +117,18 @@
             formularioValido = false;
             return;
         }
-        
+
+        /*
         // Validar contraseñas
         if (contrasenia !== contrasenia2) {
             alert("Las contraseñas no coinciden");
             formularioValido = false;
             return;
         }
-        //validar fecha nacimiento menor a hoy
-        if (new Date(fechaNac) > new Date()) {
+        */
+
+        //validar fecha nacimiento menor a hoy y que no haya nacido en el siglo 19 para abajo
+        if ((new Date(fechaNac) > new Date()) || (new Date(fechaNac).getFullYear() < 1900)){
             alert("Fecha no valida");
             formularioValido = false;
             return;

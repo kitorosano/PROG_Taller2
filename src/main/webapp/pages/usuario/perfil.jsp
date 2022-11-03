@@ -43,7 +43,7 @@
                 <h2><%=usuario.getNombre() + " " + usuario.getApellido()%></h2>
                 <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
                 <% if(esPerfilPropio) {%>
-                    <a class="btn" href="modificar-usuario">Modificar usuario</a>
+                    <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
                 <% } %>
             </div>
             <div class="tabs">
