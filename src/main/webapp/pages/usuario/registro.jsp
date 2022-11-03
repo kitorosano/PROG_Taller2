@@ -295,8 +295,8 @@
         
         function enviarForm() {
             let tipo = $("#tipo").val();
-            let button = $("#submitBtn");
-            button.prop("disabled", true);
+            let SUBMITBUTTON = $("#submitBtn");
+            SUBMITBUTTON.prop("disabled", true);
             
             let formularioValido = validarCamposVacios() && validarContrasenias() && validarFormatoNickname() && validarFormatoCorreo() && validarFechaNac();
             if(tipo === "Artista") {

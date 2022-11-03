@@ -25,13 +25,15 @@
 </head>
 <body>
     <%@ include file="../header.jsp" %>
+    <div id="message" class="hidden <%=messageType%>" role="alert">
+        <%=message%>
+    </div>
     
     <section>
         <%@ include file="../sidebar.jsp" %>
         <div class="main-container">
         <%-- AGREGAR COMPONENTES ABAJO--%>
           <h1>Registro de paquete de espectaculos</h1>
-<%--          <button class="volver" onclick="history.back()">Volver</button>--%>
   
           <select name="plataforma" id="plataforma">
             <option value="" selected disabled hidden>Plataforma</option>
@@ -63,91 +65,104 @@
             <select multiple name="espectaculosAagregar" id="espectaculosAagregar">
             </select>
             <button type="button" id="btnEliminar">Quitar espectaculo</button>
-            <button type="button" onclick="enviarForm()">Registrar!</button>
+            <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
           </form>
-
-            <%
-                String error = (String) request.getAttribute("error");
-                if (error != "") {
-            %>
-            <div role="alert">
-                ${error}
-            </div>
-            <%
-                }
-            %>
     
-          <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+          
+        <%--                AGREGAR COMPONENTES ACA--%>
+      </div>
+    </section>
+    <%--    Javascript    --%>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
     
-          <script>
-    
-            $(document).ready(function(){
-              let espectaculosTotales=$("#listEspectaculos option");
-    
-    
-              $("#plataforma").on("change", function() {
+        $(document).ready(function(){
+            const MESSAGE = $("#message");
+            if (MESSAGE.text().trim() != "") {
+                MESSAGE.removeClass("hidden");
+                setTimeout(() => {
+                    MESSAGE.text("");
+                    MESSAGE.addClass("hidden");
+                }, 5000);
+            } else {
+                MESSAGE.addClass("hidden");
+            }
+            
+            let espectaculosTotales=$("#listEspectaculos option");
+            $("#plataforma").on("change", function() {
                 cargarlista();
-              });
-    
-              $("#btnEliminar").click(eliminarEspectaculo);
-              $("#btnAgregar").click(agregarEspectaculo);
-    
-              function cargarlista(){
+            });
+        
+            $("#btnEliminar").click(eliminarEspectaculo);
+            $("#btnAgregar").click(agregarEspectaculo);
+        
+            function cargarlista(){
                 $("#listEspectaculos option").remove();
                 let select = document.getElementById("listEspectaculos");
                 let espectaculosAagregar= document.getElementById("espectaculosAagregar");
                 let plataforma = $("select[name='plataforma']").val();
                 espectaculosTotales.each(function (){
-                  if(this.value.endsWith("-"+plataforma)){
-                    if(!espectaculosAagregar.contains(this)){
-                      let copia= this;
-                      select.appendChild(copia);
+                    if(this.value.endsWith("-"+plataforma)){
+                        if(!espectaculosAagregar.contains(this)){
+                            let copia= this;
+                            select.appendChild(copia);
+                        }
                     }
-                  }
                 });
-              }
-    
-    
-              function agregarEspectaculo(){
+            }
+        
+            function agregarEspectaculo(){
                 //obtengo el valor del selector
                 let select = document.getElementById("listEspectaculos");
                 let espectaculosAagregar= document.getElementById("espectaculosAagregar");
                 let options =select.selectedOptions;
-    
+            
                 for (let i = 0; i < options.length; i++) {
-                  let nuevo=options[i];
-                  espectaculosAagregar.appendChild(nuevo);
+                    let nuevo=options[i];
+                    espectaculosAagregar.appendChild(nuevo);
                 }
-              }
-    
-              function eliminarEspectaculo(){
+            }
+        
+            function eliminarEspectaculo(){
                 let select = document.getElementById("espectaculosAagregar");
                 let options =select.selectedOptions;
-    
+            
                 for (let i = 0; i < options.length; i++) {
-                  console.log(i);
-                  $('#espectaculosAagregar option[value="'+options[i].value+'"]').remove();
+                    console.log(i);
+                    $('#espectaculosAagregar option[value="'+options[i].value+'"]').remove();
                 }
                 cargarlista();
-              }
-            });
+            }
+        });
+        
+        function mensaje(msg) {
+            const SUBMITBUTTON = $("#submitBtn");
+            const MESSAGE = $("#message");
+            MESSAGE.text(msg);
+            MESSAGE.addClass("error");
+            MESSAGE.removeClass("hidden");
     
+            setTimeout(() => {
+                MESSAGE.text("");
+                MESSAGE.addClass("hidden");
+                MESSAGE.removeClass("error");
+            }, 5000);
     
-            function enviarForm() {
-              //Agrego un input invisible para cada elemento del select de invitados
-              $("#espectaculosAagregar option").each(function() {
-                console.log("Entro")
+            SUBMITBUTTON.prop("disabled", false);
+        }
+        //TODO: HOMOLOGAR MENSAJES DE VALICACION
+        
+        function enviarForm() {
+            //Agrego un input invisible para cada elemento del select de invitados
+            $("#espectaculosAagregar option").each(function() {
                 let inputEnviar=document.createElement("input");
                 inputEnviar.type="hidden";
                 inputEnviar.value=this.value;
                 inputEnviar.name="espAgregar";
                 this.appendChild(inputEnviar);
-              });
-              document.getElementById("idform").submit();
-            }
-          </script>
-        <%--                AGREGAR COMPONENTES ACA--%>
-      </div>
-    </section>
+            });
+            document.getElementById("idform").submit();
+        }
+    </script>
 </body>
 </html>

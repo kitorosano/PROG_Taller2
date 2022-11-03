@@ -57,100 +57,113 @@
   </style>
 </head>
 <body>
-<%@ include file="/pages/header.jsp" %>
-
-<section>
-  <%@ include file="/pages/sidebar.jsp" %>
-  <div class="main-container">
-    <%--                AGREGAR COMPONENTES ACA--%>
-    <div id="datos-principales">
-      <img src="<%=funcion.getImagen()%>" alt="Foto de perfil" class="img_perfil" style="width: 150px; height: 150px">
-      <div>
-        <div class="info-container">
-        <label class="subtitulos">Nombre</label>
-        <p id="nombreFuncion"><%=funcion.getNombre()%></p>
-        </div>
-        <div class="info-container">
-          <label class="subtitulos">Costo</label>
-          <p><%=funcion.getEspectaculo().getCosto()%></p>
-        </div>
-        <div class="info-container">
-          <label class="subtitulos">Duracion</label>
-          <p><%=funcion.getEspectaculo().getDuracion()%></p>
-        </div>
-      </div>
-      <div>
-        <div class="info-container">
-          <label class="subtitulos">Nombre de espectaculo</label>
-          <p id="nombreEspectaculo"><%=funcion.getEspectaculo().getNombre()%></p>
-        </div>
-        <div class="info-container">
-          <label class="subtitulos">Nombre de plataforma</label>
-          <p id="nombrePlataforma"><%=funcion.getEspectaculo().getPlataforma().getNombre()%></p>
-        </div>
-      </div>
-    </div>
-
-    <div id="canjeos-container">
-      <div class="canjeos-containers-selects">
-        <label>Espectaculos a canjear</label>
-        <select multiple name="EspectACanjear" id="EspectACanjear">
-          <%
-            if(registros!=null){
-              for(EspectadorRegistradoAFuncion registro: registros.values()){
-                if(!registro.isCanjeado()){
-
-          %>
-          <option value="<%=registro.getFuncion().getNombre()+"-"+registro.getFuncion().getEspectaculo().getNombre()+"-"+registro.getFuncion().getEspectaculo().getPlataforma().getNombre()%>"><%=registro.getFuncion().getNombre()%></option>
-          <%
-                }
-              }
-            }
-          %>
-        </select>
-        <button type="button" onclick="agregarEspectaculo()">Seleccionar espectaculo</button>
-      </div>
-      <div class="canjeos-containers-selects">
-        <label>Espectaculos seleccionados</label>
-        <select multiple name="EspectCanjeados" id="EspectCanjeados">
-        </select>
-        <button type="button" onclick="eliminarEspectaculo()">Quitar espectaculo</button>
-      </div>
-    </div>
-    <div id="paquetes-container">
-      <div class="canjeos-containers-selects">
-        <label>Paquetes que incluyen el espectaculo</label>
-        <select multiple name="PaquetesACanjear" id="PaquetesACanjear">
-          <%
-            if(paquetes!=null){
-              for(Paquete paquete: paquetes.values()){
-          %>
-          <option value="<%=paquete.getNombre()%>"><%=paquete.getNombre()%></option>
-          <%
-              }
-            }
-          %>
-        </select>
-      </div>
-    </div>
-    <button type="button" onclick="enviarForm()">Confirmar</button>
-
-      <%
-        String error = (String) request.getAttribute("error");
-        if (error != "") {
-      %>
-      <div role="alert">
-        ${error}
-      </div>
-      <%
-        }
-      %>
-
+  <%@ include file="/pages/header.jsp" %>
+  <div id="message" class="hidden <%=messageType%>" role="alert">
+    <%=message%>
   </div>
+  
+  <section>
+    <%@ include file="/pages/sidebar.jsp" %>
+    <div class="main-container">
+      <%--                AGREGAR COMPONENTES ACA--%>
+      <div id="datos-principales">
+        <img src="<%=funcion.getImagen()%>" alt="Foto de perfil" class="img_perfil" style="width: 150px; height: 150px">
+        <div>
+          <div class="info-container">
+          <label class="subtitulos">Nombre</label>
+          <p id="nombreFuncion"><%=funcion.getNombre()%></p>
+          </div>
+          <div class="info-container">
+            <label class="subtitulos">Costo</label>
+            <p><%=funcion.getEspectaculo().getCosto()%></p>
+          </div>
+          <div class="info-container">
+            <label class="subtitulos">Duracion</label>
+            <p><%=funcion.getEspectaculo().getDuracion()%></p>
+          </div>
+        </div>
+        <div>
+          <div class="info-container">
+            <label class="subtitulos">Nombre de espectaculo</label>
+            <p id="nombreEspectaculo"><%=funcion.getEspectaculo().getNombre()%></p>
+          </div>
+          <div class="info-container">
+            <label class="subtitulos">Nombre de plataforma</label>
+            <p id="nombrePlataforma"><%=funcion.getEspectaculo().getPlataforma().getNombre()%></p>
+          </div>
+        </div>
+      </div>
+      <div id="canjeos-container">
+        <div class="canjeos-containers-selects">
+          <label>Espectaculos a canjear</label>
+          <select multiple name="EspectACanjear" id="EspectACanjear">
+            <%  if(registros!=null){
+                  for(EspectadorRegistradoAFuncion registro: registros.values()){
+                    if(!registro.isCanjeado()){ %>
+                      <option value="<%=registro.getFuncion().getNombre()+"-"+registro.getFuncion().getEspectaculo().getNombre()+"-"+registro.getFuncion().getEspectaculo().getPlataforma().getNombre()%>"><%=registro.getFuncion().getNombre()%></option>
+            <%      }
+                  }
+                }  %>
+          </select>
+          <button type="button" onclick="agregarEspectaculo()">Seleccionar espectaculo</button>
+        </div>
+        <div class="canjeos-containers-selects">
+          <label>Espectaculos seleccionados</label>
+          <select multiple name="EspectCanjeados" id="EspectCanjeados">
+          </select>
+          <button type="button" onclick="eliminarEspectaculo()">Quitar espectaculo</button>
+        </div>
+      </div>
+      <div id="paquetes-container">
+        <div class="canjeos-containers-selects">
+          <label>Paquetes que incluyen el espectaculo</label>
+          <select multiple name="PaquetesACanjear" id="PaquetesACanjear">
+            <%  if(paquetes!=null){
+                  for(Paquete paquete: paquetes.values()){  %>
+                    <option value="<%=paquete.getNombre()%>"><%=paquete.getNombre()%></option>
+            <%    }
+                } %>
+          </select>
+        </div>
+      </div>
+      <button id="submitBtn" type="button" onclick="enviarForm()">Confirmar</button>
+    <%--                AGREGAR COMPONENTES ACA--%>
+    </div>
+  </section>
 
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   <script>
-
+    $(document).ready(function () {
+      const MESSAGE = $("#message");
+    
+      if (MESSAGE.text().trim() != "") {
+        MESSAGE.removeClass("hidden");
+        setTimeout(() => {
+          MESSAGE.text("");
+          MESSAGE.addClass("hidden");
+        }, 5000);
+      } else {
+        MESSAGE.addClass("hidden");
+      }
+    });
+  
+    function mensaje(msg) {
+      const SUBMITBUTTON = $("#submitBtn");
+      const MESSAGE = $("#message");
+      MESSAGE.text(msg);
+      MESSAGE.addClass("error");
+      MESSAGE.removeClass("hidden");
+    
+      setTimeout(() => {
+        MESSAGE.text("");
+        MESSAGE.addClass("hidden");
+        MESSAGE.removeClass("error");
+      }, 5000);
+  
+      SUBMITBUTTON.prop("disabled", false);
+    }
+   //TODO: HOMOLOGAR MENSAJES DE VALICACION
+    
     function agregarEspectaculo(){
       //obtengo el valor del selector
       let espectaculo = $("select[name='EspectACanjear']").val();
@@ -172,8 +185,7 @@
       espectaculos.appendChild(canjeado);
       $('#EspectCanjeados option[value="'+espectaculo+'"]').remove();
     }
-
-
+    
     function enviarForm(){
       let form=document.createElement("form");
       let values=document.getElementById("EspectCanjeados").options;
@@ -220,8 +232,5 @@
       form.submit();
     }
   </script>
-  <%--                AGREGAR COMPONENTES ACA--%>
-  </div>
-</section>
 </body>
 </html>

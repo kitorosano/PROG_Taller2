@@ -56,7 +56,7 @@
                     <select name="filtroEspectaculo" id="filtroEspectaculo">
                         <option value="">Todos</option>
                         <% for (Espectaculo espectaculo : espectaculos.values()) { %>
-                        <option data-plataforma="<%= espectaculo.getPlataforma().getNombre() %>" value="<%= espectaculo.getNombre() %>"><%= espectaculo.getNombre() %></option>
+                            <option data-plataforma="<%= espectaculo.getPlataforma().getNombre() %>" value="<%= espectaculo.getNombre() %>"><%= espectaculo.getNombre() %></option>
                         <% } %>
                     </select>
                     <button type="submit">Buscar</button>

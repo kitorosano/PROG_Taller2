@@ -12,8 +12,8 @@
     Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
     Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
     Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
-
-
+    
+    Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
 %>
 <html>
 <head>
@@ -25,9 +25,6 @@
     <%@ include file="/pages/header.jsp" %>
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
-        <%
-            Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
-        %>
         <div class="grid-container">
             <%-- AGREGAR COMPONENTES ABAJO--%>
             <h1 class="title">Detalle de espectaculo</h1>
@@ -39,16 +36,11 @@
                         <h5 class="sticker"><%=categoria.getNombre()%></h5>
                 <%  }   %>
             </div>
-            <%
-
-                if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(((Artista)session.getAttribute("usuarioLogueado")).getNickname())){
-                    if(espectaculo.getEstado()==E_EstadoEspectaculo.ACEPTADO){
-            %>
+            <%  if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(((Artista)session.getAttribute("usuarioLogueado")).getNickname())){
+                    if(espectaculo.getEstado()==E_EstadoEspectaculo.ACEPTADO){  %>
                         <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
-            <%
-                    }
-                }
-            %>
+            <%      }
+                }   %>
                 <div class="tabs">
                 <div class="menu">
                     <p data-target="#datos_generales" class="active">Datos Generales</p>

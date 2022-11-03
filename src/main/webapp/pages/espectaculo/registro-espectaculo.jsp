@@ -135,7 +135,7 @@
                             </select>
                         </div>
                     </div>
-                    <button type="button" onclick="enviarForm()">Registrar Espectaculo</button>
+                    <button id="submitBtn"  type="button" onclick="enviarForm()">Registrar Espectaculo</button>
                 </div>
             </form>
             <%-- AGREGAR COMPONENTES ARRIBA--%>
@@ -161,6 +161,7 @@
         });
 
         function mensaje(msg) {
+            const SUBMITBUTTON = $("#submitBtn");
             const MESSAGE = $("#message");
             MESSAGE.text(msg);
             MESSAGE.addClass("error");
@@ -171,6 +172,8 @@
                 MESSAGE.addClass("hidden");
                 MESSAGE.removeClass("error");
             }, 5000);
+    
+            SUBMITBUTTON.prop("disabled", false);
         }
 
         function validarCamposVacios() {
@@ -268,8 +271,8 @@
         }
         
         function enviarForm() {;
-            let button = $("#button");
-            button.prop("disabled", true);
+            let SUBMITBUTTON = $("#submitBtn");
+            SUBMITBUTTON.prop("disabled", true);
     
             let formularioValido = validarCamposVacios() && validarFormatoURL() && validarEspectadoresMinimosMaximos() && validarCategorias();
             

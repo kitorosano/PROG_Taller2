@@ -42,21 +42,41 @@
                     <a href="perfil">Mi perfil</a>
                     <span>></span>
                 </div>
+                <hr>
                 
                 <% if(session.getAttribute("esArtista") != null && (boolean)session.getAttribute("esArtista")){ %>
-                <%-- AGREGAR ESPECTACULO A PAQUETE (ARTISTA) --%>
-                
+                    <%-- ALTA ESPECTACULO (ARTISTA) --%>
+                    <div class="header__right__submenu__options">
+                        <a href="registro-espectaculo">Registrar nuevo espectaculo</a>
+                        <span>></span>
+                    </div>
+                <%-- ALTA FUNCION (ARTISTA) --%>
+                    <div class="header__right__submenu__options">
+                        <a href="registro-funcion">Registrar nueva funcion</a>
+                        <span>></span>
+                    </div>
+                <%-- ALTA PAQUETE (ARTISTA) --%>
+                    <div class="header__right__submenu__options">
+                        <a href="registro-paquete">Registrar nuevo paquete</a>
+                        <span>></span>
+                    </div>
+                    <%-- AGREGAR ESPECTACULO A PAQUETE (ARTISTA) --%>
+                    <div class="header__right__submenu__options">
+                        <a href="registro-espectaculo-a-paquete">Registrar espectaculo a paquete</a>
+                        <span>></span>
+                    </div>
                 <% } else { %>
-                <%-- REGISTRARSE A UNA FUNCION (ESPECTADOR) --%>
-                <div class="header__right__submenu__options">
-                    <a href="registro-espectadores-a-funcion">Registrarse a Funcion</a>
-                    <span>></span>
-                </div>
+                    <%-- REGISTRARSE A UNA FUNCION (ESPECTADOR) --%>
+                    <div class="header__right__submenu__options">
+                        <a href="registro-espectadores-a-funcion">Registrarse a funcion</a>
+                        <span>></span>
+                    </div>
                 <% } %>
-                
+    
+                <hr>
                 <%-- CERRAR SESION --%>
                 <div class="header__right__submenu__options">
-                    <p onclick="cerrarSesion()">Cerrar Sesion</p>
+                    <p onclick="cerrarSesion()">Cerrar sesion</p>
                     <span>></span>
                 </div>
                 <form id="cerrarSesionForm" method="POST" action="home" hidden>
@@ -69,11 +89,10 @@
         <div class="header__left">
             <ul>
                 <li><a href="home">Inicio</a></li>
-                <li><a href="espectaculos">Espectaculos</a></li>
-                <li><a href="funciones">Funciones</a></li>
-                <li><a href="paquetes">Paquetes</a></li>
-                <li><a href="espectadores">Espectadores</a></li>
-                <li><a href="artistas">Artistas</a></li>
+                <li><a href="listado-espectaculos">Espectaculos</a></li>
+                <li><a href="listado-funciones">Funciones</a></li>
+                <li><a href="listado-paquetes">Paquetes</a></li>
+                <li><a href="listado-usuario">Usuarios</a></li>
             </ul>
         </div>
         <div class="header__right">

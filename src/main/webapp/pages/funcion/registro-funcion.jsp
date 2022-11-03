@@ -34,6 +34,9 @@
 </head>
 <body>
     <%@ include file="/pages/header.jsp" %>
+    <div id="message" class="hidden <%=messageType%>" role="alert">
+        <%=message%>
+    </div>
     
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
@@ -106,85 +109,107 @@
                   %>
                 </select>
                 <button type="button" onclick="eliminarArtista()">Quitar artista</button>
-                <button type="button" onclick="enviarForm()">Registrar!</button>
+                <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
               </div>
             </form>
-        
-            <%
-              String error = (String) request.getAttribute("error");
-              if (error != "") {
-            %>
-            <div role="alert">
-              ${error}
-            </div>
-            <%
-              }
-            %>
+
             <%-- AGREGAR COMPONENTES ARRIBA--%>
         </div>
-      
-        <%--    Javascript    --%>
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-        <script>
+    </section>
+    
+    <%--    Javascript    --%>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            const MESSAGE = $("#message");
         
-            function enviarForm() {
-              //Obtener inputs con jquery
-              let espectaculo = $("input[name='espectaculo']").val();
-              let nombre = $("input[name='nombre']").val();
-              let fecha = $("input[name='fechaInicio']").val();
-              let hora = $("input[name='horaInicio']").val();
-              let imagen = $("input[name='imagen']").val();
-              let invitadosSelector = document.getElementById("artistasInvitados");
-              let error;
+            if (MESSAGE.text().trim() != "") {
+                MESSAGE.removeClass("hidden");
+                setTimeout(() => {
+                    MESSAGE.text("");
+                    MESSAGE.addClass("hidden");
+                }, 5000);
+            } else {
+                MESSAGE.addClass("hidden");
+            }
+        });
+    
+        function mensaje(msg) {
+            const MESSAGE = $("#message");
+            MESSAGE.text(msg);
+            MESSAGE.addClass("error");
+            MESSAGE.removeClass("hidden");
         
-              let formularioValido = true;
+            setTimeout(() => {
+                MESSAGE.text("");
+                MESSAGE.addClass("hidden");
+                MESSAGE.removeClass("error");
+            }, 5000);
+        }
+        //TODO: HOMOLOGAR MENSAJES DE VALICACION
+    
+        function enviarForm() {
+            let SUBMITBUTTON = $("#submitBtn");
+            SUBMITBUTTON.prop("disabled", true);
+            
+            //Obtener inputs con jquery
+            let espectaculo = $("input[name='espectaculo']").val();
+            let nombre = $("input[name='nombre']").val();
+            let fecha = $("input[name='fechaInicio']").val();
+            let hora = $("input[name='horaInicio']").val();
+            let imagen = $("input[name='imagen']").val();
+            let invitadosSelector = document.getElementById("artistasInvitados");
+            let error;
         
-              // Validar campos vacios
-              if (espectaculo === "" || nombre === "" || fecha === "" || hora === "") {
+            let formularioValido = true;
+        
+            // Validar campos vacios
+            if (espectaculo === "" || nombre === "" || fecha === "" || hora === "") {
                 error="Complete todos los campos obligatorios";
                 formularioValido = false;
-              }
+            }
         
-              //Agrego un input invisible para cada elemento del select de invitados
-              $("#artistasInvitados option").each(function() {
+            //Agrego un input invisible para cada elemento del select de invitados
+            $("#artistasInvitados option").each(function() {
                 let inputEnviar=document.createElement("input");
                 inputEnviar.type="hidden";
                 inputEnviar.value=this.value;
                 inputEnviar.name="artInvitado";
                 this.appendChild(inputEnviar);
-              });
+            });
         
-              //Enviar formulario con jquery
-              if (formularioValido) {
+            //Enviar formulario con jquery
+            if (formularioValido) {
                 document.getElementById("idform").submit();
-              } else {
+            } else {
                 alert(error);
-              }
+                const SUBMITBUTTON = $("#submitBtn");
+                SUBMITBUTTON.prop("disabled", false);
             }
-        
-            function agregarArtista(){
-                //obtengo el valor del selector
-                let artista = $("select[name='listArtistas']").val();
-                //obtengo el objeto lista
-                let artistasInvitados= document.getElementById("artistasInvitados");
-                let invitado= document.createElement("option");
-                invitado.text=artista;
-                invitado.value=artista;
-                artistasInvitados.appendChild(invitado);
-                //Borro la categoria del select
-                $('#listArtistas option[value="'+artista+'"]').remove();
-            }
-        
-            function eliminarArtista(){
-              let artista = $("select[name='artistasInvitados']").val();
-              let artistas=document.getElementById("listArtistas");
-              let invitado=document.createElement("option");
-              invitado.text=artista;
-              invitado.value=artista;
-              artistas.appendChild(invitado);
-              $('#artistasInvitados option[value="'+artista+'"]').remove();
-            }
-          </script>
-    </section>
+        }
+    
+        function agregarArtista(){
+            //obtengo el valor del selector
+            let artista = $("select[name='listArtistas']").val();
+            //obtengo el objeto lista
+            let artistasInvitados= document.getElementById("artistasInvitados");
+            let invitado= document.createElement("option");
+            invitado.text=artista;
+            invitado.value=artista;
+            artistasInvitados.appendChild(invitado);
+            //Borro la categoria del select
+            $('#listArtistas option[value="'+artista+'"]').remove();
+        }
+    
+        function eliminarArtista(){
+            let artista = $("select[name='artistasInvitados']").val();
+            let artistas=document.getElementById("listArtistas");
+            let invitado=document.createElement("option");
+            invitado.text=artista;
+            invitado.value=artista;
+            artistas.appendChild(invitado);
+            $('#artistasInvitados option[value="'+artista+'"]').remove();
+        }
+    </script>
 </body>
 </html>

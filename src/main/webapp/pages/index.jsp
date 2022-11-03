@@ -25,22 +25,29 @@
         
         <main class="coronaTicketsUY">
             <%@ include file="header.jsp" %>
-        
+            <div class="page-title">
+                <h3>Bienvenido a CoronaTickets.uy!</h3>
+            </div>
             <section>
-                <%@ include file="sidebar.jsp" %>
                 <div class="main-container">
-        <%--                AGREGAR COMPONENTES ACA--%>
-                    <a href="registro-espectaculo">Alta de Espectaculo</a>
-                    <a href="registro-funcion">Alta de funcion</a>
-                    <a href="registro-paquete">Alta de Paquete</a>
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <article class="content-area">
+                        <div class="content-area-header">
+                            <h2><a href="listado-espectaculos">Espectaculos</a></h2>
+                            <span><a href="listado-espectaculos">Ver más</a></span>
+                        </div>
+                        <div class="content-area-content">
+                        
+                        </div>
+                    </article>
+                    <%-- AGREGAR COMPONENTES ARRIBA--%>
+                </div>
+                <%@ include file="sidebar.jsp" %>
+                
+<%--
                     <a href="registro-espectaculo-a-paquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
                     <a href='registro-espectadores-a-funcion?nombre=Casados+y+complicated&nombre_espectaculo=La+boda+de+tu+tia&nombre_plataforma=Twitch'>RegistroAFuncion</a>
-                    <a href="listado-usuario">Listado de Usuarios</a>
-                    <a href="listado-espectaculos">Listado de Espectáculos</a>
-                    <a href="listado-funciones">Listado de Funciones</a>
-                    <a href="listado-paquetes">Listado de Paquetes</a>
-        <%--                AGREGAR COMPONENTES ACA--%>
-                </div>
+--%>
             </section>
         </main>
     </div>

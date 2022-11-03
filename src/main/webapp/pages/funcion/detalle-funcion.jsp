@@ -8,6 +8,11 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
+    Funcion funcion= (Funcion) request.getAttribute("datos");
+    Map<String, EspectadorRegistradoAFuncion> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
+    int contador = espectador_registrado_funcion.size();
+    EspectadorRegistradoAFuncion registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());
+
 %>
 <html>
     <head>
@@ -19,75 +24,41 @@
     <%@ include file="/pages/header.jsp" %>
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
-        <%
-            Funcion funcion= (Funcion) request.getAttribute("datos");
-            Map<String, EspectadorRegistradoAFuncion> espectador_registrado = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
-            int contador = espectador_registrado.size();
-            EspectadorRegistradoAFuncion registro = espectador_registrado.get(usuarioLogueado.getNickname());
-            System.out.println(contador);
-            System.out.println(registro);
-        %>
         <div class="grid-container">
-
-
-                <%-- AGREGAR COMPONENTES ACA--%>
-
-                <h1 class="title">Detalle de función</h1>
-
-                    <img src="<%=funcion.getImagen()%>" alt="Foto de la funcion" class="img_perfil">
+            <%-- AGREGAR COMPONENTES ACA--%>
+            <h1 class="title">Detalle de función</h1>
+            <img src="<%=funcion.getImagen()%>" alt="Foto de la funcion" class="img_perfil">
             <div class="first-data">
                 <h2><%=funcion.getNombre()%></h2>
                 <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
-            <%
-
-                if((Boolean) session.getAttribute("esEspectador") && registro==null){
-                    if(contador +1 <= funcion.getEspectaculo().getMaxEspectadores()){
-            %>
-                    <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
-            <%
-                    }else {
-            %>
+            <% if((Boolean) session.getAttribute("esEspectador") && registro==null){
+                    if(contador +1 <= funcion.getEspectaculo().getMaxEspectadores()){ %>
+                        <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
+            <%      }else { %>
                         <h4>Funcion llena</h4>
-            <%
-                    }
-                }
-            %>
+            <%      }
+                }   %>
             </div>
             <div class="tabs">
                 <div class="menu">
-                        <p data-target="#datos_generales" class="active">Datos Generales</p>
-                        <p data-target="#espectadores">Espectadores</p>
-
-
+                    <p data-target="#datos_generales" class="active">Datos Generales</p>
+                    <p data-target="#espectadores">Espectadores</p>
                 </div>
-
                 <div class="content">
-
                     <div data-content id="datos_generales" class="active">
                         <h4>Nombre:<%=funcion.getNombre()%></h4>
                         <h4>Espectaculo:<%=funcion.getEspectaculo().getNombre()%></h4>
                         <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
                         <h4>Fecha de registro:<%=funcion.getFechaRegistro()%></h4>
-
-
                     </div>
-
-
                     <div data-content id="espectadores">
                         <table >
                             <tbody>
-                            <%
-
-                                Map<String, EspectadorRegistradoAFuncion> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
-                                for (EspectadorRegistradoAFuncion espect_reg_funcion : espectador_registrado_funcion.values()) {
-                            %>
+                            <%  for (EspectadorRegistradoAFuncion espect_reg_funcion : espectador_registrado_funcion.values()) {    %>
                             <tr>
                                 <th onClick="location.href='perfil?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
                             </tr>
-                            <%
-                                }
-                            %>
-
+                            <%  }   %>
                             </tbody>
                         </table>
                     </div>

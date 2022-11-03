@@ -17,6 +17,7 @@
     --dark-grey: #999999;
     --light-grey: #C4C4C4;
     --almost-white: #F5F5F5;
+    --link: #1c439b;
 } 
 
 body {
@@ -67,6 +68,8 @@ body {
 }
 
 main.coronaTicketsUY {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 0;
     margin-left: auto;
     margin-right: auto;
@@ -75,17 +78,33 @@ main.coronaTicketsUY {
     width: 1060px;
 }
 
+.page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    background-color: var(--primary-blue);
+}
+.page-title > h3 {
+    margin: 0 10px;
+    font-size: 20px;
+    color: var(--almost-white);
+    padding: 5px 10px;
+}
+
 section {
     display: flex;
     width: 100%;
-    height: calc(100% - 131px); /*90px = header height + padding */
+    padding: 10px 0;
+
+    border-left: 1px solid var(--light-grey);
+    border-right: 1px solid var(--light-grey);
 }
 
 .header {
     display: flex;
     flex-direction: column;
     font-size: 20px;
-    border-bottom: 1px solid #ccc;
 }
 .header__top {
     display: flex;
@@ -144,7 +163,7 @@ section {
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 .header__right__submenu_wrap.open-menu {
-    max-height: 210px;
+    max-height: 100%;
 }
 .header__right__submenu {
     display: flex;
@@ -199,7 +218,7 @@ section {
     text-indent: 2px;
 }
 .header__right__submenu__options:hover > span {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .header__center {
@@ -265,12 +284,13 @@ section {
 }
 
 .sidebar {
-    width: 20%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #cccccc;
-    padding: 20px;
+    background-color: var(--light-grey);
+    margin: 10px;
+    padding: 10px;
 }
 
 .sidebar__item {
@@ -310,7 +330,47 @@ section {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    border-right: 1px solid var(--light-grey);
+    padding: 0 10px;
+}
+
+.content-area {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.content-area-header {
+    border-bottom: 1px solid var(--light-grey);
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.content-area-header > h2 {
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.content-area-header > span {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.content-area-header > h2 > a {
+    color: var(--primary-black);
+    text-decoration: none;
+}
+.content-area-header > span > a {
+     color: var(--link);
+     text-decoration: none;
+ }
+
+.content-area-header > * > a:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
 }
 
 .loader {

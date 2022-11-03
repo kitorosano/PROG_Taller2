@@ -25,6 +25,9 @@
 </head>
 <body>
     <%@ include file="/pages/header.jsp" %>
+    <div id="message" class="hidden <%=messageType%>" role="alert">
+        <%=message%>
+    </div>
     
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
@@ -54,53 +57,76 @@
                         <label class="subtitulos">Imagen</label>
                         <input type="file" accept="image/*" name="imagen" id="imagen">
                     </div>
-                    <button type="button" onclick="enviarForm()">Confirmar</button>
+                    <button id="submitBtn" type="button" onclick="enviarForm()">Confirmar</button>
                 </div>
             </form>
-    
-            <%
-                String error = (String) request.getAttribute("error");
-                if (error != "") {
-            %>
-            <div role="alert">
-                ${error}
-            </div>
-            <%
-                }
-            %>
             <%-- AGREGAR COMPONENTES ARRIBA--%>
         </div>
-        
-        <%--    Javascript    --%>
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-        <script>
-            function enviarForm() {
-                //Obtener inputs con jquery
-                let nombre = $("input[name='nombre']").val();
-                let descripcion = $("input[name='descripcion']").val();
-                let vigencia = $("input[name='vigencia']").val();
-                let descuento = $("input[name='descuento']").val();
-                let imagen = $("input[name='imagen']").val();
-                let error;
-    
-                let formularioValido = true;
-    
-                // Validar campos vacios comunes
-                if (nombre === "" || descripcion === "" || vigencia === "" || descuento === "" ) {
-                    error="Complete todos los campos obligatorios";
-                    formularioValido = false;
-                }
-    
-                //Enviar formulario con jquery
-                if (formularioValido) {
-                    document.getElementById("idform").submit();
-                } else {
-                    alert(error);
-                }
-            }
-        </script>
-    
     </section>
+    <%--    Javascript    --%>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            const MESSAGE = $("#message");
+        
+            if (MESSAGE.text().trim() != "") {
+                MESSAGE.removeClass("hidden");
+                setTimeout(() => {
+                    MESSAGE.text("");
+                    MESSAGE.addClass("hidden");
+                }, 5000);
+            } else {
+                MESSAGE.addClass("hidden");
+            }
+        });
+    
+        function mensaje(msg) {
+            const SUBMITBUTTON = $("#submitBtn");
+            const MESSAGE = $("#message");
+            MESSAGE.text(msg);
+            MESSAGE.addClass("error");
+            MESSAGE.removeClass("hidden");
+        
+            setTimeout(() => {
+                MESSAGE.text("");
+                MESSAGE.addClass("hidden");
+                MESSAGE.removeClass("error");
+            }, 5000);
+    
+            SUBMITBUTTON.prop("disabled", false);
+        }
+        //TODO: HOMOLOGAR MENSAJES DE VALICACION
+        
+        function enviarForm() {
+            let SUBMITBUTTON = $("#submitBtn");
+            SUBMITBUTTON.prop("disabled", true);
+            
+            //Obtener inputs con jquery
+            let nombre = $("input[name='nombre']").val();
+            let descripcion = $("input[name='descripcion']").val();
+            let vigencia = $("input[name='vigencia']").val();
+            let descuento = $("input[name='descuento']").val();
+            let imagen = $("input[name='imagen']").val();
+            let error;
+        
+            let formularioValido = true;
+        
+            // Validar campos vacios comunes
+            if (nombre === "" || descripcion === "" || vigencia === "" || descuento === "" ) {
+                error="Complete todos los campos obligatorios";
+                formularioValido = false;
+            }
+        
+            //Enviar formulario con jquery
+            if (formularioValido) {
+                document.getElementById("idform").submit();
+            } else {
+                alert(error);
+                const SUBMITBUTTON = $("#submitBtn");
+                SUBMITBUTTON.prop("disabled", false);
+            }
+        }
+    </script>
 </body>
 </html>
 

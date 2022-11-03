@@ -11,6 +11,7 @@
     
     Paquete paquete = (Paquete) request.getAttribute("datos");
     String respuesta = (String) request.getAttribute("respuesta");
+    Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     
     Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
 
@@ -25,13 +26,6 @@
     <%@ include file="/pages/header.jsp" %>
     <section>
         <%@ include file="/pages/sidebar.jsp" %>
-        <%
-            //EspectadorPaquete espectadorPaquete= (EspectadorPaquete) request.getAttribute("datos");
-            //Paquete paquete = espectadorPaquete.getPaquete();
-            Paquete paquete = (Paquete)request.getAttribute("datos");
-            String respuesta = (String) request.getAttribute("respuesta");
-            Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
-        %>
         <div class="grid-container">
             <%-- AGREGAR COMPONENTES ABAJO--%>
             <h1 class="title">Detalle de paquete</h1>
