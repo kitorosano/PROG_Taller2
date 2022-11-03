@@ -4,11 +4,8 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
-import main.java.taller1.Logica.Clases.Paquete;
+import jakarta.servlet.http.*;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -33,16 +30,64 @@ public class AltaPaqueteServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
+    
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        view.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
-        if(esArtista) {
-            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
-        }else{
-            System.out.println("No puede acceder a esta pagina");
-            request.setAttribute("error", "No puede acceder a esta pagina");
-            dispatchPage("/pages/index.jsp", request, response);
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+            
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+            
+                HttpSession session = request.getSession();
+                boolean esArtista= (boolean) session.getAttribute("esArtista");
+                if(esArtista) {
+                    dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
+                }else{
+                    dispatchPage("/pages/404.jsp", request, response);
+                }
+            } else {
+                response.sendRedirect("login");
+            }
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
     }
 
@@ -55,16 +100,14 @@ public class AltaPaqueteServlet extends HttpServlet {
         Part part=request.getPart("imagen");
 
         if(camposVacios(nombre,descripcion,vigencia,descuento)){
-            request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
-            request.setAttribute("messageType", "error");
-            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
+            dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
+            return;
         }
         double descuentoDb= Double.parseDouble(descuento);
         LocalDate vigenciaDate=LocalDate.parse(vigencia);
         if(nombreExistente(nombre)){
-            request.setAttribute("message", "El nombre ingresado ya existe");
-            request.setAttribute("messageType", "error");
-            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
+            dispatchError("El nombre ingresado ya existe", request, response);
+            return;
         }
 
         String urlImagen="https://i.imgur.com/hHn0WrG.png";
@@ -75,9 +118,7 @@ public class AltaPaqueteServlet extends HttpServlet {
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
-            request.setAttribute("message", "Error al guardar la imagen");
-            request.setAttribute("messageType", "error");
-            dispatchPage("/pages/usuario/registro.jsp", request, response);
+            dispatchError("Error al guardar la imagen", request, response);
             return;
         }
         Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
@@ -87,9 +128,7 @@ public class AltaPaqueteServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            request.setAttribute("message", "Error al crear el paquete");
-            request.setAttribute("messageType", "error");
-            dispatchPage("/pages/paquete/registro-paquete.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchError("Error al crear el paquete", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 

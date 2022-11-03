@@ -5,10 +5,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
@@ -40,30 +37,77 @@ public class AltaFuncionServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
+    
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/funcion/registro-funcion.jsp");
+        view.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
-        if(esArtista){
-            Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
-            String artista=art.getNickname();
-            Map<String, Espectaculo> retorno = new HashMap<>();
-            Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-            System.out.println(espectaculos);
-            for(Espectaculo esp:espectaculos.values()){
-                if(esp.getEstado()==E_EstadoEspectaculo.ACEPTADO){
-                    retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+    
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+    
+                HttpSession session = request.getSession();
+                boolean esArtista= (boolean) session.getAttribute("esArtista");
+                if(esArtista){
+                    Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+                    String artista=art.getNickname();
+                    Map<String, Espectaculo> retorno = new HashMap<>();
+                    Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+                    for(Espectaculo esp:espectaculos.values()){
+                        if(esp.getEstado()==E_EstadoEspectaculo.ACEPTADO){
+                            retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
+                        }
+                    }
+        
+                    List<String> artistas=obtenerArtistas(artista);
+                    request.setAttribute("espectaculos", retorno);
+                    request.setAttribute("artistas",artistas);
+                    dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+                }else{
+                    dispatchPage("/pages/404.jsp", request, response);
                 }
+            } else {
+                response.sendRedirect("login");
             }
-
-            List<String> artistas=obtenerArtistas(artista);
-            request.setAttribute("espectaculos", retorno);
-            request.setAttribute("artistas",artistas);
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
-        }else{
-            System.out.println("No puede acceder a esta pagina");
-            request.setAttribute("error", "No puede acceder a esta pagina");
-            dispatchPage("/pages/index.jsp", request, response);
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
     }
 
@@ -95,25 +139,25 @@ public class AltaFuncionServlet extends HttpServlet {
         request.setAttribute("espectaculos", retorno);
 
         if(camposVacios(nombrefuncion,nombrespectaculo,fecha,hora,artista)){
-            request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+            dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
+            return;
         }
         Espectaculo esp=retorno.get(nombrespectaculo);
         if(esp==null){
-            request.setAttribute("error", "El espectaculo está en estado ingresado");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+            dispatchError("El espectaculo está en estado ingresado", request, response);
+            return;
         }
         if(nombreExistente(nombrefuncion,esp)){
-            request.setAttribute("error", "El nombre ingresado ya existe");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+            dispatchError("El nombre ingresado ya existe", request, response);
+            return;
         }
         if(fechaInvalida(fecha)){
-            request.setAttribute("error", "Fecha invalida");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+            dispatchError("Fecha invalida", request, response);
+            return;
         }
         if(horaInvalida(hora)){
-            request.setAttribute("error", "Hora invalida");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response);
+            dispatchError("Hora invalida", request, response);
+            return;
         }
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
@@ -127,8 +171,7 @@ public class AltaFuncionServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
-            request.setAttribute("error", "Error al crear la funcion");
-            dispatchPage("/pages/funcion/registro-funcion.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchError("Error al crear la funcion", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
         }
     }
 

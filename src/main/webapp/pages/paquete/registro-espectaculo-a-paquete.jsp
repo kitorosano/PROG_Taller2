@@ -24,54 +24,64 @@
   <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="../header.jsp" %>
-    <div id="message" class="hidden <%=messageType%>" role="alert">
-        <%=message%>
-    </div>
-    
-    <section>
-        <%@ include file="../sidebar.jsp" %>
-        <div class="main-container">
-        <%-- AGREGAR COMPONENTES ABAJO--%>
-          <h1>Registro de paquete de espectaculos</h1>
-  
-          <select name="plataforma" id="plataforma">
-            <option value="" selected disabled hidden>Plataforma</option>
-            <%
-              for(Plataforma p: plataformas.values()){
-            %>
-            <option value="<%=p.getNombre()%>"><%=p.getNombre()%></option>
-            <%
-              }
-            %>
-          </select>
-  
-          <div id="artistas-list">
-              <p>Artistas a invitar</p>
-              <select multiple name="listEspectaculos" id="listEspectaculos">
-                <%
-                  for(Espectaculo e: espectaculos.values()){
-                %>
-                <option value="<%=e.getNombre()+"-"+e.getPlataforma().getNombre()%>"><%=e.getNombre()%></option>
-                <%
-                  }
-                %>
-              </select>
-              <button type="button" id="btnAgregar">Agregar espectaculo</button>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
+        </div>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Registrar espectaculo en paquete</h3>
             </div>
-    
-          <form id="idform" name="formEspectaculosPaquete" method="POST" action="espectaculoAPaquete">
-            <input type="hidden" value="<%=request.getParameter("paquete")%>" name="paquete">
-            <select multiple name="espectaculosAagregar" id="espectaculosAagregar">
-            </select>
-            <button type="button" id="btnEliminar">Quitar espectaculo</button>
-            <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
-          </form>
-    
-          
-        <%--                AGREGAR COMPONENTES ACA--%>
-      </div>
-    </section>
+            <section>
+                <%@ include file="../sidebar.jsp" %>
+                <div class="main-container">
+                <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <div class="input-container">
+                        <label class="subtitulos">Plataforma</label>
+                          <select name="plataforma" id="plataforma">
+                            <option value="" selected disabled hidden>Plataforma</option>
+                            <% for(Plataforma p: plataformas.values()){ %>
+                                <option value="<%=p.getNombre()%>"><%=p.getNombre()%></option>
+                            <% }  %>
+                          </select>
+                    </div>
+                    <br>
+                    <br>
+                    <div style="display: flex; gap: 30px">
+                      <div id="artistas-list">
+                          <p>Espectaculos a agregar</p>
+                          <select multiple name="listEspectaculos" id="listEspectaculos" style="width: 300px; height: 200px; padding: 5px">
+                            <%
+                              for(Espectaculo e: espectaculos.values()){
+                            %>
+                            <option value="<%=e.getNombre()+"-"+e.getPlataforma().getNombre()%>"><%=e.getNombre()%></option>
+                            <%
+                              }
+                            %>
+                          </select>
+                          <button type="button" id="btnAgregar">Agregar espectaculo</button>
+                        </div>
+                
+                      <form id="idform" name="formEspectaculosPaquete" method="POST" action="espectaculoAPaquete">
+                          <p>Espectaculos agregados</p>
+                            <input type="hidden" value="<%=request.getParameter("paquete")%>" name="paquete">
+                            <select multiple name="espectaculosAagregar" id="espectaculosAagregar" style="width: 300px; height: 200px; padding: 5px">
+                            </select>
+                            <button type="button" id="btnEliminar">Quitar espectaculo</button>
+                      </form>
+                    </div>
+                    <br>
+                    <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
+
+
+                <%--                AGREGAR COMPONENTES ACA--%>
+              </div>
+            </section>
+        </main>
+    </div>
+
     <%--    Javascript    --%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>

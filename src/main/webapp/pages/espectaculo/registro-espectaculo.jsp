@@ -14,8 +14,6 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
-    
-    
     String nombre = "";
     String descripcion = "";
     String duracion = "";
@@ -38,10 +36,7 @@
         categoriasElegidas = new ArrayList<>(
                 Arrays.asList(str_categoriasElegidas)
         );
-        System.out.println("Categorias elegidas: " + categoriasElegidas);
     }
-    Map<String, Plataforma> plataformas= (Map<String, Plataforma>) request.getAttribute("plataformas");
-    Map<String, Categoria>categorias= (Map<String, Categoria>) request.getAttribute("categorias");
 %>
 
 
@@ -55,92 +50,100 @@
 
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <div id="message" class="hidden <%=messageType%>" role="alert">
-        <%=message%>
-    </div>
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <h1>Alta de espectaculo</h1>
-<%--            <button class="volver" onclick="history.back()">Volver</button>--%>
-            <form id="idform" name="formEspectaculo" method="POST" action="registro-espectaculo" enctype="multipart/form-data">
-                <div style="display: flex; flex-direction: column; align-items: flex-start">
-                    <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
-                        <div class="input-container">
-                            <label class="subtitulos" for="plataforma">Plataforma</label>
-                            <select name="plataforma" id="plataforma">
-                            <% for (Plataforma elem : plataformas.values()) { %>
-                                <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
-                            <% } %>
-                            </select>
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="nombre">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="descripcion">Descripcion</label>
-                        <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100" ><%= descripcion%></textarea>
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="duracion">Duracion</label>
-                        <input type="number" min="0" id="duracion" name="duracion" placeholder="*Duracion..." step="0.01" value="<%= duracion%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="espMinimos">Espectadores Minimos</label>
-                        <input type="number" min="0" id="espMinimos" name="espMinimos" placeholder="*Espectadores Minimos..." value="<%= especMinimos%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="espMaximos">Espectadores Maximos</label>
-                        <input type="number" min="0" id="espMaximos" name="espMaximos" placeholder="*Espectadores Maximos..." value="<%= especMaximos%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="url">URL sitio web</label>
-                        <input type="url" name="url" id="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="costo">Costo de entrada</label>
-                        <input type="number" min="0" id="costo" name="costo" placeholder="*Costo de entrada..." step="0.01" value="<%= costo%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="imagen">Imagen</label>
-                            <input type="file" name="imagen" id="imagen" accept="image/*">
-                        </div>
-    
-                        <div id="select-categorias">
-                            <label for="categorias">Categorias</label>
-                            <select name="categorias"  id="categorias">
-                            <% for (Categoria cat : categorias.values()) {
-                                    if(!categoriasElegidas.contains(cat.getNombre())){ %>
-                                        <option value="<%= cat.getNombre()%>"><%=cat.getNombre()%></option>
-                            <%      }
-                                } %>
-                            </select>
-                            <button type="button" onclick="AgregarCategoria()">Agregar</button>
-                            
-                            <%-- Aca se agregan las categorias seleccionadas para mostrar --%>
-                            <ul id="Categorias-list">
-                                <% for (String cat : categoriasElegidas) { %>
-                                    <li class="cat-elegidas" onclick="QuitarCategoria(this)"> <%=cat%> </li>
-                                <% } %>
-                            </ul>
-    
-                            <%-- Aca se agregan las categorias seleccionadas para el envio --%>
-                            <select hidden name="catElegidas" id="catElegidas" multiple>
-                                <% for (String cat : categoriasElegidas) { %>
-                                <option value="<%= cat%>" selected><%=cat%></option>
-                                <% } %>
-                            </select>
-                        </div>
-                    </div>
-                    <button id="submitBtn"  type="button" onclick="enviarForm()">Registrar Espectaculo</button>
-                </div>
-            </form>
-            <%-- AGREGAR COMPONENTES ARRIBA--%>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Alta de espectaculo</h3>
+            </div>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="main-container">
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <h1>Alta de espectaculo</h1>
+        <%--            <button class="volver" onclick="history.back()">Volver</button>--%>
+                    <form id="idform" name="formEspectaculo" method="POST" action="registro-espectaculo" enctype="multipart/form-data">
+                        <div style="display: flex; flex-direction: column; align-items: flex-start">
+                            <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
+                                <div class="input-container">
+                                    <label class="subtitulos" for="plataforma">Plataforma</label>
+                                    <select name="plataforma" id="plataforma">
+                                    <% for (Plataforma elem : plataformasMap.values()) { %>
+                                        <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
+                                    <% } %>
+                                    </select>
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="descripcion">Descripcion</label>
+                                <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100" ><%= descripcion%></textarea>
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="duracion">Duracion</label>
+                                <input type="number" min="0" id="duracion" name="duracion" placeholder="*Duracion..." step="0.01" value="<%= duracion%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="espMinimos">Espectadores Minimos</label>
+                                <input type="number" min="0" id="espMinimos" name="espMinimos" placeholder="*Espectadores Minimos..." value="<%= especMinimos%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="espMaximos">Espectadores Maximos</label>
+                                <input type="number" min="0" id="espMaximos" name="espMaximos" placeholder="*Espectadores Maximos..." value="<%= especMaximos%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="url">URL sitio web</label>
+                                <input type="url" name="url" id="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="costo">Costo de entrada</label>
+                                <input type="number" min="0" id="costo" name="costo" placeholder="*Costo de entrada..." step="0.01" value="<%= costo%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="imagen">Imagen</label>
+                                    <input type="file" name="imagen" id="imagen" accept="image/*">
+                                </div>
+            
+                                <div id="select-categorias">
+                                    <label for="categorias">Categorias</label>
+                                    <select name="categorias"  id="categorias">
+                                    <% for (Categoria cat : categoriasMap.values()) {
+                                            if(!categoriasElegidas.contains(cat.getNombre())){ %>
+                                                <option value="<%= cat.getNombre()%>"><%=cat.getNombre()%></option>
+                                    <%      }
+                                        } %>
+                                    </select>
+                                    <button type="button" onclick="AgregarCategoria()">Agregar</button>
+                                    
+                                    <%-- Aca se agregan las categorias seleccionadas para mostrar --%>
+                                    <ul id="Categorias-list">
+                                        <% for (String cat : categoriasElegidas) { %>
+                                            <li class="cat-elegidas" onclick="QuitarCategoria(this)"> <%=cat%> </li>
+                                        <% } %>
+                                    </ul>
+            
+                                    <%-- Aca se agregan las categorias seleccionadas para el envio --%>
+                                    <select hidden name="catElegidas" id="catElegidas" multiple>
+                                        <% for (String cat : categoriasElegidas) { %>
+                                        <option value="<%= cat%>" selected><%=cat%></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="submitBtn"  type="button" onclick="enviarForm()">Registrar Espectaculo</button>
+                        </div>
+                    </form>
+                    <%-- AGREGAR COMPONENTES ARRIBA--%>
+                </div>
+            </section>
+        </main>
+    </div>
 
 
     <%--    Javascript    --%>

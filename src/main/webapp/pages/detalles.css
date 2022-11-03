@@ -1,8 +1,7 @@
 .grid-container{
     display: grid;
-    grid-template-columns: 10px 140px 130px 190px 3px 550px;
-    grid-template-rows: 80px 80px 50px 360px 20px;
-    overflow-y: scroll;
+    grid-template-columns: 40px 115px 130px 190px 3px 550px;
+    grid-template-rows: 20px 50px 60px 300px 20px;
     overflow-x: hidden;
 }
 .title{
@@ -40,25 +39,19 @@
     width: 90px;
 }
 
-
-
-
-.menu p {
-    //margin-right: 2rem;
-    cursor: pointer;
-
-}
 .menu {
     display: flex;
     justify-content: space-around;
-    border-bottom: solid black 1px;
+    border-bottom: 1px solid black;
 }
-[data-target]{
-    background-color: white;
+.menu > p {
+    padding: 10px;
+    cursor: pointer;
 }
-[data-target]:hover {
-    background-color: lightgrey;
+.menu > p:hover {
+    background-color: #e6e6e6;
 }
+
 .active[data-target]{
     background-color: darkgrey;
     border-radius: 6px;
@@ -67,13 +60,16 @@
     background-color: gray;
 }
 .content {
-    margin-top: 1rem;
     text-align: left;
-    margin-right: 3rem;
+    margin: 2rem 2rem;
 }
 
 [data-content] {
     display: none;
+}
+
+[data-content] table tbody {
+    text-align: left;
 }
 
 
@@ -81,20 +77,9 @@
     display: block;
 
 }
-#funciones table tbody tr th{
+[data-content] table tbody tr th{
     cursor: pointer;
-}
-
-#espectaculos table tbody tr th{
-    cursor:pointer;
-}
-
-#espectadores table tbody tr th{
-    cursor:pointer;
-}
-
-#paquetes table tbody tr th{
-    cursor:pointer;
+    padding-right: 30px;
 }
 
 .seleccion{
@@ -124,11 +109,19 @@
     grid-column: 3;
     grid-row: 3;
 }
-
+/* For colorful badge*/
 .sticker{
     display: inline-block;
-    border-radius: 3px;
-    background-color: gray;
+    padding: 0.5em 1em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: white;
+
 }
 
 .respuesta{
