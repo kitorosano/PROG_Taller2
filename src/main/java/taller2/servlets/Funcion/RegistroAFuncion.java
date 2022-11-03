@@ -29,6 +29,7 @@ public class RegistroAFuncion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean esEspectador= (boolean) request.getSession().getAttribute("esEspectador");
+        System.out.println("Se llego al serverlet de registro  a funcion");
         if(esEspectador) {
             String espectaculo = request.getParameter("espectaculo");
             String funcion = request.getParameter("nombre");

@@ -66,8 +66,8 @@ public class AltaPaqueteServlet extends HttpServlet {
             request.setAttribute("messageType", "error");
             dispatchPage("/pages/paquete/registro-paquete.jsp", request, response);
         }
-    
-        String urlImagen="";
+
+        String urlImagen="https://i.imgur.com/hHn0WrG.png";
         try {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
