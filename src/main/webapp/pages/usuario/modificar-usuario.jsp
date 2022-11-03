@@ -41,73 +41,79 @@
     <style>
         <%@ include file="/pages/global.css" %>
     </style>
-    <style><%@ include file="/pages/usuario/registro.css" %></style>
+    <style><%@ include file="/pages/registros.css" %></style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <div id="message" class="hidden <%=messageType%>" role="alert">
-        <%=message%>
-    </div>
-    
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <h3>Modifica tus datos de usuario</h3>
-            <form id="idform" name="myform" method="POST" action="modificar-usuario" enctype="multipart/form-data">
-                <div id="camposComunes">
-                    <div class="input-group-container">
-                        <div class="input-container">
-                            <label class="subtitulos" for="nombre">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="apellido">Apellido</label>
-                            <input type="text" id="apellido" name="apellido" placeholder="*Apellido..." maxlength="30" value="<%= apellido%>">
-                        </div>
-                    </div>
-                    <div class="input-container">
-                        <label class="subtitulos" for="contrasenia">Contraseña</label>
-                        <input type="password" id="contrasenia" name="contrasenia" placeholder="*Contraseña..." maxlength="30"
-                               value="<%= contrasenia%>">
-                    </div>
-                    <div class="input-group-container">
-                        <div class="input-container">
-                            <label class="subtitulos" for="fechaNac">Fecha de nacimiento</label>
-                            <input type="date" id="fechaNac" name="fechaNac" placeholder="*Fecha de nacimiento..."
-                                   max="<%= LocalDate.now().toString() %>" value="<%= fechaNac%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="imagen">Imagen de perfil</label>
-                            <input type="file" accept="image/*" id="imagen" name="imagen" value="<%= imagen%>">
-                        </div>
-                    </div>
-                </div>
-                <% if(esArtista) {%>
-                    <div id="camposArtista">
-                        <div class="input-container">
-                            <label class="subtitulos" for="descripcion">Descripcion</label>
-                            <textarea id="descripcion" name="descripcion" placeholder="*Descripcion..." maxlength="100"
-                                      value="<%= descripcion%>"><%= descripcion%></textarea>
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="biografia">Biografia</label>
-                            <input type="text" id="biografia" name="biografia" placeholder="Biografia..." maxlength="200"
-                                   value="<%= biografia%>">
-                        </div>
-                        <div class="input-container">
-                            <label class="subtitulos" for="url">URL del sitio web</label>
-                            <input type="url" id="url" name="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
-                        </div>
-                    </div>
-                <% } %>
-                <button id="submitBtn" type="button" onclick="enviarForm()">Registrarse!</button>
-            </form>
-            <%-- AGREGAR COMPONENTES ARRIBA--%>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Modificar Perfil</h3>
+            </div>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="main-container">
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <form id="idform" name="myform" method="POST" action="modificar-usuario" enctype="multipart/form-data">
+                        <div id="camposComunes">
+                            <div class="input-group-container">
+                                <div class="input-container">
+                                    <label class="subtitulos" for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="apellido">Apellido</label>
+                                    <input type="text" id="apellido" name="apellido" placeholder="*Apellido..." maxlength="30" value="<%= apellido%>">
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <label class="subtitulos" for="contrasenia">Contraseña</label>
+                                <input type="password" id="contrasenia" name="contrasenia" placeholder="*Contraseña..." maxlength="30"
+                                       value="<%= contrasenia%>">
+                            </div>
+                            <div class="input-group-container">
+                                <div class="input-container">
+                                    <label class="subtitulos" for="fechaNac">Fecha de nacimiento</label>
+                                    <input type="date" id="fechaNac" name="fechaNac" placeholder="*Fecha de nacimiento..."
+                                           max="<%= LocalDate.now().toString() %>" value="<%= fechaNac%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="imagen">Imagen de perfil</label>
+                                    <input type="file" accept="image/*" id="imagen" name="imagen" value="<%= imagen%>">
+                                </div>
+                            </div>
+                        </div>
+                        <% if(esArtista) {%>
+                            <div id="camposArtista">
+                                <div class="input-container">
+                                    <label class="subtitulos" for="descripcion">Descripcion</label>
+                                    <textarea id="descripcion" name="descripcion" placeholder="*Descripcion..." maxlength="100"
+                                              value="<%= descripcion%>"><%= descripcion%></textarea>
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="biografia">Biografia</label>
+                                    <input type="text" id="biografia" name="biografia" placeholder="Biografia..." maxlength="200"
+                                           value="<%= biografia%>">
+                                </div>
+                                <div class="input-container">
+                                    <label class="subtitulos" for="url">URL del sitio web</label>
+                                    <input type="url" id="url" name="url" placeholder="Sitio Web Url..." maxlength="50" value="<%= url%>">
+                                </div>
+                            </div>
+                        <% } %>
+                        <button id="submitBtn" type="button" onclick="enviarForm()">Registrarse!</button>
+                    </form>
+                    <%-- AGREGAR COMPONENTES ARRIBA--%>
+                </div>
+            </section>
+        </main>
+    </div>
     
     <%--    Javascript    --%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"

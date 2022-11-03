@@ -31,6 +31,25 @@ public class AltaEspectaculoServlet extends HttpServlet {
         view.forward(request, response);
     }
     
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    
     protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("message", errorMessage);
@@ -41,18 +60,36 @@ public class AltaEspectaculoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        boolean esArtista = session.getAttribute("esArtista") != null && (boolean) session.getAttribute("esArtista");
-        
-        // Si no es artista, redirigir a la página 404
-        if(esArtista){
-            Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-            Map<String, Categoria>categorias=fabrica.getICategoria().obtenerCategorias();
-            request.setAttribute("plataformas", plataformas);
-            request.setAttribute("categorias", categorias);
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
-        }else{
-            dispatchPage("/pages/404.jsp", request, response);
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+            
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+            
+                HttpSession session = request.getSession();
+                boolean esArtista = session.getAttribute("esArtista") != null && (boolean) session.getAttribute("esArtista");
+                
+                // Si no es artista, redirigir a la página 404
+                if(esArtista){
+                    dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+                }else{
+                    dispatchPage("/pages/404.jsp", request, response);
+                }
+            } else {
+                response.sendRedirect("login");
+            }
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
     }
 

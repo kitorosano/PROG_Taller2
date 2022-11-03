@@ -33,91 +33,91 @@
   <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <div id="message" class="hidden <%=messageType%>" role="alert">
-        <%=message%>
-    </div>
-    
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <h1>Registro de funcion de espectaculo</h1>
-<%--            <button class="volver" onclick="history.back()">Volver</button>--%>
-            <form id="idform" name="formEspectaculo" method="POST" action="registro-funcion" enctype="multipart/form-data">
-              <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
-                  <div class="input-container">
-                      <label class="subtitulos">Espectaculo</label>
-                      <select name="espectaculo" >
-                      <%
-                        if(nombrespectaculo==null || nombreplataforma==null){
-                          for (Espectaculo elem : espectaculos.values()) {
-                      %>
-                      <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
-                      <%
-                          }
-                        }else{
-                      %>
-                        <option value="<%=nombrespectaculo+"-"+nombreplataforma%>"><%=nombrespectaculo%></option>
-                        <%
-                          }
-                      %>
-                      </select>
-                  </div>
-                  <div class="input-container">
-                    <label class="subtitulos">Nombre</label>
-                    <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%=nombrefuncion%>">
-                  </div>
-                  <div class="input-container">
-                    <label class="subtitulos">Fecha de inicio</label>
-                    <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>" value="<%=fecha%>">
-                  </div>
-                  <div class="input-container">
-                    <label class="subtitulos">Hora de inicio</label>
-                    <input type="time" name="horaInicio" value="<%=hora%>">
-                  </div>
-                  <div class="input-container">
-                    <label class="subtitulos">Imagen</label>
-                    <input type="file" accept="image/*" name="imagen">
-                  </div>
-                </div>
-                <div id="artistas-list">
-                  <p>Artistas a invitar</p>
-                  <select multiple name="listArtistas" id="listArtistas">
-                    <%
-                      for(String artista: artistas){
-                    %>
-                    <option value="<%=artista%>"><%=artista%></option>
-                    <%
-                      }
-                    %>
-                  </select>
-                  <button type="button" onclick="agregarArtista()">Invitar artista</button>
-                </div>
-        
-        
-                <select multiple name="artistasInvitados" id="artistasInvitados">
-                  <%
-                    if(artistasInvitados!=null){
-                      for(String nombInvitado:artistasInvitados){
-                  %>
-                  <option value="<%=nombInvitado%>"><%=nombInvitado%></option>
-                  <%
-                      }
-                    }
-                  %>
-                </select>
-                <button type="button" onclick="eliminarArtista()">Quitar artista</button>
-                <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
-              </div>
-            </form>
-
-            <%-- AGREGAR COMPONENTES ARRIBA--%>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Alta de Funcion</h3>
+            </div>
+        <section>
+            <%@ include file="/pages/sidebar.jsp" %>
+            <div class="main-container">
+                <%-- AGREGAR COMPONENTES ABAJO--%>
+                <form id="idform" name="formEspectaculo" method="POST" action="registro-funcion" enctype="multipart/form-data">
+                  <div style="display: flex; flex-direction: column; align-items: flex-start">
+                    <div id="camposBasicos" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%">
+                      <div class="input-container">
+                          <label class="subtitulos">Espectaculo</label>
+                          <select name="espectaculo" >
+                          <%  if(nombrespectaculo==null || nombreplataforma==null){
+                                    if(espectaculos.values().size() == 0) { %>
+                                        <option value="">No tienes espectaculos aceptados</option>
+                          <%        } else {
+                                        for (Espectaculo elem : espectaculos.values()) {  %>
+                                            <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
+                          <%            }
+                                    }
+                            }else{ %>
+                                    <option value="<%=nombrespectaculo+"-"+nombreplataforma%>"><%=nombrespectaculo%></option>
+                        <%    } %>
+                          </select>
+                      </div>
+                      <div class="input-container">
+                        <label class="subtitulos">Nombre</label>
+                        <input type="text" name="nombre" placeholder="*Nombre..." maxlength="30" value="<%=nombrefuncion%>">
+                      </div>
+                      <div class="input-container">
+                        <label class="subtitulos">Fecha de inicio</label>
+                        <input type="date" name="fechaInicio" min="<%= LocalDate.now().toString() %>" value="<%=fecha%>">
+                      </div>
+                      <div class="input-container">
+                        <label class="subtitulos">Hora de inicio</label>
+                        <input type="time" name="horaInicio" value="<%=hora%>">
+                      </div>
+                      <div class="input-container">
+                        <label class="subtitulos">Imagen</label>
+                        <input type="file" accept="image/*" name="imagen">
+                      </div>
+                    </div>
+                      <div style="display: flex; gap: 30px">
+                            <div id="artistas-list">
+                              <p>Artistas a invitar</p>
+                              <select multiple name="listArtistas" id="listArtistas" style="width: 120px; height: 200px; padding: 5px">
+                                  <%  for(String artista: artistas){ %>
+                                  <option value="<%=artista%>"><%=artista%></option>
+                                  <%  }   %>
+                              </select>
+                              <button type="button" onclick="agregarArtista()">Invitar artista</button>
+                          </div>
+                          <div>
+                            <p>Artistas invitados</p>
+                            <select multiple name="artistasInvitados" id="artistasInvitados" style="width: 120px; height: 200px; padding: 5px">
+                              <%    if(artistasInvitados!=null){
+                                        for(String nombInvitado:artistasInvitados){ %>
+                                            <option value="<%=nombInvitado%>"><%=nombInvitado%></option>
+                              <%        }
+                                    }   %>
+                            </select>
+                            <button type="button" onclick="eliminarArtista()">Quitar artista</button>
+                          </div>
+                      </div>
+                      <br>
+                    <button id="submitBtn" type="button" onclick="enviarForm()">Registrar!</button>
+                  </div>
+                </form>
     
-    <%--    Javascript    --%>
+                <%-- AGREGAR COMPONENTES ARRIBA--%>
+            </div>
+        </section>
+        </main>
+    </div>
+
+
+<%--    Javascript    --%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {

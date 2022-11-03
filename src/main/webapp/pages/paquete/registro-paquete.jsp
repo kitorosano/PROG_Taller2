@@ -24,45 +24,51 @@
     <title>CoronaTicketsUY</title>
 </head>
 <body>
-    <%@ include file="/pages/header.jsp" %>
-    <div id="message" class="hidden <%=messageType%>" role="alert">
-        <%=message%>
-    </div>
-    
-    <section>
-        <%@ include file="/pages/sidebar.jsp" %>
-        <div class="main-container">
-            <%-- AGREGAR COMPONENTES ABAJO--%>
-            <h1>Registro de paquete de espectaculos</h1>
-<%--            <button class="volver" onclick="history.back()">Volver</button>--%>
-            <form id="idform" name="formEspectaculo" method="POST" action="registro-paquete" enctype="multipart/form-data">
-                <div style="display: flex; flex-direction: column; align-items: flex-start">
-                    <div class="input-container">
-                        <label class="subtitulos">Nombre</label>
-                        <input type="text" name="nombre" id="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
-                    </div>
-                    <div class="input-container">
-                        <label class="subtitulos">Descripcion</label>
-                        <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
-                    </div>
-                    <div class="input-container">
-                        <label class="subtitulos">Fecha de expiracion</label>
-                        <input type="date" min="<%=LocalDate.now()%>" name="vigencia" id="fecha-expiracion" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
-                    </div>
-                    <div class="input-container">
-                        <label class="subtitulos">Porcentaje de descuento</label>
-                        <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" step="0.1" value="<%= descuento%>">
-                    </div>
-                    <div class="input-container">
-                        <label class="subtitulos">Imagen</label>
-                        <input type="file" accept="image/*" name="imagen" id="imagen">
-                    </div>
-                    <button id="submitBtn" type="button" onclick="enviarForm()">Confirmar</button>
-                </div>
-            </form>
-            <%-- AGREGAR COMPONENTES ARRIBA--%>
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
         </div>
-    </section>
+        
+        <main class="coronaTicketsUY">
+            <%@ include file="/pages/header.jsp" %>
+            <div class="page-title">
+                <h3>Alta de Paquete</h3>
+            </div>
+            <section>
+                <%@ include file="/pages/sidebar.jsp" %>
+                <div class="main-container">
+                    <%-- AGREGAR COMPONENTES ABAJO--%>
+                    <form id="idform" name="formEspectaculo" method="POST" action="registro-paquete" enctype="multipart/form-data">
+                        <div style="display: flex; flex-direction: column; align-items: flex-start">
+                            <div class="input-container">
+                                <label class="subtitulos">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" placeholder="*Nombre..." maxlength="30" value="<%= nombre%>">
+                            </div>
+                            <div class="input-container">
+                                <label class="subtitulos">Descripcion</label>
+                                <textarea name="descripcion" id="descripcion" placeholder="*Descripcion..." maxlength="100"><%= descripcion%></textarea>
+                            </div>
+                            <div class="input-container">
+                                <label class="subtitulos">Fecha de expiracion</label>
+                                <input type="date" min="<%=LocalDate.now()%>" name="vigencia" id="fecha-expiracion" placeholder="*Fecha de expiracion..." value="<%= vigencia%>">
+                            </div>
+                            <div class="input-container">
+                                <label class="subtitulos">Porcentaje de descuento</label>
+                                <input type="number" min="0" name="descuento" id="descuento" placeholder="*Porcentaje de descuento" step="0.1" value="<%= descuento%>">
+                            </div>
+                            <div class="input-container">
+                                <label class="subtitulos">Imagen</label>
+                                <input type="file" accept="image/*" name="imagen" id="imagen">
+                            </div>
+                            <button id="submitBtn" type="button" onclick="enviarForm()">Confirmar</button>
+                        </div>
+                    </form>
+                    <%-- AGREGAR COMPONENTES ARRIBA--%>
+                </div>
+            </section>
+        </main>
+    </div>
+
     <%--    Javascript    --%>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>

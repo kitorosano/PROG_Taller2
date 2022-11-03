@@ -3,15 +3,14 @@ package taller2.servlets.Usuario;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.Espectador;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Map;
 
 @WebServlet(name = "ModificarUsuario", value = "/modificar-usuario")
 @MultipartConfig
@@ -28,10 +27,60 @@ public class ModificarUsuario extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(page);
         view.forward(request, response);
     }
+    
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        view.forward(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+            
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+                
+                dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+    
+            } else {
+                response.sendRedirect("login");
+            }
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
+        }
     }
 
     @Override
@@ -46,8 +95,7 @@ public class ModificarUsuario extends HttpServlet {
                 request.setAttribute("tipo", "artista");
             }
         }else{
-            request.setAttribute("error", "Nickname no valido");
-            dispatchPage("/pages/index.jsp", request, response);
+            dispatchError("Nickname no valido", request, response);
             return;
         }
 
@@ -72,8 +120,7 @@ public class ModificarUsuario extends HttpServlet {
 
         //error cuando alguno de los campos son vacios
         if(camposVacios(nombre, apellido, fechaNac_str, contrasenia)) {
-            request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-            dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+            dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
             return;
         }
 
@@ -81,8 +128,7 @@ public class ModificarUsuario extends HttpServlet {
 
         //La fecha no es valida porque no nacio mañana
         if(!fechaValida(fechaNac)){
-            request.setAttribute("error", "La fecha no es valida");
-            dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+            dispatchError("La fecha no es valida", request, response);
             return;
         }
 
@@ -103,13 +149,11 @@ public class ModificarUsuario extends HttpServlet {
         // Se especifica el tipo de usuario a crear
         if(tipo.equals("artista")){
             if(camposVaciosArtista(descripcion)){
-                request.setAttribute("error", "Los campos obligatorios no pueden ser vacios");
-                dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+                dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
                 return;
             }
             if(!esFormatoUrl(url)){
-                request.setAttribute("error", "El url no es valido");
-                dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response);
+                dispatchError("El url no es valido", request, response);
                 return;
             }
 
@@ -127,8 +171,7 @@ public class ModificarUsuario extends HttpServlet {
         } catch (RuntimeException e){
             System.out.println(e.getMessage());
             // Error al crear el usuario
-            request.setAttribute("error", "Error al crear el usuario");
-            dispatchPage("/pages/usuario/modificar-usuario.jsp", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchError("Error al crear el usuario", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
             return;
         }
     }

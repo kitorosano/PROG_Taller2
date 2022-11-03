@@ -3,10 +3,7 @@ package taller2.servlets.Paquete;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.Espectaculo;
-import main.java.taller1.Logica.Clases.EspectadorPaquete;
-import main.java.taller1.Logica.Clases.Paquete;
-import main.java.taller1.Logica.Clases.Plataforma;
+import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -29,22 +26,70 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         view.forward(request, response);
     }
     
+    protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        // Si no hay sesión, redirigir a login
+        if (session == null) {
+            return false;
+        }
+        
+        // Si hay sesión, obtener el usuario
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        
+        // Si no hay usuario, redirigir a login
+        if (usuarioLogueado == null) {
+            return false;
+        }
+        
+        // Si hay usuario, enviarlo a la página de inicio
+        return true;
+    }
+    
+    protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setAttribute("message", errorMessage);
+        request.setAttribute("messageType","error");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        view.forward(request, response);
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean esArtista= (boolean) request.getSession().getAttribute("esArtista");
-        if(esArtista) {
-            String paquete = request.getParameter("paquete");
-            Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
-            //Obtengo los espectaculos que no estan en el paquete
-            Map<String, Espectaculo> espectaculos= obtenerEspectaculosSinPaquete(paquete);
-            request.setAttribute("plataformas", plataformas);
-            request.setAttribute("espectaculos", espectaculos);
-            request.setAttribute("paquete", paquete);
-            dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
-        } else{
-            System.out.println("No puede acceder a esta pagina");
-            request.setAttribute("error", "No puede acceder a esta pagina");
-            dispatchPage("/pages/index.jsp", request, response);
+        // Si no hay sesión, redirigir a login
+        boolean sessionIniciada = checkSession(request, response);
+        try {
+            if(sessionIniciada) {
+                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+            
+                request.setAttribute("todasPlataformas", todasPlataformas);
+                request.setAttribute("todosEspectaculos", todosEspectaculos);
+                request.setAttribute("todosPaquetes", todosPaquetes);
+                request.setAttribute("todasCategorias", todasCategorias);
+                request.setAttribute("todosUsuarios", todosUsuarios);
+            
+                HttpSession session = request.getSession();
+                boolean esArtista= (boolean) session.getAttribute("esArtista");
+                if(esArtista) {
+                    String paquete = request.getParameter("paquete");
+                    Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                    //Obtengo los espectaculos que no estan en el paquete
+                    Map<String, Espectaculo> espectaculos= obtenerEspectaculosSinPaquete(paquete);
+                    request.setAttribute("plataformas", plataformas);
+                    request.setAttribute("espectaculos", espectaculos);
+                    request.setAttribute("paquete", paquete);
+                    dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
+                }else{
+                    dispatchPage("/pages/404.jsp", request, response);
+                }
+            } else {
+                response.sendRedirect("login");
+            }
+        } catch (RuntimeException e) {
+            dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
     }
     
@@ -68,8 +113,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                         fabrica.getIPaquete().altaEspectaculoAPaquete(esp.getNombre(),nombrepaquete,esp.getPlataforma().getNombre());
                     } catch (Exception e) {
                         System.out.println(e);
-                        request.setAttribute("error", "Error al agregar los paquetes");
-                        dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
+                        dispatchError("Error al agregar los paquetes", request, response);
                     }
                 }
             }
