@@ -63,8 +63,9 @@ public class DetallePaqueteServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
     String nombre = request.getParameter("nombre");
-    String nickname_espectador = (String) session.getAttribute("nickname");
-    
+    //String nickname_espectador = (String) session.getAttribute("nickname");
+    Usuario usuSession=(Usuario)session.getAttribute("usuarioLogueado");
+    String nickname_espectador= usuSession.getNickname();
     boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
     if(!paqueteExiste) { // Si el paquete no existe
         request.setAttribute("respuesta","Paquete no encontrado");
@@ -81,8 +82,8 @@ public class DetallePaqueteServlet extends HttpServlet {
       return;
     }
     
-    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nickname_espectador, nombre);
+    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nombre, nickname_espectador);
     request.setAttribute("respuesta", "Paquete Adquirido");
-    response.sendRedirect("detalle-paquete.jsp" + "?nombre=" + nombre);
+    response.sendRedirect("detalle-paquete" + "?nombre=" + nombre);
   }
 }

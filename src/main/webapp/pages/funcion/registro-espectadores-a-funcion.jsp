@@ -182,7 +182,7 @@
       funcion.value=$("#nombreFuncion").text();
       funcion.type="hidden";
       form.method="post";
-      form.action="registroAFuncion";
+      form.action="registro-espectadores-a-funcion";
       form.appendChild(espectaculo);
       form.appendChild(funcion);
       form.appendChild(plataforma);
