@@ -26,41 +26,37 @@
     <title>Login</title>
 </head>
 <body>
-    <div class="login-container">
-        <img src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />
-        <div class="background_container">
+    <img class="background_img" src="https://i.imgur.com/d6cWesT.jpeg" alt="background_img"  />
+    <div class="background_container">
+        <div id="message" class="hidden <%=messageType%>" role="alert">
+            <%=message%>
+        </div>
 
-            <div id="message" class="hidden <%=messageType%>" role="alert">
-                <%=message%>
+        <div class="container">
+            <div class="container__left">
+                <img
+                  class="w-full object-cover h-full"
+                  src="https://i.imgur.com/fDe4KjV.png"
+                  alt="left_section_image"
+                />
             </div>
+            <div class="vertical"></div>
+            <div class="container__right">
+                <h3>Bienvenid@ a <span>CoronaTicketsUY</span></h3>
 
-            <div class="container">
-                <div class="container__left">
-                    <img
-                      class="w-full object-cover h-full"
-                      src="https://i.imgur.com/fDe4KjV.png"
-                      alt="left_section_image"
-                    />
-                </div>
-                <div class="vertical"></div>
-                <div class="container__right">
-                    <h3>Bienvenid@ a <span>CoronaTicketsUY</span></h3>
+                <form id="idform" name="myform" method="POST" action="login">
+                    
+                    <label for='nickname'>Nickname o Correo *</label>
+                    <input id="nickname" type="text" name="nickname" maxlength="30" value="<%= nickname%>">
+                    <label for='contrasenia'>Contraseña *</label>
+                    <input id="contrasenia" type="password" name="contrasenia" maxlength="30" value="<%= contrasenia%>">
 
-                    <form id="idform" name="myform" method="POST" action="login">
-                        
-                        <label for='nickname'>Nickname o Correo *</label>
-                        <input id="nickname" type="text" name="nickname" maxlength="30" value="<%= nickname%>">
-                        <label for='contrasenia'>Contraseña *</label>
-                        <input id="contrasenia" type="password" name="contrasenia" maxlength="30" value="<%= contrasenia%>">
+                    <a href="#" onclick="alert('una pena brother')" class="forgot">¿Olvidaste tu contraseña?</a>
 
-                        <a href="#" onclick="alert('una pena brother')" class="forgot">¿Olvidaste tu contraseña?</a>
-
-                        <button id="submitBtn" type="button" onclick="enviarForm()">INGRESAR </button>
-                    </form>
-                    <a href="registro">No tienes una cuenta? Registrarte!</a>
-                </div>
+                    <button id="submitBtn" type="button" onclick="enviarForm()">INGRESAR </button>
+                </form>
+                <a href="registro">No tienes una cuenta? Registrarte!</a>
             </div>
-
         </div>
     </div>
     
