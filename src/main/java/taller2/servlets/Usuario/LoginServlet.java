@@ -27,25 +27,44 @@ public class LoginServlet extends HttpServlet {
     view.forward(request, response);
   }
   
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // Obtener el usuario de la sesion
-    HttpSession session = request.getSession();
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
-    String message = (String) session.getAttribute("message");
-    // Si hay usuario en la sesion, redirigir al home
-    if(usuarioLogueado != null) {
-      response.sendRedirect(request.getContextPath());
-      return;
+  protected boolean checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    // Si no hay sesión, redirigir a login
+    if (session == null) {
+      return false;
     }
     
-    // Si hay mensaje de error, mostrarlo
-    if(message != null) {
-      request.setAttribute("message", message);
-      session.removeAttribute("message");
+    // Si hay sesión, obtener el usuario
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    
+    // Si no hay usuario, redirigir a login
+    if (usuarioLogueado == null) {
+      return false;
     }
+    
+    // Si hay usuario, enviarlo a la página de inicio
+    return true;
+  }
+  protected void dispatchError(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    request.setAttribute("message", errorMessage);
+    request.setAttribute("messageType","error");
+    RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/login.jsp");
+    view.forward(request, response);
+  }
   
-    dispatchPage("/pages/usuario/login.jsp", request, response);
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    boolean sessionIniciada = checkSession(request, response);
+    try {
+      if(!sessionIniciada) {
+        dispatchPage("/pages/usuario/login.jsp", request, response);
+      } else {
+        response.sendRedirect("home");
+      }
+    } catch (RuntimeException e) {
+      dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
+    }
   }
   
   @Override
@@ -56,9 +75,7 @@ public class LoginServlet extends HttpServlet {
     
     //error cuando alguno de los campos son vacios
     if(camposVacios(nickname, contrasenia)) {
-      request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
-      request.setAttribute("messageType", "error");
-      dispatchPage("/pages/usuario/login.jsp", request, response);
+      dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
       return;
     }
     
@@ -71,9 +88,7 @@ public class LoginServlet extends HttpServlet {
         boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
         if (!usuarioExistePorCorreo) {
           //error cuando el usuario no existe
-          request.setAttribute("message", "El usuario no existe");
-          request.setAttribute("messageType", "error");
-          dispatchPage("/pages/usuario/login.jsp", request, response);
+          dispatchError("El usuario no existe", request, response);
           return;
         }
         usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
@@ -82,17 +97,13 @@ public class LoginServlet extends HttpServlet {
       }
     } catch (RuntimeException e) {
       e.printStackTrace();
-      request.setAttribute("message", "Error al obtener el usuario");
-      request.setAttribute("messageType", "error");
-      dispatchPage("/pages/usuario/login.jsp", request, response);
+      dispatchError("Error al obtener el usuario", request, response);
       return;
     }
     
     //error cuando la contraseña es incorrecta
     if(!usuario.getContrasenia().equals(contrasenia)) {
-      request.setAttribute("message", "La contraseña es incorrecta");
-      request.setAttribute("messageType", "error");
-      dispatchPage("/pages/usuario/login.jsp", request, response);
+      dispatchError("La contraseña es incorrecta", request, response);
       return;
     }
     
