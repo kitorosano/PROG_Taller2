@@ -1,6 +1,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page import="java.time.LocalDateTime" %>
+<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -11,7 +12,7 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
-    Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
+    Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) request.getAttribute("categorias");
     Map<String, FuncionDTO> funciones = (Map<String, FuncionDTO>) request.getAttribute("funciones");
     Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
     
@@ -44,7 +45,7 @@
                 <div class="first-data">
                     <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%></h2>
                     <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
-                    <%  for (Categoria categoria : categorias.values()) {
+                    <%  for (CategoriaDTO categoria : categorias.values()) {
                             int nextInt = random.nextInt(0xffffff + 1);
                             String randomColor = String.format("#%06x", nextInt); %>
                             <h5 class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></h5>

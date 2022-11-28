@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.CategoriaDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
@@ -64,7 +65,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
-                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+                Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
@@ -75,7 +76,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
                 String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
                 Map<String, Espectaculo> espectaculosFiltrados = new HashMap<>();
-                Map<String, Map<String, Categoria>> categoriasEspectaculosFiltrados = new HashMap<>();
+                Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
     
                 // Si se llega con un filtrado vacio
                 if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
@@ -107,7 +108,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 
                 // Cargar categorias de los espectaculos filtrados
                 for (Espectaculo espectaculo : espectaculosFiltrados.values()){
-                    Map<String,Categoria> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
+                    Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
                     categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
                 }
                 request.setAttribute("categoriasEspectaculosFiltrados", categoriasEspectaculosFiltrados);
