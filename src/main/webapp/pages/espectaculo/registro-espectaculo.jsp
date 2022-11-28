@@ -1,6 +1,6 @@
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
+<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
@@ -113,7 +113,7 @@
                                 <div id="select-categorias">
                                     <label for="categorias">Categorias</label>
                                     <select name="categorias"  id="categorias">
-                                    <% for (Categoria cat : categoriasMap.values()) {
+                                    <% for (CategoriaDTO cat : categoriasMap.values()) {
                                             if(!categoriasElegidas.contains(cat.getNombre())){ %>
                                                 <option value="<%= cat.getNombre()%>"><%=cat.getNombre()%></option>
                                     <%      }

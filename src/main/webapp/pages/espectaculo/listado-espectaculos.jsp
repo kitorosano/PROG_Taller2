@@ -8,12 +8,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
-<%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Collection" %>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
 <%  // Cargamos el usuarioLogueado en cada pantalla
     Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
     
@@ -23,7 +23,7 @@
   String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
   String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
   Map<String, Espectaculo> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
-  Map<String, Map<String, Categoria>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, Categoria>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
+  Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, CategoriaDTO>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
 %>
 
 <!DOCTYPE html>
@@ -64,7 +64,7 @@
                             <label for="filtroCategoria">Selecciona una categoria:</label>
                             <select name="filtroCategoria" id="filtroCategoria">
                                 <option value="">Todas</option>
-                                <% for (Categoria categoria : categoriasMap.values()) { %>
+                                <% for (CategoriaDTO categoria : categoriasMap.values()) { %>
                                     <option value="<%= categoria.getNombre() %>"><%= categoria.getNombre() %></option>
                                 <% } %>
                             </select>
@@ -152,8 +152,8 @@
                 celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
                 celdaCategorias.innerHTML = "";
                 <%
-                Collection<Categoria> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();
-                for (Categoria categoria : categoriasEspectaculoFiltrado) { %>
+                Collection<CategoriaDTO> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();
+                for (CategoriaDTO categoria : categoriasEspectaculoFiltrado) { %>
                     celdaCategorias.innerHTML += "<%=categoria.getNombre()%> ";
                 <% } %>
                     celdaPlataforma.innerHTML = "<%=elem.getPlataforma().getNombre()%>";

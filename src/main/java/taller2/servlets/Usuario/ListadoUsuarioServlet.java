@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.CategoriaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class ListadoUsuarioServlet extends HttpServlet {
         Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
-        Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
+        Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
         Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
         
         request.setAttribute("todasPlataformas", todasPlataformas);
