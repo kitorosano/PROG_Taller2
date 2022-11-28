@@ -1,10 +1,12 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -60,7 +62,7 @@ public class RegistroAFuncion extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -80,7 +82,7 @@ public class RegistroAFuncion extends HttpServlet {
                     String plataforma = request.getParameter("plataforma");
                     Espectador esp=(Espectador)request.getSession().getAttribute("usuarioLogueado");
                     String nombreEsp=esp.getNickname();
-                    Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
+                    FuncionDTO fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
                     Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
                     //Obtengo los paquetes del espectador que tienen el espectaculo asociado
                     Map<String, PaqueteDTO> paquetes = obtenerPaquetesEspectadorEspectaculo(espectaculo, plataforma, nombreEsp);
@@ -113,7 +115,7 @@ public class RegistroAFuncion extends HttpServlet {
         String[] registrosCanjeados = request.getParameterValues("registrosCanjeados");
 
         //Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
-        Funcion fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
+        FuncionDTO fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
         Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(espectador);
         Map<String, PaqueteDTO> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,espectador);
         PaqueteDTO paq=null;

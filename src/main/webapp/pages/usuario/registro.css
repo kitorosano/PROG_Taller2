@@ -139,19 +139,5 @@
     background-color: var(--secondary-blue);
 }
 
-@media screen and (max-height: 610px) {
-    .container {
-        width: 45%;
-        height: auto;
-        overflow-y: scroll;
-    }
 
-    .container > h3 {
-        font-size: 25px;
-    }
-
-    .input-container {
-        margin-bottom: 10px;
-    }
-}
 

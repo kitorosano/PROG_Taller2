@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -60,7 +62,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -85,7 +87,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         Espectaculo espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
         request.setAttribute("datos",espectaculo);
     
-        Map<String, Funcion> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
+        Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
         request.setAttribute("funciones",funciones);
         
         Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);

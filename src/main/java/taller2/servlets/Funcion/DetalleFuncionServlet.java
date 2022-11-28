@@ -1,4 +1,4 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class DetalleFuncionServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -85,7 +87,7 @@ public class DetalleFuncionServlet extends HttpServlet {
           response.sendRedirect("listado-funciones");
           return;
         }
-        Funcion funcion = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).get();
+        FuncionDTO funcion = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).get();
         request.setAttribute("datos",funcion);
       
         Map <String, EspectadorRegistradoAFuncion> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre);

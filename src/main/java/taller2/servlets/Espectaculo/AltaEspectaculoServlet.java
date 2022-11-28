@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -65,7 +66,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -116,7 +117,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         
         // Seteo valores para los campos select del formulario
         try {
-            Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+            Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
             request.setAttribute("plataformas", plataformas);
             Map<String, Categoria> categorias = fabrica.getICategoria().obtenerCategorias();
             request.setAttribute("categorias", categorias);
@@ -174,9 +175,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         }
     
         // Obtener plataforma
-        Plataforma plataforma;
+        PlataformaDTO plataforma;
         try {
-            Optional<Plataforma> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
+            Optional<PlataformaDTO> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
             if (!optional.isPresent()) {
                 dispatchError("Error, plataforma no encontrada", request, response);
                 return;

@@ -8,7 +8,7 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
-    Funcion funcion= (Funcion) request.getAttribute("datos");
+    FuncionDTO funcion= (FuncionDTO) request.getAttribute("datos");
     Map<String, EspectadorRegistradoAFuncion> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
     int contador = espectador_registrado_funcion.size();
     EspectadorRegistradoAFuncion registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());

@@ -1,4 +1,4 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 
 import jakarta.servlet.RequestDispatcher;
@@ -8,6 +8,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -72,7 +74,7 @@ public class AltaFuncionServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -165,7 +167,7 @@ public class AltaFuncionServlet extends HttpServlet {
             InputStream inputImagen=part.getInputStream();
             urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
-        Funcion nueva=new Funcion(nombrefuncion,esp,fechahora,LocalDateTime.now(), urlImagen);
+        FuncionDTO nueva=new FuncionDTO(nombrefuncion,esp,fechahora,LocalDateTime.now(), urlImagen);
         try {
             fabrica.getIFuncion().altaFuncion(nueva);
             //TODO: VER COMO AGREGAR ARTISTAS INVITADOS
@@ -182,9 +184,9 @@ public class AltaFuncionServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrefunc, Espectaculo esp) {      //Devuelve true si hay error
-        Map<String, Funcion> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
+        Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         if(funciones!=null) {
-            for (Funcion fun : funciones.values()) {
+            for (FuncionDTO fun : funciones.values()) {
                 if (fun.getNombre().equals(nombrefunc)) {
                     return true;
                 }
