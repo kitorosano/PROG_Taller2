@@ -1,9 +1,9 @@
-<%@ page import="main.java.taller1.Logica.Clases.Funcion" %>
+<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.Paquete" %>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
   Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
@@ -13,9 +13,9 @@
   
   
   //Traer datos precargados del request anterior
-  Funcion funcion = (Funcion) request.getAttribute("funcion");
+  FuncionDTO funcion = (FuncionDTO) request.getAttribute("funcion");
   Map<String, EspectadorRegistradoAFuncion> registros = (Map<String,EspectadorRegistradoAFuncion>) request.getAttribute("registros");
-  Map<String, Paquete> paquetes= (Map<String, Paquete>) request.getAttribute("paquetes");
+  Map<String, PaqueteDTO> paquetes= (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
 %>
 <html>
 <head>
@@ -124,7 +124,7 @@
             <label>Paquetes que incluyen el espectaculo</label>
             <select multiple name="PaquetesACanjear" id="PaquetesACanjear">
               <%  if(paquetes!=null){
-                    for(Paquete paquete: paquetes.values()){  %>
+                    for(PaqueteDTO paquete: paquetes.values()){  %>
                       <option value="<%=paquete.getNombre()%>"><%=paquete.getNombre()%></option>
               <%    }
                   } %>

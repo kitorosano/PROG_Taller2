@@ -2,6 +2,8 @@
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -11,8 +13,8 @@
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
     Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) request.getAttribute("categorias");
-    Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
-    Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
+    Map<String, FuncionDTO> funciones = (Map<String, FuncionDTO>) request.getAttribute("funciones");
+    Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
     
     Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
     
@@ -80,7 +82,7 @@
                             <div data-content id="funciones">
                                 <table >
                                     <tbody>
-                                    <%  for (Funcion funcion : funciones.values()) {
+                                    <%  for (FuncionDTO funcion : funciones.values()) {
                                             if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
                                                 <tr>
                                                     <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
@@ -93,7 +95,7 @@
                             <div data-content id="paquetes">
                                 <table >
                                     <tbody>
-                                    <%  for (Paquete paquete : paquetes.values()) {    %>
+                                    <%  for (PaqueteDTO paquete : paquetes.values()) {    %>
                                             <tr>
                                                 <th onClick="location.href='detalle-paquete?nombre=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%></th>
                                             </tr>

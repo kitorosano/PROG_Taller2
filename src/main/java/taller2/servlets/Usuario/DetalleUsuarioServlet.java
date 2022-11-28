@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -60,9 +61,9 @@ public class DetalleUsuarioServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+        Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
         Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
       

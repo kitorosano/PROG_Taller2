@@ -1,5 +1,6 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
@@ -9,7 +10,7 @@
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
-    Paquete paquete = (Paquete) request.getAttribute("datos");
+    PaqueteDTO paquete = (PaqueteDTO) request.getAttribute("datos");
     String respuesta = (String) request.getAttribute("respuesta");
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     
