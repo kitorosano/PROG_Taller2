@@ -1,6 +1,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
 <%@ page import="java.time.LocalDateTime" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -11,7 +12,7 @@
     
     Map<String, Categoria> categorias = (Map<String, Categoria>) request.getAttribute("categorias");
     Map<String, Funcion> funciones = (Map<String, Funcion>) request.getAttribute("funciones");
-    Map<String, Paquete> paquetes = (Map<String, Paquete>) request.getAttribute("paquetes");
+    Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
     
     Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
     
@@ -92,7 +93,7 @@
                             <div data-content id="paquetes">
                                 <table >
                                     <tbody>
-                                    <%  for (Paquete paquete : paquetes.values()) {    %>
+                                    <%  for (PaqueteDTO paquete : paquetes.values()) {    %>
                                             <tr>
                                                 <th onClick="location.href='detalle-paquete?nombre=<%=paquete.getNombre()%>'"> <%=paquete.getNombre()%></th>
                                             </tr>
