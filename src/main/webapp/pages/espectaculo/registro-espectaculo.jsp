@@ -1,4 +1,4 @@
-<%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
 <%@ page import="com.google.gson.Gson" %>
@@ -72,7 +72,7 @@
                                 <div class="input-container">
                                     <label class="subtitulos" for="plataforma">Plataforma</label>
                                     <select name="plataforma" id="plataforma">
-                                    <% for (Plataforma elem : plataformasMap.values()) { %>
+                                    <% for (PlataformaDTO elem : plataformasMap.values()) { %>
                                         <option value="<%= elem.getNombre()%>"><%=elem.getNombre()%></option>
                                     <% } %>
                                     </select>
