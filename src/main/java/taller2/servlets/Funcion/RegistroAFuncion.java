@@ -1,9 +1,10 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
@@ -80,7 +81,7 @@ public class RegistroAFuncion extends HttpServlet {
                     String plataforma = request.getParameter("plataforma");
                     Espectador esp=(Espectador)request.getSession().getAttribute("usuarioLogueado");
                     String nombreEsp=esp.getNickname();
-                    Funcion fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
+                    FuncionDTO fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
                     Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
                     //Obtengo los paquetes del espectador que tienen el espectaculo asociado
                     Map<String, Paquete> paquetes = obtenerPaquetesEspectadorEspectaculo(espectaculo, plataforma, nombreEsp);
@@ -113,7 +114,7 @@ public class RegistroAFuncion extends HttpServlet {
         String[] registrosCanjeados = request.getParameterValues("registrosCanjeados");
 
         //Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
-        Funcion fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
+        FuncionDTO fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
         Map<String, EspectadorRegistradoAFuncion> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(espectador);
         Map<String, Paquete> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,espectador);
         Paquete paq=null;

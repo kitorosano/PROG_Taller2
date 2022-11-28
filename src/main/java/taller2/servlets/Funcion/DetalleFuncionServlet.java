@@ -1,4 +1,4 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
@@ -85,7 +86,7 @@ public class DetalleFuncionServlet extends HttpServlet {
           response.sendRedirect("listado-funciones");
           return;
         }
-        Funcion funcion = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).get();
+        FuncionDTO funcion = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).get();
         request.setAttribute("datos",funcion);
       
         Map <String, EspectadorRegistradoAFuncion> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre);

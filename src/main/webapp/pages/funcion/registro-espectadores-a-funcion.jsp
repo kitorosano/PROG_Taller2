@@ -1,4 +1,4 @@
-<%@ page import="main.java.taller1.Logica.Clases.Funcion" %>
+<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion" %>
 <%@ page import="java.util.Map" %>
@@ -13,7 +13,7 @@
   
   
   //Traer datos precargados del request anterior
-  Funcion funcion = (Funcion) request.getAttribute("funcion");
+  FuncionDTO funcion = (FuncionDTO) request.getAttribute("funcion");
   Map<String, EspectadorRegistradoAFuncion> registros = (Map<String,EspectadorRegistradoAFuncion>) request.getAttribute("registros");
   Map<String, Paquete> paquetes= (Map<String, Paquete>) request.getAttribute("paquetes");
 %>
