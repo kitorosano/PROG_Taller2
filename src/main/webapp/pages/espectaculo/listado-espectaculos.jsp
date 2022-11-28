@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
+<%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="main.java.taller1.Logica.Clases.Categoria" %>
 <%@ page import="java.util.Map" %>
@@ -55,7 +55,7 @@
                             <label for="filtroPlataforma">Selecciona una plataforma:</label>
                             <select name="filtroPlataforma" id="filtroPlataforma">
                                 <option value="">Todas</option>
-                                <% for (Plataforma plataforma : plataformasMap.values()) { %>
+                                <% for (PlataformaDTO plataforma : plataformasMap.values()) { %>
                                     <option value="<%= plataforma.getNombre() %>"><%= plataforma.getNombre() %></option>
                                 <% } %>
                             </select>
