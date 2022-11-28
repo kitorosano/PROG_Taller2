@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
@@ -62,7 +63,7 @@ public class DetallePaqueteServlet extends HttpServlet {
       if(sessionIniciada) {
         Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+        Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
         Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
       
@@ -85,7 +86,7 @@ public class DetallePaqueteServlet extends HttpServlet {
           response.sendRedirect("listado-paquetes");
           return;
         }
-        Paquete paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
+        PaqueteDTO paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
         request.setAttribute("datos",paquete);
         
         Map<String, Espectaculo> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);

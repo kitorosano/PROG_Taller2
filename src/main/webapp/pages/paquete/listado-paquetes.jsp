@@ -76,7 +76,7 @@
             let celdaNombre;
             let celdaDescripcion;
     
-            <% for (Paquete elem : paquetesMap.values()) {%>
+            <% for (PaqueteDTO elem : paquetesMap.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
                 celdaNombre = nuevaFila.insertCell(0);
                 celdaDescripcion = nuevaFila.insertCell(1);

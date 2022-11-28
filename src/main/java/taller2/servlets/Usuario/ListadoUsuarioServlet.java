@@ -62,7 +62,7 @@ public class ListadoUsuarioServlet extends HttpServlet {
       if(sessionIniciada) {
         Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+        Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
         Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
         

@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
@@ -67,7 +68,7 @@ public class AltaPaqueteServlet extends HttpServlet {
             if(sessionIniciada) {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-                Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
+                Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
             
@@ -122,7 +123,7 @@ public class AltaPaqueteServlet extends HttpServlet {
             dispatchError("Error al guardar la imagen", request, response);
             return;
         }
-        Paquete nuevo = new Paquete(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
+        PaqueteDTO nuevo = new PaqueteDTO(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 
         try {
             fabrica.getIPaquete().altaPaquete(nuevo);
@@ -139,8 +140,8 @@ public class AltaPaqueteServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrepaq) {      //Devuelve true si hay error
-        Map<String, Paquete> paquetes = fabrica.getIPaquete().obtenerPaquetes();
-        for (Paquete paq : paquetes.values()) {
+        Map<String, PaqueteDTO> paquetes = fabrica.getIPaquete().obtenerPaquetes();
+        for (PaqueteDTO paq : paquetes.values()) {
             if (paq.getNombre().equals(nombrepaq)) {
                 return true;
             }

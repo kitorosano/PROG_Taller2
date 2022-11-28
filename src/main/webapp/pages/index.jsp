@@ -54,7 +54,7 @@
                                 <span><a href="listado-paquetes">Ver más</a></span>
                             </div>
                             <div class="content-area-content">
-                                <% for(Paquete paq : todosPaquetes) { %>
+                                <% for(PaqueteDTO paq : todosPaquetes) { %>
                                 <div class="content-area-content-item">
                                     <div class="content-area-content-item-img">
                                         <img src="<%=paq.getImagen()%>" alt="imagen" />
