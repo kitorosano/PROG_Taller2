@@ -1,4 +1,4 @@
-package taller2.servlets.Funcion;
+package taller2.servlets.FuncionDTO;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.FuncionDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class ListadoFuncionesServlet extends HttpServlet {
                 
                 String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
                 String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
-                Map<String, Funcion> funcionesFiltradas;
+                Map<String, FuncionDTO> funcionesFiltradas;
                 
                 // Si se llega con un filtrado vacio
                 if(filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {

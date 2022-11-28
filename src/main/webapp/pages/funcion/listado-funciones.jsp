@@ -8,7 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.Clases.Plataforma" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
-<%@ page import="main.java.taller1.Logica.Clases.Funcion" %>
+<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
@@ -22,7 +22,7 @@
     
     String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
     String filtroEspectaculo = request.getParameter("filtroEspectaculo") != null ? request.getParameter("filtroEspectaculo") : "";
-    Map<String, Funcion> funcionesFiltradas = request.getAttribute("funcionesFiltradas") != null ? (Map<String, Funcion>) request.getAttribute("funcionesFiltradas") : new HashMap<>();
+    Map<String, FuncionDTO> funcionesFiltradas = request.getAttribute("funcionesFiltradas") != null ? (Map<String, FuncionDTO>) request.getAttribute("funcionesFiltradas") : new HashMap<>();
 
 %>
 <!DOCTYPE html>
@@ -176,7 +176,7 @@
             let celdaEspectaculo;
             let celdaInicio;
     
-            <%for (Funcion elem : funcionesFiltradas.values()) {%>
+            <%for (FuncionDTO elem : funcionesFiltradas.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
                 celdaNombre = nuevaFila.insertCell(0);
                 celdaPlataforma = nuevaFila.insertCell(1);
