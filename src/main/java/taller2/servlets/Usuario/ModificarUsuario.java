@@ -5,7 +5,9 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
+import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -38,7 +40,7 @@ public class ModificarUsuario extends HttpServlet {
         }
         
         // Si hay sesión, obtener el usuario
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         // Si no hay usuario, redirigir a login
         if (usuarioLogueado == null) {
@@ -67,7 +69,7 @@ public class ModificarUsuario extends HttpServlet {
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -87,9 +89,9 @@ public class ModificarUsuario extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Usuario usuarioSession= (Usuario) request.getSession().getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioSession= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String nickname= usuarioSession.getNickname();
-        Usuario usu=null;
+        UsuarioDTO usu=null;
         if(fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent()) {
             usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
             request.setAttribute("tipo", "espectador");
