@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
+import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, Plataforma> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
                 Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, Paquete> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
@@ -75,7 +76,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                 boolean esArtista= (boolean) session.getAttribute("esArtista");
                 if(esArtista) {
                     String paquete = request.getParameter("paquete");
-                    Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+                    Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
                     //Obtengo los espectaculos que no estan en el paquete
                     Map<String, Espectaculo> espectaculos= obtenerEspectaculosSinPaquete(paquete);
                     request.setAttribute("plataformas", plataformas);
@@ -97,7 +98,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] espectaculosAagregar = request.getParameterValues("espAgregar");
         String nombrepaquete=request.getParameter("paquete");
-        Map<String, Plataforma> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+        Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         //Obtengo los espectaculos que no estan en el paquete
         Map<String, Espectaculo> espectaculosPaq= obtenerEspectaculosSinPaquete(nombrepaquete);
         request.setAttribute("plataformas", plataformas);
