@@ -3,6 +3,7 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="main.java.taller1.Logica.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -13,15 +14,15 @@
     
     UsuarioDTO usuario = (UsuarioDTO) request.getAttribute("datos");
     Boolean esPerfilPropio = request.getAttribute("esPerfilPropio") != null ? (Boolean) request.getAttribute("esPerfilPropio") : false;
-	Map<String, Espectaculo> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculos") : new HashMap<>();
+	Map<String, EspectaculoDTO> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos") : new HashMap<>();
 	Map<String, EspectadorRegistradoAFuncion> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones") : new HashMap<>();
 	Map<String, EspectadorPaquete> paquetes = request.getAttribute("paquetes") != null ? (Map<String, EspectadorPaquete>) request.getAttribute("paquetes") : new HashMap<>();
 	String json = new Gson().toJson(usuario);
     
-    Map<String, Espectaculo> espectaculosAceptados = espectaculos.values()
+    Map<String, EspectaculoDTO> espectaculosAceptados = espectaculos.values()
                                                                  .stream()
                                                                  .filter(e -> e.getEstado().equals(E_EstadoEspectaculo.ACEPTADO))
-                                                                 .collect(Collectors.toMap(Espectaculo::getNombre, e -> e));
+                                                                 .collect(Collectors.toMap(EspectaculoDTO::getNombre, e -> e));
 
 %>
 <html>
@@ -99,7 +100,7 @@
                                                 </th>
                                             </tr>
                                         <% } else {
-                                                for (Espectaculo elem : espectaculos.values()) {
+                                                for (EspectaculoDTO elem : espectaculos.values()) {
                                                     if (elem.getEstado() == E_EstadoEspectaculo.ACEPTADO || esPerfilPropio) { %>
                                                         <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'">
                                                             <th><%=elem.getNombre()%> </th>

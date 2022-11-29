@@ -60,7 +60,7 @@ public class ListadoFuncionesServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();

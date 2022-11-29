@@ -73,7 +73,7 @@ public class AltaFuncionServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
@@ -89,9 +89,9 @@ public class AltaFuncionServlet extends HttpServlet {
                 if(esArtista){
                     Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
                     String artista=art.getNickname();
-                    Map<String, Espectaculo> retorno = new HashMap<>();
-                    Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-                    for(Espectaculo esp:espectaculos.values()){
+                    Map<String, EspectaculoDTO> retorno = new HashMap<>();
+                    Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+                    for(EspectaculoDTO esp:espectaculos.values()){
                         if(esp.getEstado()==E_EstadoEspectaculo.ACEPTADO){
                             retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
                         }
@@ -123,8 +123,8 @@ public class AltaFuncionServlet extends HttpServlet {
         String[] artistasInvitados = request.getParameterValues("artInvitado");
         Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
         String artista=art.getNickname();
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-        Map<String, Espectaculo> retorno = new HashMap<>();
+        Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+        Map<String, EspectaculoDTO> retorno = new HashMap<>();
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
             for(String invitado:artistasInvitados){
@@ -132,7 +132,7 @@ public class AltaFuncionServlet extends HttpServlet {
             }
         }
         request.setAttribute("artistas",artistas);
-       for(Espectaculo esp:espectaculos.values()){
+       for(EspectaculoDTO esp:espectaculos.values()){
             if(esp.getEstado()== E_EstadoEspectaculo.ACEPTADO){
                 retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
             }
@@ -143,7 +143,7 @@ public class AltaFuncionServlet extends HttpServlet {
             dispatchError("Los campos obligatorios no pueden ser vacios", request, response);
             return;
         }
-        Espectaculo esp=retorno.get(nombrespectaculo);
+        EspectaculoDTO esp=retorno.get(nombrespectaculo);
         if(esp==null){
             dispatchError("El espectaculo está en estado ingresado", request, response);
             return;
@@ -181,7 +181,7 @@ public class AltaFuncionServlet extends HttpServlet {
                 nombre.isEmpty() || nombespectaculo.isEmpty() || fecha.isEmpty() || hora.isEmpty() || nombArtista.isEmpty();
     }
 
-    private boolean nombreExistente(String nombrefunc, Espectaculo esp) {      //Devuelve true si hay error
+    private boolean nombreExistente(String nombrefunc, EspectaculoDTO esp) {      //Devuelve true si hay error
         Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         if(funciones!=null) {
             for (FuncionDTO fun : funciones.values()) {

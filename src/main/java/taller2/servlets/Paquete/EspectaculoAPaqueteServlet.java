@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
+import main.java.taller1.Logica.DTOs.EspectaculoDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.DTOs.UsuarioDTO;
@@ -64,7 +65,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
@@ -81,7 +82,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                     String paquete = request.getParameter("paquete");
                     Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
                     //Obtengo los espectaculos que no estan en el paquete
-                    Map<String, Espectaculo> espectaculos= obtenerEspectaculosSinPaquete(paquete);
+                    Map<String, EspectaculoDTO> espectaculos= obtenerEspectaculosSinPaquete(paquete);
                     request.setAttribute("plataformas", plataformas);
                     request.setAttribute("espectaculos", espectaculos);
                     request.setAttribute("paquete", paquete);
@@ -103,16 +104,16 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         String nombrepaquete=request.getParameter("paquete");
         Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
         //Obtengo los espectaculos que no estan en el paquete
-        Map<String, Espectaculo> espectaculosPaq= obtenerEspectaculosSinPaquete(nombrepaquete);
+        Map<String, EspectaculoDTO> espectaculosPaq= obtenerEspectaculosSinPaquete(nombrepaquete);
         request.setAttribute("plataformas", plataformas);
         request.setAttribute("espectaculos", espectaculosPaq);
 
 
         if(espectaculosAagregar!=null){
-            Map<String,Espectaculo> espectaculos=fabrica.getIPaquete().obtenerEspectaculosDePaquete(nombrepaquete);
+            Map<String,EspectaculoDTO> espectaculos=fabrica.getIPaquete().obtenerEspectaculosDePaquete(nombrepaquete);
             for(String nuevo:espectaculosAagregar){
                 if(espectaculos.get(nuevo)==null){
-                    Espectaculo esp=fabrica.getIEspectaculo().obtenerEspectaculos().get(nuevo);
+                    EspectaculoDTO esp=fabrica.getIEspectaculo().obtenerEspectaculos().get(nuevo);
                     try {
                         fabrica.getIPaquete().altaEspectaculoAPaquete(esp.getNombre(),nombrepaquete,esp.getPlataforma().getNombre());
                     } catch (Exception e) {
@@ -124,10 +125,10 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath());
     }
-    private Map<String, Espectaculo> obtenerEspectaculosSinPaquete(String paquete ){
-        Map<String, Espectaculo> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-        Map<String, Espectaculo> espectaculosPaquete = fabrica.getIPaquete().obtenerEspectaculosDePaquete(paquete);
-        for (Espectaculo e : espectaculosPaquete.values()) {
+    private Map<String, EspectaculoDTO> obtenerEspectaculosSinPaquete(String paquete ){
+        Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+        Map<String, EspectaculoDTO> espectaculosPaquete = fabrica.getIPaquete().obtenerEspectaculosDePaquete(paquete);
+        for (EspectaculoDTO e : espectaculosPaquete.values()) {
             String clave = e.getNombre() + "-" + e.getPlataforma().getNombre();
             if (espectaculos.containsKey(clave)) {
                 espectaculos.remove(clave, espectaculos.get(clave));

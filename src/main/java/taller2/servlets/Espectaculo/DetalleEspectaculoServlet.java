@@ -1,4 +1,4 @@
-package taller2.servlets.Espectaculo;
+package taller2.servlets.EspectaculoDTO;
 
 
 import jakarta.servlet.RequestDispatcher;
@@ -61,7 +61,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
     try {
       if(sessionIniciada) {
         Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-        Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+        Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
         Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
@@ -82,7 +82,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
           response.sendRedirect("listado-espectaculos");
           return;
         }
-        Espectaculo espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
+        EspectaculoDTO espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
         request.setAttribute("datos",espectaculo);
     
         Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);

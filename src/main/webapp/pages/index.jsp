@@ -35,7 +35,7 @@
                             <span><a href="listado-espectaculos">Ver más</a></span>
                         </div>
                         <div class="content-area-content">
-                            <% for(Espectaculo esp : todosEspectaculos) { %>
+                            <% for(EspectaculoDTO esp : todosEspectaculos) { %>
                                 <div class="content-area-content-item">
                                     <div class="content-area-content-item-img">
                                         <img src="<%=esp.getImagen()%>" alt="imagen" />
