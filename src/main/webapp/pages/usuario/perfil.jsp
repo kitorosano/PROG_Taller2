@@ -16,7 +16,7 @@
     Boolean esPerfilPropio = request.getAttribute("esPerfilPropio") != null ? (Boolean) request.getAttribute("esPerfilPropio") : false;
 	Map<String, EspectaculoDTO> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos") : new HashMap<>();
 	Map<String, EspectadorRegistradoAFuncion> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones") : new HashMap<>();
-	Map<String, EspectadorPaquete> paquetes = request.getAttribute("paquetes") != null ? (Map<String, EspectadorPaquete>) request.getAttribute("paquetes") : new HashMap<>();
+	Map<String, AltaEspectadorAPaqueteDTO> paquetes = request.getAttribute("paquetes") != null ? (Map<String, AltaEspectadorAPaqueteDTO>) request.getAttribute("paquetes") : new HashMap<>();
 	String json = new Gson().toJson(usuario);
     
     Map<String, EspectaculoDTO> espectaculosAceptados = espectaculos.values()
@@ -147,7 +147,7 @@
                                                 </th>
                                             </tr>
                                         <% } else {
-                                                for (EspectadorPaquete paquete : paquetes.values()) { %>
+                                                for (AltaEspectadorAPaqueteDTO paquete : paquetes.values()) { %>
                                                     <tr>
                                                         <th>
                                                             <a href="detalle-paquete?nombre=<%=paquete.getPaquete().getNombre()%>"><%=paquete.getPaquete().getNombre()%>

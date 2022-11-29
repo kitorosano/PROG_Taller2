@@ -161,9 +161,9 @@ public class RegistroAFuncion extends HttpServlet {
 
     private Map<String,PaqueteDTO> obtenerPaquetesEspectadorEspectaculo(String espectaculo,String plataforma, String espectador ){
         Map<String, PaqueteDTO> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo,plataforma);
-        Map<String, EspectadorPaquete> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador);
+        Map<String, AltaEspectadorAPaqueteDTO> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador);
         Map<String, PaqueteDTO> paquetes= new HashMap<>();
-        for(EspectadorPaquete paq :paquetesEspectador.values()){
+        for(AltaEspectadorAPaqueteDTO paq :paquetesEspectador.values()){
             if (paquetesEspectaculo.get(paq.getPaquete().getNombre())!=null) {
                 paquetes.put(paq.getPaquete().getNombre(),paq.getPaquete());
             }
