@@ -11,6 +11,7 @@ import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class DetallePaqueteServlet extends HttpServlet {
     }
     
     // Si hay sesión, obtener el usuario
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     // Si no hay usuario, redirigir a login
     if (usuarioLogueado == null) {
@@ -66,7 +67,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-        Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+        Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -76,7 +77,7 @@ public class DetallePaqueteServlet extends HttpServlet {
       
         HttpSession session = request.getSession();
         Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         String nombre = request.getParameter("nombre");
     
         boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
@@ -116,7 +117,7 @@ public class DetallePaqueteServlet extends HttpServlet {
     HttpSession session = request.getSession();
     String nombre = request.getParameter("nombre");
     //String nickname_espectador = (String) session.getAttribute("nickname");
-    Usuario usuSession=(Usuario)session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuSession=(UsuarioDTO)session.getAttribute("usuarioLogueado");
     String nickname_espectador= usuSession.getNickname();
     boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
     if(!paqueteExiste) { // Si el paquete no existe

@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.Espectador;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
     }
     
     // Si hay sesión, obtener el usuario
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     // Si no hay usuario, redirigir a login
     if (usuarioLogueado == null) {
@@ -80,7 +80,7 @@ public class LoginServlet extends HttpServlet {
     }
     
     // Buscar el usuario en la base de datos
-    Usuario usuario;
+    UsuarioDTO usuario;
     
     try {
       boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
@@ -109,8 +109,8 @@ public class LoginServlet extends HttpServlet {
     
     // Si el usuario existe y la contraseña es correcta, iniciar sesión
     session.setAttribute("usuarioLogueado", usuario);
-    session.setAttribute("esArtista", usuario instanceof Artista);
-    session.setAttribute("esEspectador", usuario instanceof Espectador);
+    session.setAttribute("esArtista", true);
+    session.setAttribute("esEspectador", false);
     response.sendRedirect("home");
   }
   
