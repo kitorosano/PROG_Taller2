@@ -8,7 +8,7 @@
     Map<String, PlataformaDTO> plataformasMap = request.getAttribute("todasPlataformas") != null ? (Map<String, PlataformaDTO>) request.getAttribute("todasPlataformas") : new HashMap<>();
     Map<String, CategoriaDTO> categoriasMap = request.getAttribute("todasCategorias") != null ? (Map<String, CategoriaDTO>) request.getAttribute("todasCategorias") : new HashMap<>();
     Map<String, PaqueteDTO> paquetesMap = request.getAttribute("todosPaquetes") != null ? (Map<String, PaqueteDTO>) request.getAttribute("todosPaquetes") : new HashMap<>();
-    Map<String, Usuario> usuarioMap = request.getAttribute("todosUsuarios") != null ? (Map<String, Usuario>) request.getAttribute("todosUsuarios") : new HashMap<>();
+    Map<String, UsuarioDTO> usuarioMap = request.getAttribute("todosUsuarios") != null ? (Map<String, UsuarioDTO>) request.getAttribute("todosUsuarios") : new HashMap<>();
     Map<String, EspectaculoDTO> espectaculosMap = request.getAttribute("todosEspectaculos") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("todosEspectaculos") : new HashMap<>();
     
     // shuffle plataforma and filter up to 5

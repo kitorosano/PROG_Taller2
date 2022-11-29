@@ -12,7 +12,8 @@ import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import main.java.taller1.Logica.Clases.Artista;
 import main.java.taller1.Logica.Clases.EspectaculoDTO;
 import main.java.taller1.Logica.Clases.Espectador;
-import main.java.taller1.Logica.Clases.Usuario;
+import main.java.taller1.Logica.Clases.UsuarioDTO;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.FileInputStream;
@@ -131,7 +132,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     }
 
     // Se especifica el tipo de usuario a crear
-    Usuario usuario;
+    UsuarioDTO usuario;
     if(tipo.equals("Artista")){
       if(camposVaciosArtista(descripcion)){
         request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
@@ -195,12 +196,12 @@ public class AltaUsuarioServlet extends HttpServlet {
   }
 
   private boolean nombreExistenteNickname(String nombreUsuario) {      //Devuelve true si hay error
-    Optional<Usuario> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
+    Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
     return usuario.isPresent();
   }
 
   private boolean nombreExistenteCorreo(String correo) {      //Devuelve true si hay error
-    Optional<Usuario> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
+    Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
     return usuario.isPresent();
   }
 

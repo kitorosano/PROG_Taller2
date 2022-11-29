@@ -47,7 +47,7 @@ public class AltaFuncionServlet extends HttpServlet {
         }
         
         // Si hay sesión, obtener el usuario
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         // Si no hay usuario, redirigir a login
         if (usuarioLogueado == null) {
@@ -76,7 +76,7 @@ public class AltaFuncionServlet extends HttpServlet {
                 Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -217,9 +217,9 @@ public class AltaFuncionServlet extends HttpServlet {
     }
 
     private List<String> obtenerArtistas(String artista){
-        Map <String, Usuario> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
         List<String> artistas = new ArrayList<>();
-        for(Usuario u:usuarios.values()){
+        for(UsuarioDTO u:usuarios.values()){
             if(u instanceof Artista && !artista.equals(u.getNickname())){
                 artistas.add(u.getNickname());
             }

@@ -8,14 +8,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.EspectaculoDTO" %>
+<%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
-<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.*" %>
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    main.java.taller1.Logica.DTOs.UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";

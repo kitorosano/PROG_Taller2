@@ -35,7 +35,7 @@ public class ListadoFuncionesServlet extends HttpServlet {
         }
         
         // Si hay sesión, obtener el usuario
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         // Si no hay usuario, redirigir a login
         if (usuarioLogueado == null) {
@@ -64,7 +64,7 @@ public class ListadoFuncionesServlet extends HttpServlet {
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
                 Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);

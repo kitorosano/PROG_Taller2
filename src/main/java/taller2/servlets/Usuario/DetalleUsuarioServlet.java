@@ -13,6 +13,7 @@ import main.java.taller1.Logica.DTOs.CategoriaDTO;
 import main.java.taller1.Logica.DTOs.EspectaculoDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class DetalleUsuarioServlet extends HttpServlet {
     }
     
     // Si hay sesión, obtener el usuario
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     // Si no hay usuario, redirigir a login
     if (usuarioLogueado == null) {
@@ -67,7 +68,7 @@ public class DetalleUsuarioServlet extends HttpServlet {
         Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
         Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
         Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-        Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+        Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -76,12 +77,12 @@ public class DetalleUsuarioServlet extends HttpServlet {
         request.setAttribute("todosUsuarios", todosUsuarios);
         
         HttpSession session = request.getSession();
-        String usuarioLogueadoNickname = ((Usuario) session.getAttribute("usuarioLogueado")).getNickname();
+        String usuarioLogueadoNickname = ((UsuarioDTO) session.getAttribute("usuarioLogueado")).getNickname();
         String nickname = request.getParameter("nickname") != null ? request.getParameter("nickname") : usuarioLogueadoNickname;
         Boolean esPerfilPropio = nickname.equals(usuarioLogueadoNickname);
         request.setAttribute("esPerfilPropio", esPerfilPropio);
       
-        Usuario usuario;
+        UsuarioDTO usuario;
         // Si el usuario no viene vacio y no es mi perfil entonces buscar por nickname
         if(!nickname.isEmpty() && !esPerfilPropio) {
           boolean usuarioExistePorNickname = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
@@ -98,7 +99,7 @@ public class DetalleUsuarioServlet extends HttpServlet {
           }
         } else {
           // Si el usuario viene vacio o es mi perfil, traer el usuario logueado
-          usuario = (Usuario) session.getAttribute("usuarioLogueado");
+          usuario = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         }
         request.setAttribute("datos", usuario);
         
