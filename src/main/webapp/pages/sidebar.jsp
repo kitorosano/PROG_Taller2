@@ -3,12 +3,13 @@
 <%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.UsuarioDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% //CARGAR ALGUN@S ESPECTACULOS / FUNCIONES / PAQUETES / ARTISTA
     Map<String, PlataformaDTO> plataformasMap = request.getAttribute("todasPlataformas") != null ? (Map<String, PlataformaDTO>) request.getAttribute("todasPlataformas") : new HashMap<>();
     Map<String, CategoriaDTO> categoriasMap = request.getAttribute("todasCategorias") != null ? (Map<String, CategoriaDTO>) request.getAttribute("todasCategorias") : new HashMap<>();
     Map<String, PaqueteDTO> paquetesMap = request.getAttribute("todosPaquetes") != null ? (Map<String, PaqueteDTO>) request.getAttribute("todosPaquetes") : new HashMap<>();
-    Map<String, Usuario> usuarioMap = request.getAttribute("todosUsuarios") != null ? (Map<String, Usuario>) request.getAttribute("todosUsuarios") : new HashMap<>();
+    Map<String, UsuarioDTO> usuarioMap = request.getAttribute("todosUsuarios") != null ? (Map<String, UsuarioDTO>) request.getAttribute("todosUsuarios") : new HashMap<>();
     Map<String, Espectaculo> espectaculosMap = request.getAttribute("todosEspectaculos") != null ? (Map<String, Espectaculo>) request.getAttribute("todosEspectaculos") : new HashMap<>();
     
     // shuffle plataforma and filter up to 5
@@ -16,12 +17,12 @@
     Collections.shuffle(todasPlataformas);
     todasPlataformas = todasPlataformas.subList(0, Math.min(5, todasPlataformas.size()));
     
+    // shuffle usuarios and filter up to 5
     // shuffle categorias and filter up to 5
     List<String> todasCategorias = new ArrayList<>(categoriasMap.keySet());
     Collections.shuffle(todasCategorias);
     todasCategorias = todasCategorias.subList(0, Math.min(5, todasCategorias.size()));
     
-    // shuffle usuarios and filter up to 5
     List<String> todosUsuarios = new ArrayList<>(usuarioMap.keySet());
     Collections.shuffle(todosUsuarios);
     todosUsuarios = todosUsuarios.subList(0, Math.min(5, todosUsuarios.size()));
