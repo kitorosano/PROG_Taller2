@@ -7,16 +7,16 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
-<%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
+<%@ page import="main.java.taller1.Logica.DTOs.EspectaculoDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -64,7 +64,7 @@
                                 <label for="filtroEspectaculo">Selecciona un espectáculo:</label>
                                 <select name="filtroEspectaculo" id="filtroEspectaculo">
                                     <option value="">Todos</option>
-                                    <% for (Espectaculo espectaculo : espectaculosMap.values()) { %>
+                                    <% for (EspectaculoDTO espectaculo : espectaculosMap.values()) { %>
                                         <option data-plataforma="<%= espectaculo.getPlataforma().getNombre() %>" value="<%= espectaculo.getNombre() %>"><%= espectaculo.getNombre() %></option>
                                     <% } %>
                                 </select>

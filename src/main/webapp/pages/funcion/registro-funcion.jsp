@@ -1,12 +1,12 @@
 <%@ page import="java.time.LocalDate" %>
-<%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
+<%@ page import="main.java.taller1.Logica.DTOs.EspectaculoDTO" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -20,7 +20,7 @@
   String hora = request.getParameter("horaInicio") instanceof String ? request.getParameter("horaInicio") : "";
   String imagen = request.getParameter("imagen") instanceof String ? request.getParameter("imagen") : "";
   String[] artistasInvitados = request.getParameterValues("artInvitado");
-  Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+  Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos");
   List<String> artistas= (List<String>) request.getAttribute("artistas");
 %>
 
@@ -57,7 +57,7 @@
                                     if(espectaculos.values().size() == 0) { %>
                                         <option value="">No tienes espectaculos aceptados</option>
                           <%        } else {
-                                        for (Espectaculo elem : espectaculos.values()) {  %>
+                                        for (EspectaculoDTO elem : espectaculos.values()) {  %>
                                             <option value="<%= elem.getNombre()+"-"+elem.getPlataforma().getNombre()%>"><%=elem.getNombre()%></option>
                           <%            }
                                     }

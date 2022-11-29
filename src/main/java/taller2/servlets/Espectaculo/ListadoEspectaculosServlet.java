@@ -9,8 +9,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
+import main.java.taller1.Logica.DTOs.EspectaculoDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
+import main.java.taller1.Logica.DTOs.UsuarioDTO;
 import main.java.taller1.Logica.Fabrica;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
         }
         
         // Si hay sesión, obtener el usuario
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         // Si no hay usuario, redirigir a login
         if (usuarioLogueado == null) {
@@ -63,10 +65,10 @@ public class ListadoEspectaculosServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
+                Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
                 Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
                 Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -75,7 +77,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 request.setAttribute("todosUsuarios", todosUsuarios);
                 String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
                 String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
-                Map<String, Espectaculo> espectaculosFiltrados = new HashMap<>();
+                Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
                 Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
     
                 // Si se llega con un filtrado vacio
@@ -95,10 +97,10 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 }
                 // Si llega con un filtrado de plataforma y categoria
                 else {
-                    Map<String, Espectaculo> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
-                    Map<String, Espectaculo> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
+                    Map<String, EspectaculoDTO> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
+                    Map<String, EspectaculoDTO> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
                 
-                    for (Espectaculo espectaculo : espectaculosDeCategoria.values()){
+                    for (EspectaculoDTO espectaculo : espectaculosDeCategoria.values()){
                         if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
                             espectaculosFiltrados.put(espectaculo.getNombre(), espectaculo);
                         }
@@ -107,7 +109,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 }
                 
                 // Cargar categorias de los espectaculos filtrados
-                for (Espectaculo espectaculo : espectaculosFiltrados.values()){
+                for (EspectaculoDTO espectaculo : espectaculosFiltrados.values()){
                     Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
                     categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
                 }

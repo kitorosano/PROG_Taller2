@@ -7,7 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -16,7 +16,7 @@
     Map<String, FuncionDTO> funciones = (Map<String, FuncionDTO>) request.getAttribute("funciones");
     Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
     
-    Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
+    EspectaculoDTO espectaculo= (EspectaculoDTO) request.getAttribute("datos");
     
     Random random = new Random();
 %>

@@ -1,8 +1,8 @@
 <%@ page import="java.time.LocalDate" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";

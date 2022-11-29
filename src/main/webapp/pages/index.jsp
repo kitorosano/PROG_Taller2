@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -35,7 +35,7 @@
                             <span><a href="listado-espectaculos">Ver más</a></span>
                         </div>
                         <div class="content-area-content">
-                            <% for(Espectaculo esp : todosEspectaculos) { %>
+                            <% for(EspectaculoDTO esp : todosEspectaculos) { %>
                                 <div class="content-area-content-item">
                                     <div class="content-area-content-item-img">
                                         <img src="<%=esp.getImagen()%>" alt="imagen" />

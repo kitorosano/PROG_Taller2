@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import main.java.taller1.Logica.Clases.*;
 import main.java.taller1.Logica.DTOs.CategoriaDTO;
+import main.java.taller1.Logica.DTOs.EspectaculoDTO;
 import main.java.taller1.Logica.DTOs.PaqueteDTO;
 import main.java.taller1.Logica.DTOs.PlataformaDTO;
 import main.java.taller1.Logica.DTOs.UsuarioDTO;
@@ -41,7 +42,7 @@ public class HomeServlet extends HttpServlet {
         }
         
         // Si hay sesión, obtener el usuario
-        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         // Si no hay usuario, redirigir a login
         if (usuarioLogueado == null) {
@@ -77,6 +78,7 @@ public class HomeServlet extends HttpServlet {
                 Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
                 Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
                 Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+                
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
                 request.setAttribute("todosPaquetes", todosPaquetes);

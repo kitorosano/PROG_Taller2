@@ -7,22 +7,22 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.EspectaculoDTO" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
-<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.*" %>
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    main.java.taller1.Logica.DTOs.UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
   String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
   String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
-  Map<String, Espectaculo> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, Espectaculo>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
+  Map<String, EspectaculoDTO> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
   Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, CategoriaDTO>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
 %>
 
@@ -142,7 +142,7 @@
             let celdaPlataforma;
             let celdaArtista;
         
-            <%for (Espectaculo elem : espectaculosFiltrados.values()) {%>
+            <%for (EspectaculoDTO elem : espectaculosFiltrados.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
                 celdaEspectaculo = nuevaFila.insertCell(0);
                 celdaCategorias = nuevaFila.insertCell(1);

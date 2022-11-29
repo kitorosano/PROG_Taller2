@@ -1,11 +1,11 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="main.java.taller1.Logica.Clases.*" %>
-<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -14,7 +14,7 @@
     String respuesta = (String) request.getAttribute("respuesta");
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
     
-    Map<String, Espectaculo> espectaculos = (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+    Map<String, EspectaculoDTO> espectaculos = (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos");
 
 %>
 <html>
@@ -80,7 +80,7 @@
                                             </th>
                                         </tr>
                                     <% } else {
-                                            for (Espectaculo espectaculo : espectaculos.values()) { %>
+                                            for (EspectaculoDTO espectaculo : espectaculos.values()) { %>
                                                 <tr  onclick="location.href='detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'">
                                                     <th> <%=espectaculo.getNombre()%> </th>
                                                     <th> <%=espectaculo.getPlataforma().getNombre()%> </th>

@@ -4,10 +4,10 @@
 <%@ page import="main.java.taller1.Logica.Clases.Artista" %>
 <%@ page import="main.java.taller1.Logica.Clases.Espectador" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
+<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    Usuario usuarioLogueado = session.getAttribute("usuarioLogueado") != null ? (Usuario) session.getAttribute("usuarioLogueado") : null;
+    UsuarioDTO usuarioLogueado = session.getAttribute("usuarioLogueado") != null ? (UsuarioDTO) session.getAttribute("usuarioLogueado") : null;
     boolean esArtista = session.getAttribute("esArtista") != null ? (boolean) session.getAttribute("esArtista") : false;
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
