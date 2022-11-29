@@ -94,7 +94,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         request.setAttribute("espectaculos",espectaculos);
         
         if(esEspectador) {
-            Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
+            Map<String, AltaEspectadorAPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
             
             if(paquetes_espectador.containsKey(nombre)) {
                 request.setAttribute("message","Paquete Adquirido");
@@ -126,7 +126,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         return;
     }
   
-    Map<String, EspectadorPaquete> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    Map<String, AltaEspectadorAPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
     boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
 
     if (paqueteYaComprado) {

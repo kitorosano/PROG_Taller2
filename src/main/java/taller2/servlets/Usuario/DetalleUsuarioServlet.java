@@ -110,7 +110,7 @@ public class DetalleUsuarioServlet extends HttpServlet {
           Map<String, EspectadorRegistradoAFuncion> funciones=fabrica.getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuario.getNickname());
           request.setAttribute("funciones",funciones);
           
-          Map<String, EspectadorPaquete> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador(usuario.getNickname());
+          Map<String, AltaEspectadorAPaqueteDTO> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador(usuario.getNickname());
           request.setAttribute("paquetes",paquetes);
         }
         
