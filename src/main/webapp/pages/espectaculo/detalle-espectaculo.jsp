@@ -16,7 +16,7 @@
     Map<String, FuncionDTO> funciones = (Map<String, FuncionDTO>) request.getAttribute("funciones");
     Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
     
-    Espectaculo espectaculo= (Espectaculo) request.getAttribute("datos");
+    EspectaculoDTO espectaculo= (EspectaculoDTO) request.getAttribute("datos");
     
     Random random = new Random();
 %>

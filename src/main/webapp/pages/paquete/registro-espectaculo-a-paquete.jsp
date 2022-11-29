@@ -1,6 +1,5 @@
-<%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
+<%@ page import="main.java.taller1.Logica.DTOs.*" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.Espectaculo" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="main.java.taller1.Logica.Clases.Usuario" %>
 
@@ -12,7 +11,7 @@
     
     
     //Traer datos precargados del request anterior
-  Map<String, Espectaculo> espectaculos= (Map<String, Espectaculo>) request.getAttribute("espectaculos");
+  Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos");
   Map<String, PlataformaDTO> plataformas= (Map<String, PlataformaDTO>) request.getAttribute("plataformas");
 %>
 
@@ -54,7 +53,7 @@
                           <p>Espectaculos a agregar</p>
                           <select multiple name="listEspectaculos" id="listEspectaculos" style="width: 300px; height: 200px; padding: 5px">
                             <%
-                              for(Espectaculo e: espectaculos.values()){
+                              for(EspectaculoDTO e: espectaculos.values()){
                             %>
                             <option value="<%=e.getNombre()+"-"+e.getPlataforma().getNombre()%>"><%=e.getNombre()%></option>
                             <%
