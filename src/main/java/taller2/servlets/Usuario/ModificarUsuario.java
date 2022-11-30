@@ -3,13 +3,7 @@ package taller2.servlets.Usuario;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.CategoriaDTO;
-import main.java.taller1.Logica.DTOs.EspectaculoDTO;
-import main.java.taller1.Logica.DTOs.PaqueteDTO;
-import main.java.taller1.Logica.DTOs.PlataformaDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+
 import taller2.DTOs.*;
 import taller2.utils.Utils;
 
@@ -25,9 +19,6 @@ public class ModificarUsuario extends HttpServlet {
 
 
 
-    public void init() {
-        fabrica = Fabrica.getInstance();
-    }
 
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

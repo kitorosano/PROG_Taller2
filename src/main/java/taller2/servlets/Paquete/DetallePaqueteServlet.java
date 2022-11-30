@@ -120,7 +120,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         return;
     }
   
-    Map<String, AltaEspectadorAPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
     boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
 
     if (paqueteYaComprado) {

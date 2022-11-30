@@ -72,23 +72,32 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         String nombre = request.getParameter("nombre");
         String plataforma= request.getParameter("plataforma");
         
-        boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
-        if(!espectaculoExiste) { // Si el espectaculo no existe
+        //boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
+        EspectaculoDTO espect = (EspectaculoDTO) Utils.FetchApi("/espectaculos/?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
+        if(espect==null) { // Si el espectaculo no existe
           request.setAttribute("message","Espectaculo no encontrado");
           request.setAttribute("messageType","error");
           response.sendRedirect("listado-espectaculos");
           return;
         }
-        EspectaculoDTO espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
+        //EspectaculoDTO espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
+
+        EspectaculoDTO espectaculo = (EspectaculoDTO) Utils.FetchApi("/espectaculos/?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
         request.setAttribute("datos",espectaculo);
     
-        Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
+        //Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
+
+        Map<String, FuncionDTO> funciones=(Map<String, FuncionDTO>) Utils.FetchApi("/funciones/?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
         request.setAttribute("funciones",funciones);
         
-        Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
+        //Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
+
+        Map<String, PaqueteDTO> paquetes=(Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).getEntity();
         request.setAttribute("paquetes",paquetes);
         
-        Map<String, CategoriaDTO> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
+        //Map<String, CategoriaDTO> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
+
+        Map<String, CategoriaDTO> categorias=(Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/?nombreEspectaculo="+nombre).getEntity();
         request.setAttribute("categorias",categorias);
         
         dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);

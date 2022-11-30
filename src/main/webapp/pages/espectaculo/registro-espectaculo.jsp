@@ -7,7 +7,7 @@
 <%@ page import="taller2.DTOs.*" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
-    main.java.taller1.Logica.DTOs.UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
+    UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";

@@ -1,4 +1,4 @@
-package taller2.servlets.FuncionDTO;
+package taller2.servlets.Funcion;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -79,12 +79,14 @@ public class ListadoFuncionesServlet extends HttpServlet {
                 }
                 // Si se llega con un filtrado de plataforma
                 else if (!filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
-                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+                    //funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+                    funcionesFiltradas = (Map<String, FuncionDTO>) Utils.FetchApi("/funciones/?nombrePlataforma="+filtroPlataforma).getEntity();
                     request.setAttribute("funcionesFiltradas", funcionesFiltradas);
                 }
                 // Si llega con un filtrado espectaculo tambien llegara con uno de plataforma
                 else {
-                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+                    //funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+                    funcionesFiltradas = (Map<String, FuncionDTO>) Utils.FetchApi("/funciones/?nombrePlataforma="+filtroPlataforma+"&nombreEspectaculo="+filtroEspectaculo).getEntity();
                     request.setAttribute("funcionesFiltradas", funcionesFiltradas);
                 }
                 

@@ -1,6 +1,7 @@
 package taller2.DTOs;
 
-import main.java.taller1.Logica.Clases.E_EstadoEspectaculo;
+
+import taller2.E_EstadoEspectaculo;
 
 import java.time.LocalDateTime;
 

@@ -7,13 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.CategoriaDTO;
-import main.java.taller1.Logica.DTOs.EspectaculoDTO;
-import main.java.taller1.Logica.DTOs.PaqueteDTO;
-import main.java.taller1.Logica.DTOs.PlataformaDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+
 import taller2.DTOs.*;
 import taller2.utils.Utils;
 
@@ -23,10 +17,7 @@ import java.util.Map;
 @WebServlet(name = "ListadoUsuario", value = "/listado-usuario")
 public class ListadoUsuarioServlet extends HttpServlet {
 
-  
-  public void init() {
-    fabrica = Fabrica.getInstance();
-  }
+
   
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");

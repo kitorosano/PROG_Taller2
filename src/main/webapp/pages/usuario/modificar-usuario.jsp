@@ -29,9 +29,9 @@
     imagen = request.getAttribute("imagen") instanceof String ? (String) request.getAttribute("imagen") : usuarioLogueado.getImagen();
     
     if(esArtista) {
-        descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : ((Artista) usuarioLogueado).getDescripcion();
-        biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : ((Artista) usuarioLogueado).getBiografia();
-        url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : ((Artista) usuarioLogueado).getSitioWeb();
+        descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : ((UsuarioDTO) usuarioLogueado).getDescripcion();
+        biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : ((UsuarioDTO) usuarioLogueado).getBiografia();
+        url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : ((UsuarioDTO) usuarioLogueado).getSitioWeb();
     }
 %>
 <!DOCTYPE html>

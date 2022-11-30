@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
 import taller2.utils.Utils;
 
 import java.io.FileInputStream;
@@ -92,7 +93,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Artista artistaLogueado = (Artista) session.getAttribute("usuarioLogueado");
+        UsuarioDTO artistaLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         String nombre = request.getParameter("nombre");
         String nombplataforma = request.getParameter("plataforma");
@@ -171,6 +172,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         // Obtener plataforma
         PlataformaDTO plataforma;
         try {
+            //
             Optional<PlataformaDTO> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
             if (!optional.isPresent()) {
                 dispatchError("Error, plataforma no encontrada", request, response);
@@ -183,7 +185,20 @@ public class AltaEspectaculoServlet extends HttpServlet {
             return;
         }
         
-        Espectaculo nuevoEspectaculo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, plataforma, artistaLogueado);
+        //AltaEspectaculoDTO nuevoEspectaculo = new AltaEspectaculoDTO(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, plataforma, artistaLogueado);
+        AltaEspectaculoDTO nuevoEspectaculo = new AltaEspectaculoDTO();
+        nuevoEspectaculo.setNombre(nombre);
+        nuevoEspectaculo.setDescripcion(descripcion);
+        nuevoEspectaculo.setDuracion(duracion);
+        nuevoEspectaculo.setMinEspectadores(espMinimos);
+        nuevoEspectaculo.setMaxEspectadores(espMaximos);
+        nuevoEspectaculo.setUrl(url);
+        nuevoEspectaculo.setCosto(costo);
+        nuevoEspectaculo.setEstado(E_EstadoEspectaculo.INGRESADO);
+        nuevoEspectaculo.setFechaRegistro(LocalDateTime.now());
+        nuevoEspectaculo.setImagen(urlImagen);
+        nuevoEspectaculo.setPlataforma(plataforma.getNombre());
+        nuevoEspectaculo.setArtista(artistaLogueado.getNickname());
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
             for(String categoria : categoriasElegidas){
@@ -207,7 +222,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
-        Optional<Espectaculo> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
+        Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
         return espectaculo.isPresent();
     }
 
