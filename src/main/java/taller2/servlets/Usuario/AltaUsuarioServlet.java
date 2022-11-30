@@ -1,5 +1,6 @@
 package taller2.servlets.Usuario;
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -9,6 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import taller2.DTOs.UsuarioDTO;
+import taller2.utils.FetchApiOptions;
+import taller2.utils.Utils;
 
 
 import java.io.FileInputStream;
@@ -113,7 +117,10 @@ public class AltaUsuarioServlet extends HttpServlet {
     try {
       if (part.getSize() != 0) {
         InputStream inputImagen = part.getInputStream();
-        urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
+        String body= new Gson().toJson(inputImagen);
+        FetchApiOptions options=new FetchApiOptions("POST",body);
+        urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+        //urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
     } catch (RuntimeException e) {
       e.printStackTrace();
@@ -139,14 +146,19 @@ public class AltaUsuarioServlet extends HttpServlet {
         return;
       }
       
-      usuario = new Artista(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
+      usuario = new UsuarioDTO(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
+      usuario.setEsArtista(true);
     } else {
-      usuario = new Espectador(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
+      usuario = new UsuarioDTO(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
+      usuario.setEsArtista(false);
     }
 
     try {
       // Se crea el usuario en la base de datos
-      fabrica.getIUsuario().altaUsuario(usuario);
+      String body=new Gson().toJson(usuario);
+      FetchApiOptions options=new FetchApiOptions("POST",body);
+      Utils.FetchApi("/usuarios/create",options);
+      //fabrica.getIUsuario().altaUsuario(usuario);
 
       // Redireccionar a la pantalla de login
       request.getSession().setAttribute("message", "Usuario creado exitosamente");
@@ -188,13 +200,15 @@ public class AltaUsuarioServlet extends HttpServlet {
   }
 
   private boolean nombreExistenteNickname(String nombreUsuario) {      //Devuelve true si hay error
-    Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
-    return usuario.isPresent();
+    UsuarioDTO usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname?nickname="+nombreUsuario).getEntity();
+    //Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
+    return usuario != null;
   }
 
   private boolean nombreExistenteCorreo(String correo) {      //Devuelve true si hay error
-    Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
-    return usuario.isPresent();
+    UsuarioDTO usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo?correo="+correo).getEntity();
+    //Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
+    return usuario != null;
   }
 
 }

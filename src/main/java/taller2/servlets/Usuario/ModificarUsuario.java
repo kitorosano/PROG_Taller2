@@ -1,10 +1,12 @@
 package taller2.servlets.Usuario;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import taller2.DTOs.*;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
 import java.io.FileInputStream;
@@ -59,11 +61,11 @@ public class ModificarUsuario extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -85,11 +87,11 @@ public class ModificarUsuario extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UsuarioDTO usuarioSession= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String nickname= usuarioSession.getNickname();
-        UsuarioDTO usu=null;
-        if(fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent()) {
-            usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
+        UsuarioDTO usu= (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname?nickname="+nickname).getEntity();
+        if(usu!=null) {
+            //usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
             request.setAttribute("tipo", "espectador");
-            if(usu instanceof Artista){
+            if(usu.isEsArtista()){
                 request.setAttribute("tipo", "artista");
             }
         }else{
@@ -133,7 +135,10 @@ public class ModificarUsuario extends HttpServlet {
         String urlImagen="";
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
+            String body= new Gson().toJson(inputImagen);
+            FetchApiOptions options=new FetchApiOptions("POST",body);
+            urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+            //urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         if(usu!=null){
             usu.setNombre(nombre);
@@ -155,13 +160,16 @@ public class ModificarUsuario extends HttpServlet {
                 return;
             }
 
-            ((Artista) usu).setDescripcion(descripcion);
-            ((Artista) usu).setBiografia(biografia);
-            ((Artista) usu).setSitioWeb(url);
+            usu.setDescripcion(descripcion);
+            usu.setBiografia(biografia);
+            usu.setSitioWeb(url);
         }
         try {
             // Se crea el usuario en la base de datos
-            fabrica.getIUsuario().modificarUsuario(usu);
+            String body=new Gson().toJson(usu);
+            FetchApiOptions options=new FetchApiOptions("PUT",body);
+            Utils.FetchApi("/usuarios/updateByNickname",options);
+            //fabrica.getIUsuario().modificarUsuario(usu);
 
             // Redireccionar a la pantalla de login
             request.getSession().setAttribute("message", "Informacion modificada exitosamente");

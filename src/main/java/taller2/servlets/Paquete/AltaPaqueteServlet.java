@@ -1,11 +1,13 @@
 package taller2.servlets.Paquete;
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import taller2.DTOs.*;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
 import java.io.FileInputStream;
@@ -61,11 +63,11 @@ public class AltaPaqueteServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -111,7 +113,10 @@ public class AltaPaqueteServlet extends HttpServlet {
         try {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
-                urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+                String body= new Gson().toJson(inputImagen);
+                FetchApiOptions options=new FetchApiOptions("POST",body);
+                urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+                //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -121,7 +126,10 @@ public class AltaPaqueteServlet extends HttpServlet {
         PaqueteDTO nuevo = new PaqueteDTO(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
 
         try {
-            fabrica.getIPaquete().altaPaquete(nuevo);
+            String body=new Gson().toJson(nuevo);
+            FetchApiOptions options=new FetchApiOptions("POST",body);
+            Utils.FetchApi("/paquetes/create",options);
+            //fabrica.getIPaquete().altaPaquete(nuevo);
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
