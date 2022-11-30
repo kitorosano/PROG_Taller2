@@ -7,13 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.CategoriaDTO;
-import main.java.taller1.Logica.DTOs.EspectaculoDTO;
-import main.java.taller1.Logica.DTOs.PaqueteDTO;
-import main.java.taller1.Logica.DTOs.PlataformaDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+import taller2.DTOs.*;
 import taller2.utils.Utils;
 
 import java.io.IOException;
@@ -22,11 +16,8 @@ import java.util.Map;
 @WebServlet(name = "Home", value = "/")
 public class HomeServlet extends HttpServlet {
     
-    Fabrica fabrica;
-    
-    public void init() {
-        fabrica = Fabrica.getInstance();
-    }
+
+
     
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -74,7 +65,7 @@ public class HomeServlet extends HttpServlet {
 //                Map<String, Usuario> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
 
                 Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-                Map<String, Espectaculo> todosEspectaculos = (Map<String, Espectaculo>) Utils.FetchApi("/espectaculos").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
                 Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
                 Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
                 Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();

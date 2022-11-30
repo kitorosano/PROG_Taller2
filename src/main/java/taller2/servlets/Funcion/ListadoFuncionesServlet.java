@@ -1,4 +1,4 @@
-package taller2.servlets.FuncionDTO;
+package taller2.servlets.Funcion;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -7,20 +7,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.*;
-import main.java.taller1.Logica.Fabrica;
+import taller2.DTOs.*;
+import taller2.utils.Utils;
 
 import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(name = "ListadoFunciones", value = "/listado-funciones")
 public class ListadoFuncionesServlet extends HttpServlet {
-    Fabrica fabrica;
+
     
-    public void init() {
-        fabrica = Fabrica.getInstance();
-    }
+
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         RequestDispatcher view = request.getRequestDispatcher(page);
@@ -59,12 +56,11 @@ public class ListadoFuncionesServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, EspectaculoDTO> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-                Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
-                Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, Categoria> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -78,17 +74,19 @@ public class ListadoFuncionesServlet extends HttpServlet {
                 
                 // Si se llega con un filtrado vacio
                 if(filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
-                    funcionesFiltradas = fabrica.getIFuncion().obtenerFunciones();
+                    funcionesFiltradas = (Map<String, FuncionDTO>) Utils.FetchApi("/funciones").getEntity();
                     request.setAttribute("funcionesFiltradas", funcionesFiltradas);
                 }
                 // Si se llega con un filtrado de plataforma
                 else if (!filtroPlataforma.isEmpty() && filtroEspectaculo.isEmpty()) {
-                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+                    //funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDePlataforma(filtroPlataforma);
+                    funcionesFiltradas = (Map<String, FuncionDTO>) Utils.FetchApi("/funciones/?nombrePlataforma="+filtroPlataforma).getEntity();
                     request.setAttribute("funcionesFiltradas", funcionesFiltradas);
                 }
                 // Si llega con un filtrado espectaculo tambien llegara con uno de plataforma
                 else {
-                    funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+                    //funcionesFiltradas = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(filtroPlataforma, filtroEspectaculo);
+                    funcionesFiltradas = (Map<String, FuncionDTO>) Utils.FetchApi("/funciones/?nombrePlataforma="+filtroPlataforma+"&nombreEspectaculo="+filtroEspectaculo).getEntity();
                     request.setAttribute("funcionesFiltradas", funcionesFiltradas);
                 }
                 

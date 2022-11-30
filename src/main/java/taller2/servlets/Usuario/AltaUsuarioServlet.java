@@ -9,12 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
-import main.java.taller1.Logica.Clases.Artista;
-import main.java.taller1.Logica.Clases.EspectaculoDTO;
-import main.java.taller1.Logica.Clases.Espectador;
-import main.java.taller1.Logica.Clases.UsuarioDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,11 +22,8 @@ import java.util.Optional;
 @MultipartConfig
 public class AltaUsuarioServlet extends HttpServlet {
 
-  Fabrica fabrica;
-  
-  public void init() {
-    fabrica = Fabrica.getInstance();
-  }
+
+
 
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");

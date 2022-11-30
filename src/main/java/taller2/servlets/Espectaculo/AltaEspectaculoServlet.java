@@ -5,12 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.CategoriaDTO;
-import main.java.taller1.Logica.DTOs.PaqueteDTO;
-import main.java.taller1.Logica.DTOs.PlataformaDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
+import taller2.utils.Utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,11 +20,7 @@ import java.util.*;
 @MultipartConfig
 public class AltaEspectaculoServlet extends HttpServlet {
 
-    Fabrica fabrica;
 
-    public void init() {
-        fabrica = Fabrica.getInstance();
-    }
 
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -68,11 +61,11 @@ public class AltaEspectaculoServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-                Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
-                Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -100,7 +93,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Artista artistaLogueado = (Artista) session.getAttribute("usuarioLogueado");
+        UsuarioDTO artistaLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         
         String nombre = request.getParameter("nombre");
         String nombplataforma = request.getParameter("plataforma");
@@ -119,9 +112,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         
         // Seteo valores para los campos select del formulario
         try {
-            Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+            Map<String, PlataformaDTO> plataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
             request.setAttribute("plataformas", plataformas);
-            Map<String, CategoriaDTO> categorias = fabrica.getICategoria().obtenerCategorias();
+            Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
             request.setAttribute("categorias", categorias);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener las plataformas y categorias", request, response);
@@ -179,6 +172,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         // Obtener plataforma
         PlataformaDTO plataforma;
         try {
+            //
             Optional<PlataformaDTO> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
             if (!optional.isPresent()) {
                 dispatchError("Error, plataforma no encontrada", request, response);
@@ -191,7 +185,20 @@ public class AltaEspectaculoServlet extends HttpServlet {
             return;
         }
         
-        Espectaculo nuevoEspectaculo = new Espectaculo(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, plataforma, artistaLogueado);
+        //AltaEspectaculoDTO nuevoEspectaculo = new AltaEspectaculoDTO(nombre, descripcion, duracion, espMinimos, espMaximos, url, costo, E_EstadoEspectaculo.INGRESADO, LocalDateTime.now(), urlImagen, plataforma, artistaLogueado);
+        AltaEspectaculoDTO nuevoEspectaculo = new AltaEspectaculoDTO();
+        nuevoEspectaculo.setNombre(nombre);
+        nuevoEspectaculo.setDescripcion(descripcion);
+        nuevoEspectaculo.setDuracion(duracion);
+        nuevoEspectaculo.setMinEspectadores(espMinimos);
+        nuevoEspectaculo.setMaxEspectadores(espMaximos);
+        nuevoEspectaculo.setUrl(url);
+        nuevoEspectaculo.setCosto(costo);
+        nuevoEspectaculo.setEstado(E_EstadoEspectaculo.INGRESADO);
+        nuevoEspectaculo.setFechaRegistro(LocalDateTime.now());
+        nuevoEspectaculo.setImagen(urlImagen);
+        nuevoEspectaculo.setPlataforma(plataforma.getNombre());
+        nuevoEspectaculo.setArtista(artistaLogueado.getNickname());
         try {
             fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
             for(String categoria : categoriasElegidas){
@@ -215,7 +222,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
-        Optional<Espectaculo> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
+        Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
         return espectaculo.isPresent();
     }
 

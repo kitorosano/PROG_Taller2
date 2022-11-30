@@ -1,10 +1,9 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.time.LocalDateTime" %>
-<%@ page import="main.java.taller1.Logica.Clases.Artista" %>
-<%@ page import="main.java.taller1.Logica.Clases.Espectador" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
+<%@ page import="taller2.DTOs.*" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
     UsuarioDTO usuarioLogueado = session.getAttribute("usuarioLogueado") != null ? (UsuarioDTO) session.getAttribute("usuarioLogueado") : null;
@@ -30,9 +29,9 @@
     imagen = request.getAttribute("imagen") instanceof String ? (String) request.getAttribute("imagen") : usuarioLogueado.getImagen();
     
     if(esArtista) {
-        descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : ((Artista) usuarioLogueado).getDescripcion();
-        biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : ((Artista) usuarioLogueado).getBiografia();
-        url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : ((Artista) usuarioLogueado).getSitioWeb();
+        descripcion = request.getAttribute("descripcion") instanceof String ? (String) request.getAttribute("descripcion") : ((UsuarioDTO) usuarioLogueado).getDescripcion();
+        biografia = request.getAttribute("biografia") instanceof String ? (String) request.getAttribute("biografia") : ((UsuarioDTO) usuarioLogueado).getBiografia();
+        url = request.getAttribute("url") instanceof String ? (String) request.getAttribute("url") : ((UsuarioDTO) usuarioLogueado).getSitioWeb();
     }
 %>
 <!DOCTYPE html>

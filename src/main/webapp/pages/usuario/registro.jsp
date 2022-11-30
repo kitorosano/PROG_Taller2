@@ -1,6 +1,6 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
+<%@ page import="taller2.DTOs.*" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
     UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");

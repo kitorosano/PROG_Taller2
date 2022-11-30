@@ -1,9 +1,9 @@
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.*" %>
+
 <%@ page import="java.time.LocalDateTime" %>
-<%@ page import="main.java.taller1.Logica.DTOs.CategoriaDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
+<%@ page import="taller2.DTOs.*" %>
+
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
