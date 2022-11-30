@@ -88,12 +88,12 @@ public class DetalleFuncionServlet extends HttpServlet {
         request.setAttribute("datos",funcion);
       
         //Map <String, EspectadorRegistradoAFuncionDTO> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre);
-        Map <String, EspectadorRegistradoAFuncionDTO> espectadores= (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion?nombre="+nombre).getEntity();
+        Map <String, EspectadorRegistradoAFuncionDTO> espectadores= (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion//?nombre="+nombre).getEntity();
         request.setAttribute("espectadores",espectadores);
       
         if(esEspectador) {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuarioLogueado.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas = (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion?nicknameEspectador="+usuarioLogueado.getNickname()).getEntity();
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas = (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion/findByNickname/?nicknameEspectador="+usuarioLogueado.getNickname()).getEntity();
           if(funciones_registradas.containsKey(nombre)) {
             request.setAttribute("message","Registrado a funcion");
             request.setAttribute("datosRegistro", funciones_registradas.get(nombre));

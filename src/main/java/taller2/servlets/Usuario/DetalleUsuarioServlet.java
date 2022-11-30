@@ -80,20 +80,20 @@ public class DetalleUsuarioServlet extends HttpServlet {
         // Si el usuario no viene vacio y no es mi perfil entonces buscar por nickname
         if(!nickname.isEmpty() && !esPerfilPropio) {
           //boolean usuarioExistePorNickname = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-          UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios?nickname="+nickname).getEntity();
+          UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
           if (usuarioExistePorNickname==null) { // Si el usuario no existe por nickname, buscar por email
             //boolean usuarioExistePorCorreo = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-            UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios?correo="+nickname).getEntity();
+            UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
             if (usuarioExistePorCorreo==null) { // Si el usuario no existe por correo, redirigir al listado de usuarios
               request.setAttribute("respuesta", "Usuario no encontrado");
               response.sendRedirect("listado-usuarios");
               return;
             }
             //usuario = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
-              usuario = (UsuarioDTO) Utils.FetchApi("/usuarios?correo="+nickname).getEntity();
+              usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
           } else {
             //usuario = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
-              usuario = (UsuarioDTO) Utils.FetchApi("/usuarios?nickname="+nickname).getEntity();
+              usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
           }
         } else {
           // Si el usuario viene vacio o es mi perfil, traer el usuario logueado
@@ -104,17 +104,17 @@ public class DetalleUsuarioServlet extends HttpServlet {
         // Si el usuario es artista, entonces mostramos sus espectaculos
         if(usuario.isEsArtista()) {
           //Map <String, EspectaculoDTO> espectaculos=fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(usuario.getNickname());
-          Map <String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos?artistaOrganizador="+usuario.getNickname()).getEntity();
+          Map <String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByArtista/?artistaOrganizador="+usuario.getNickname()).getEntity();
           request.setAttribute("espectaculos", espectaculos);
         }
         // Si el usuario es espectador, entonces mostramos sus funciones a las que esta registrado y sus paquetes comprados
         else {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones=fabrica.getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuario.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones = (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion?nicknameEspectador="+usuario.getNickname()).getEntity();
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones = (Map <String, EspectadorRegistradoAFuncionDTO>) Utils.FetchApi("/EspectadorAFuncion/findByNickname/?nicknameEspectador="+usuario.getNickname()).getEntity();
           request.setAttribute("funciones",funciones);
           
           //Map<String, AltaEspectadorAPaqueteDTO> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador(usuario.getNickname());
-          Map<String, EspectadorPaqueteDTO> paquetes= (Map <String, EspectadorPaqueteDTO>) Utils.FetchApi("/paquetes?nombreEspectador="+usuario.getNickname()).getEntity();
+          Map<String, PaqueteDTO> paquetes= (Map <String, PaqueteDTO>) Utils.FetchApi("/paquetes/findByNombreEspectador/?nombreEspectador="+usuario.getNickname()).getEntity();
           request.setAttribute("paquetes",paquetes);
         }
         

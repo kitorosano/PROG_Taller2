@@ -80,18 +80,18 @@ public class LoginServlet extends HttpServlet {
     
     try {
       //boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-      UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios?nickname="+nickname).getEntity();
+      UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
       if (usuarioExistePorNickname==null) { // Si el usuario no existe
         //boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-        UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios?correo="+nickname).getEntity();
+        UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
         if (usuarioExistePorCorreo==null) {
           //error cuando el usuario no existe
           dispatchError("El usuario no existe", request, response);
           return;
         }
-        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios?correo="+nickname).getEntity();
+        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
       } else {
-        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios?nickname="+nickname).getEntity();
+        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
       }
     } catch (RuntimeException e) {
       e.printStackTrace();
