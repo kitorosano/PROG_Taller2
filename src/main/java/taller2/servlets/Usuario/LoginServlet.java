@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @WebServlet(name = "Login", value = "/login")
 public class LoginServlet extends HttpServlet {
-  Fabrica fabrica;
+
   
   public void init() {
     fabrica = Fabrica.getInstance();

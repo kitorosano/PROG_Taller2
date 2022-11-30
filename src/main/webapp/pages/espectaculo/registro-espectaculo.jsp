@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="main.java.taller1.Logica.DTOs.*" %>
+<%@ page import="taller2.DTOs.*" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
     main.java.taller1.Logica.DTOs.UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");

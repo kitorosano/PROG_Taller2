@@ -1,6 +1,6 @@
-<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
+
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.Artista" %>
+<%@ page import="taller2.DTOs.*" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 

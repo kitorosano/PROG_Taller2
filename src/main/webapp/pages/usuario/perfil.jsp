@@ -1,9 +1,9 @@
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.*" %>
+
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.stream.Collectors" %>
-<%@ page import="main.java.taller1.Logica.DTOs.*" %>
+<%@ page import="taller2.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -15,7 +15,7 @@
     UsuarioDTO usuario = (UsuarioDTO) request.getAttribute("datos");
     Boolean esPerfilPropio = request.getAttribute("esPerfilPropio") != null ? (Boolean) request.getAttribute("esPerfilPropio") : false;
 	Map<String, EspectaculoDTO> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos") : new HashMap<>();
-	Map<String, EspectadorRegistradoAFuncion> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("funciones") : new HashMap<>();
+	Map<String, EspectadorRegistradoAFuncionDTO> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncionDTO>) request.getAttribute("funciones") : new HashMap<>();
 	Map<String, AltaEspectadorAPaqueteDTO> paquetes = request.getAttribute("paquetes") != null ? (Map<String, AltaEspectadorAPaqueteDTO>) request.getAttribute("paquetes") : new HashMap<>();
 	String json = new Gson().toJson(usuario);
     
@@ -125,7 +125,7 @@
                                                 </th>
                                             </tr>
                                         <% } else {
-                                                for (EspectadorRegistradoAFuncion elem : funciones.values()) { %>
+                                                for (EspectadorRegistradoAFuncionDTO elem : funciones.values()) { %>
                                                     <tr onclick="location.href='detalle-funcion?nombre=<%=elem.getFuncion().getNombre()%>&espectaculo=<%=elem.getFuncion().getEspectaculo().getNombre()%>&plataforma=<%=elem.getFuncion().getEspectaculo().getPlataforma().getNombre()%>'">
                                                         <th><%=elem.getFuncion().getNombre()%> </th>
                                                         <th> <%=elem.getFuncion().getEspectaculo().getNombre()%> </th>

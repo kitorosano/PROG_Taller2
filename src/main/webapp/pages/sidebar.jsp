@@ -1,9 +1,5 @@
 <%@ page import="java.util.*" %>
-<%@ page import="main.java.taller1.Logica.Clases.*" %>
-<%@ page import="main.java.taller1.Logica.DTOs.*" %>
-<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.PlataformaDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.UsuarioDTO" %>
+<%@ page import="taller2.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% //CARGAR ALGUN@S ESPECTACULOS / FUNCIONES / PAQUETES / ARTISTA
     Map<String, PlataformaDTO> plataformasMap = request.getAttribute("todasPlataformas") != null ? (Map<String, PlataformaDTO>) request.getAttribute("todasPlataformas") : new HashMap<>();

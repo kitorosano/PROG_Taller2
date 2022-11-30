@@ -5,12 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import main.java.taller1.Logica.Clases.*;
-import main.java.taller1.Logica.DTOs.CategoriaDTO;
-import main.java.taller1.Logica.DTOs.PaqueteDTO;
-import main.java.taller1.Logica.DTOs.PlataformaDTO;
-import main.java.taller1.Logica.DTOs.UsuarioDTO;
-import main.java.taller1.Logica.Fabrica;
+import taller2.DTOs.*;
+import taller2.utils.Utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,11 +19,7 @@ import java.util.*;
 @MultipartConfig
 public class AltaEspectaculoServlet extends HttpServlet {
 
-    Fabrica fabrica;
 
-    public void init() {
-        fabrica = Fabrica.getInstance();
-    }
 
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -68,11 +60,11 @@ public class AltaEspectaculoServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fabrica.getIPlataforma().obtenerPlataformas();
-                Map<String, Espectaculo> todosEspectaculos = fabrica.getIEspectaculo().obtenerEspectaculos();
-                Map<String, PaqueteDTO> todosPaquetes = fabrica.getIPaquete().obtenerPaquetes();
-                Map<String, CategoriaDTO> todasCategorias = fabrica.getICategoria().obtenerCategorias();
-                Map<String, UsuarioDTO> todosUsuarios = fabrica.getIUsuario().obtenerUsuarios();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -119,9 +111,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         
         // Seteo valores para los campos select del formulario
         try {
-            Map<String, PlataformaDTO> plataformas = fabrica.getIPlataforma().obtenerPlataformas();
+            Map<String, PlataformaDTO> plataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
             request.setAttribute("plataformas", plataformas);
-            Map<String, CategoriaDTO> categorias = fabrica.getICategoria().obtenerCategorias();
+            Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
             request.setAttribute("categorias", categorias);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener las plataformas y categorias", request, response);

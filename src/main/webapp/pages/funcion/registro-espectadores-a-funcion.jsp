@@ -1,9 +1,6 @@
-<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.EspectaculoDTO" %>
-<%@ page import="main.java.taller1.Logica.Clases.EspectadorRegistradoAFuncion" %>
+
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.UsuarioDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.PaqueteDTO" %>
+<%@ page import="taller2.DTOs.*" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
   UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
@@ -14,7 +11,7 @@
   
   //Traer datos precargados del request anterior
   FuncionDTO funcion = (FuncionDTO) request.getAttribute("funcion");
-  Map<String, EspectadorRegistradoAFuncion> registros = (Map<String,EspectadorRegistradoAFuncion>) request.getAttribute("registros");
+  Map<String, EspectadorRegistradoAFuncionDTO> registros = (Map<String,EspectadorRegistradoAFuncionDTO>) request.getAttribute("registros");
   Map<String, PaqueteDTO> paquetes= (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
 %>
 <html>
@@ -103,7 +100,7 @@
             <label>Espectaculos a canjear</label>
             <select multiple name="EspectACanjear" id="EspectACanjear">
               <%  if(registros!=null){
-                    for(EspectadorRegistradoAFuncion registro: registros.values()){
+                    for(EspectadorRegistradoAFuncionDTO registro: registros.values()){
                       if(!registro.isCanjeado()){ %>
                         <option value="<%=registro.getFuncion().getNombre()+"-"+registro.getFuncion().getEspectaculo().getNombre()+"-"+registro.getFuncion().getEspectaculo().getPlataforma().getNombre()%>"><%=registro.getFuncion().getNombre()%></option>
               <%      }

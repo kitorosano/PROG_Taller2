@@ -27,11 +27,8 @@ import java.util.Optional;
 @MultipartConfig
 public class AltaUsuarioServlet extends HttpServlet {
 
-  Fabrica fabrica;
-  
-  public void init() {
-    fabrica = Fabrica.getInstance();
-  }
+
+
 
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");

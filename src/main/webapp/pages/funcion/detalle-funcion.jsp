@@ -1,7 +1,5 @@
 <%@ page import="java.util.Map" %>
-<%@ page import="main.java.taller1.Logica.Clases.*" %>
-<%@ page import="main.java.taller1.Logica.DTOs.FuncionDTO" %>
-<%@ page import="main.java.taller1.Logica.DTOs.*" %>
+<%@ page import="taller2.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -11,9 +9,9 @@
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
     FuncionDTO funcion= (FuncionDTO) request.getAttribute("datos");
-    Map<String, EspectadorRegistradoAFuncion> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncion>) request.getAttribute("espectadores");
+    Map<String, EspectadorRegistradoAFuncionDTO> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncionDTO>) request.getAttribute("espectadores");
     int contador = espectador_registrado_funcion.size();
-    EspectadorRegistradoAFuncion registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());
+    EspectadorRegistradoAFuncionDTO registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());
 
 %>
 <html>
@@ -64,7 +62,7 @@
                             <div data-content id="espectadores">
                                 <table >
                                     <tbody>
-                                    <%  for (EspectadorRegistradoAFuncion espect_reg_funcion : espectador_registrado_funcion.values()) {    %>
+                                    <%  for (EspectadorRegistradoAFuncionDTO espect_reg_funcion : espectador_registrado_funcion.values()) {    %>
                                     <tr>
                                         <th onClick="location.href='perfil?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
                                     </tr>
