@@ -9,7 +9,6 @@ import taller2.DTOs.*;
 import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
