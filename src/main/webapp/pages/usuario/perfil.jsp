@@ -69,6 +69,7 @@
                                 <p data-target="#funciones">Funciones</p>
                                 <% if (esPerfilPropio) { %>
                                     <p data-target="#paquetes">Paquetes adquiridos</p>
+                                    <p data-target="#finalizados">Espectaculos finalizados</p>
                                 <% }
                             } %>
                         </div>
@@ -88,6 +89,33 @@
                                     <h4><%=usuario.getBiografia()%></h4>
                                     <h4>Sitio Web:<%=usuario.getSitioWeb()%></h4>
                                 </div>
+
+                            <div data-content id="finalizados">
+                                <table>
+                                    <tbody>
+                                    <% if (esPerfilPropio ? espectaculos.size() == 0 : espectaculosAceptados.size() == 0) { %>
+                                    <tr>
+                                        <th>
+                                            <h4>
+                                                <%= esPerfilPropio ? "No tienes espectaculos" : "No tiene espectaculos finalizados"%>
+                                            </h4>
+                                        </th>
+                                    </tr>
+                                    <% } else {
+                                        for (EspectaculoDTO elem2 : espectaculos.values()) {
+                                            if (elem2.getEstado() == E_EstadoEspectaculo.FINALIZADO || esPerfilPropio) { %>
+                                    <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem2.getNombre()%>&plataforma=<%=elem2.getPlataforma().getNombre()%>'">
+                                        <th><%=elem2.getNombre()%> </th>
+                                        <th> <%=elem2.getPlataforma().getNombre()%> </th>
+                                    </tr>
+                                    <%          }
+                                    }
+                                    }%>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
                                 
                                 <div data-content id="espectaculos">
                                     <table>
