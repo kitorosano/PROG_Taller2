@@ -17,8 +17,6 @@ public class PlataformaDTO implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty())
-            throw new IllegalArgumentException("El nombre no puede ser vacio");
         this.nombre = nombre;
     }
 
@@ -27,8 +25,6 @@ public class PlataformaDTO implements Serializable {
     }
 
     public void setDescripcion(String descripcion) {
-        if (descripcion == null || descripcion.isEmpty())
-            throw new IllegalArgumentException("la descripcion no puede ser vacia");
         this.descripcion = descripcion;
     }
 
@@ -37,12 +33,6 @@ public class PlataformaDTO implements Serializable {
     }
 
     public void setUrl(String url) {
-        if (url == null || url.isEmpty())
-            throw new IllegalArgumentException("El url no puede ser vacio");
-            //queda validar url
-        if (!url.matches(regexURL)) {
-            throw new IllegalArgumentException("El url no es valido");
-        }
         this.url = url;
     }
 }

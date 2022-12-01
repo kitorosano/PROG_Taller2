@@ -11,8 +11,6 @@ public class CategoriaDTO implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty())
-            throw new IllegalArgumentException("El nombre no puede ser vacio");
         this.nombre = nombre;
     }
 }

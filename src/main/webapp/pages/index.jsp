@@ -68,11 +68,6 @@
                         </article>
                     <%-- AGREGAR COMPONENTES ARRIBA--%>
                 </div>
-                
-<%--
-                    <a href="registro-espectaculo-a-paquete?paquete=sixPack">Agregar Espectaculo a paquete</a>
-                    <a href='registro-espectadores-a-funcion?nombre=Casados+y+complicated&nombre_espectaculo=La+boda+de+tu+tia&nombre_plataforma=Twitch'>RegistroAFuncion</a>
---%>
             </section>
         </main>
     </div>

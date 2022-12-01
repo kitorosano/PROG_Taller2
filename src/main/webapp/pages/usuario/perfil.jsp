@@ -4,6 +4,7 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="taller2.DTOs.*" %>
+<%@ page import="taller2.E_EstadoEspectaculo" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -52,7 +53,7 @@
                     <%-- AGREGAR COMPONENTES ABAJO--%>
                     <img src="<%=usuario.getImagen()%>" alt="Foto de perfil" class="img_perfil">
                     <div class="first-data">
-                        <h2><%=usuario.getNombre() + " " + usuario.getApellido() + " - " + (usuario instanceof Artista ? "Artista" : "Espectador") %></h2>
+                        <h2><%=usuario.getNombre() + " " + usuario.getApellido() + " - " + (usuario.isEsArtista() ? "Artista" : "Espectador") %></h2>
                         <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
                         <% if(esPerfilPropio) {%>
                             <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
@@ -61,7 +62,7 @@
                     <div class="tabs">
                         <div class="menu">
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
-                            <% if (usuario instanceof Artista) { %>
+                            <% if (usuario.isEsArtista()) { %>
                                 <p data-target="#datos_artista">Datos Artista</p>
                                 <p data-target="#espectaculos">Espectaculos</p>
                             <% } else { %>
@@ -81,11 +82,11 @@
                                 <h4>Fecha de Nacimiento:<%=usuario.getFechaNacimiento()%></h4>
                             </div>
                             
-                            <% if (usuario instanceof Artista) { %>
+                            <% if (usuario.isEsArtista()) { %>
                                 <div data-content id="datos_artista">
-                                    <h4><%=((Artista) usuario).getDescripcion()%></h4>
-                                    <h4><%=((Artista) usuario).getBiografia()%></h4>
-                                    <h4>Sitio Web:<%=((Artista) usuario).getSitioWeb()%></h4>
+                                    <h4><%=usuario.getDescripcion()%></h4>
+                                    <h4><%=usuario.getBiografia()%></h4>
+                                    <h4>Sitio Web:<%=usuario.getSitioWeb()%></h4>
                                 </div>
                                 
                                 <div data-content id="espectaculos">
@@ -150,7 +151,7 @@
                                                 for (AltaEspectadorAPaqueteDTO paquete : paquetes.values()) { %>
                                                     <tr>
                                                         <th>
-                                                            <a href="detalle-paquete?nombre=<%=paquete.getPaquete().getNombre()%>"><%=paquete.getPaquete().getNombre()%>
+                                                            <a href="detalle-paquete?nombre=<%=paquete.getNombrePaquete()%>"><%=paquete.getNombrePaquete()%>
                                                             </a>
                                                         </th>
                                                     </tr>

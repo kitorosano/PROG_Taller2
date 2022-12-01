@@ -26,8 +26,6 @@ public class FuncionDTO implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty())
-            throw new IllegalArgumentException("El nombre no puede ser vacio");
         this.nombre = nombre;
     }
 
@@ -36,8 +34,6 @@ public class FuncionDTO implements Serializable {
     }
 
     public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
-        if (fechaHoraInicio == null)
-            throw new IllegalArgumentException("Fecha y hora de inicio no puede ser vacia");
         this.fechaHoraInicio = fechaHoraInicio;
     }
 
@@ -46,8 +42,6 @@ public class FuncionDTO implements Serializable {
     }
 
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        if (fechaRegistro == null)
-            throw new IllegalArgumentException("Fecha de registro no puede ser vacia");
         this.fechaRegistro = fechaRegistro;
     }
 
@@ -56,8 +50,6 @@ public class FuncionDTO implements Serializable {
     }
 
     public void setImagen(String imagen) {
-        if (imagen == null || imagen.isEmpty())
-            throw new IllegalArgumentException("La imagen no puede ser vacio");
         this.imagen = imagen;
     }
 }

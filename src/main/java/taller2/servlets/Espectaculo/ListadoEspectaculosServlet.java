@@ -85,24 +85,24 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 else if (!filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
                     //espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
 
-                    espectaculosFiltrados = fetch.Set("/espectaculos?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
+                    espectaculosFiltrados = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
                     request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
                 }
                 // Si se llega con un filtrado de categoria
                 else if (filtroPlataforma.isEmpty() && !filtroCategoria.isEmpty()) {
                     //espectaculosFiltrados = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
 
-                    espectaculosFiltrados = fetch.Set("/espectaculos?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
+                    espectaculosFiltrados = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
                     request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
                 }
                 // Si llega con un filtrado de plataforma y categoria
                 else {
                   
                     //Map<String, EspectaculoDTO> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
-                    Map<String, EspectaculoDTO> espectaculosDePlataforma = fetch.Set("/espectaculos?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
+                    Map<String, EspectaculoDTO> espectaculosDePlataforma = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
 
                     //Map<String, EspectaculoDTO> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
-                    Map<String, EspectaculoDTO> espectaculosDeCategoria = fetch.Set("/espectaculos?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
+                    Map<String, EspectaculoDTO> espectaculosDeCategoria = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
                 
                     for (EspectaculoDTO espectaculo : espectaculosDeCategoria.values()){
                         if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
@@ -115,7 +115,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
                 // Cargar categorias de los espectaculos filtrados
                 for (EspectaculoDTO espectaculo : espectaculosFiltrados.values()){
                     //Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
-                    Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fetch.Set("/categorias?nombreEspectaculo="+espectaculo.getNombre()).Get().getContentMap(CategoriaDTO.class);
+                    Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fetch.Set("/categorias/findByEspectaculo?nombreEspectaculo="+espectaculo.getNombre()).Get().getContentMap(CategoriaDTO.class);
                     categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
                 }
                 request.setAttribute("categoriasEspectaculosFiltrados", categoriasEspectaculosFiltrados);

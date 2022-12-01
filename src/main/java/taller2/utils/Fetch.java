@@ -6,11 +6,12 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Primitives;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpRequest;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.BufferedReader;
@@ -41,18 +42,21 @@ public class Fetch {
   }
   
   public Fetch Get() throws IOException {
-    CloseableHttpClient client = HttpClients.createDefault();
-    
-    HttpRequest request = new HttpGet(this.prefix + this.url);
-    
-    CloseableHttpResponse response = client.execute((HttpUriRequest) request);
-    client.close();
-    String responseString = new BasicResponseHandler().handleResponse(response);
-    
-    if(response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 201) {
-      throw new RuntimeException(response.getStatusLine().getReasonPhrase());
+    try {
+      HttpClient client = HttpClients.createDefault();
+  
+      HttpRequest request = new HttpGet(this.prefix + this.url);
+  
+      HttpResponse response = client.execute((HttpUriRequest) request);
+      String responseString = new BasicResponseHandler().handleResponse(response);
+  
+      if (response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 201) {
+        throw new RuntimeException(response.getStatusLine().getReasonPhrase());
+      }
+      this.content = responseString;
+    } catch (HttpResponseException e) {
+      System.out.println(e.getMessage());
     }
-    this.content = responseString;
     return this;
   }
   
@@ -188,6 +192,10 @@ public class Fetch {
     Type type = new TypeToken<Map<String, T>>(){}.getType();
     Map<String, T> map = new Gson().fromJson(this.content, type);
     return map;
+  }
+  
+  public String getContentString() {
+    return this.content;
   }
   
 }

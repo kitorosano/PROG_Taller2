@@ -81,7 +81,7 @@
                 celdaTipo = nuevaFila.insertCell(1);
     
                 celdaNickname.innerHTML = "<%=elem.getNickname()%>";
-                <% if (elem instanceof Artista){%>
+                <% if (elem.isEsArtista()){%>
                     celdaTipo.innerHTML = "Artista";
                 <%}else{%>
                     celdaTipo.innerHTML = "Espectador";

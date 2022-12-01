@@ -113,7 +113,7 @@ public class DetalleUsuarioServlet extends HttpServlet {
         // Si el usuario es espectador, entonces mostramos sus funciones a las que esta registrado y sus paquetes comprados
         else {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones=fabrica.getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuario.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/EspectadorAFuncion/findByNickname?nicknameEspectador="+usuario.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nicknameEspectador="+usuario.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
           request.setAttribute("funciones",funciones);
           
           //Map<String, AltaEspectadorAPaqueteDTO> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador(usuario.getNickname());
