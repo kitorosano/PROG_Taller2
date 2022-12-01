@@ -146,8 +146,7 @@
             type:"DELETE",
             url:"detalle-espectaculo",
             data: {
-                nombre: <%=espectaculo.getNombre()%>,
-                plataforma: <%=espectaculo.getPlataforma().getNombre()%>
+                nombre:
             },
         });
         request.done(function(response) {
