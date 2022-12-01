@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
+import taller2.utils.Utils;
 
 
 import java.io.IOException;
@@ -78,17 +79,19 @@ public class LoginServlet extends HttpServlet {
     UsuarioDTO usuario;
     
     try {
-      boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-      if (!usuarioExistePorNickname) { // Si el usuario no existe
-        boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-        if (!usuarioExistePorCorreo) {
+      //boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
+      UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
+      if (usuarioExistePorNickname==null) { // Si el usuario no existe
+        //boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
+        UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
+        if (usuarioExistePorCorreo==null) {
           //error cuando el usuario no existe
           dispatchError("El usuario no existe", request, response);
           return;
         }
-        usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
+        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
       } else {
-        usuario = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).get();
+        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
       }
     } catch (RuntimeException e) {
       e.printStackTrace();
