@@ -19,12 +19,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 public class Utils {
   
+  private static String prefix = "http://localhost:8081/api/";
+  
   public static Response FetchApi(String url) {
     FetchApiOptions options = new FetchApiOptions();
     options.addHeader("Content-Type", "application/json");
     CloseableHttpClient client = HttpClients.createDefault();
     
-    HttpRequest request = new HttpGet(url);
+    HttpRequest request = new HttpGet(prefix + url);
     
     for (Map.Entry<String, String> entry : options.getHeaders().entrySet()) {
       request.addHeader(entry.getKey(), entry.getValue());
@@ -45,7 +47,7 @@ public class Utils {
       default:
       case "POST": {
         try {
-          URL url = new URL(str);
+          URL url = new URL(prefix + str);
           HttpURLConnection con = (HttpURLConnection) url.openConnection();
           con.setRequestMethod("POST");
           con.setRequestProperty("Content-Type", "application/json");
