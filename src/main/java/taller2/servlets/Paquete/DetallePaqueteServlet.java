@@ -1,5 +1,6 @@
 package taller2.servlets.Paquete;
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
 import java.io.IOException;
@@ -56,11 +58,11 @@ public class DetallePaqueteServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-        Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-        Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
-        Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
-        Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+        Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll/").getEntity();
+        Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll/").getEntity();
+        Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll/").getEntity();
+        Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll/").getEntity();
+        Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll/").getEntity();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -73,23 +75,25 @@ public class DetallePaqueteServlet extends HttpServlet {
         UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
         String nombre = request.getParameter("nombre");
     
-        boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
-    
-        if(!paqueteExiste) { // Si el paquete no existe
+        //boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
+        PaqueteDTO paqueteExiste = (PaqueteDTO) Utils.FetchApi("/paquetes/find/?nombre="+nombre).getEntity();
+        if(paqueteExiste==null) { // Si el paquete no existe
           request.setAttribute("message","Paquete no encontrado");
           request.setAttribute("messageType","error");
           response.sendRedirect("listado-paquetes");
           return;
         }
-        PaqueteDTO paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
+        //PaqueteDTO paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
+        PaqueteDTO paquete = (PaqueteDTO) Utils.FetchApi("/paquetes/find/?nombre="+nombre).getEntity();
         request.setAttribute("datos",paquete);
         
-        Map<String, EspectaculoDTO> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);
+        //Map<String, EspectaculoDTO> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);
+        Map<String, EspectaculoDTO> espectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByPaquete/?nombrePaquete="+nombre).getEntity();
         request.setAttribute("espectaculos",espectaculos);
         
         if(esEspectador) {
-            Map<String, AltaEspectadorAPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
-            
+            //Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
+          Map<String, PaqueteDTO> paquetes_espectador = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findByNombreEspectador/?nombreEspectador="+usuarioLogueado.getNickname()).getEntity();
             if(paquetes_espectador.containsKey(nombre)) {
                 request.setAttribute("message","Paquete Adquirido");
                 request.setAttribute("fechaCompra", paquetes_espectador.get(nombre).getFechaRegistro());
@@ -112,15 +116,17 @@ public class DetallePaqueteServlet extends HttpServlet {
     //String nickname_espectador = (String) session.getAttribute("nickname");
     UsuarioDTO usuSession=(UsuarioDTO)session.getAttribute("usuarioLogueado");
     String nickname_espectador= usuSession.getNickname();
-    boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
-    if(!paqueteExiste) { // Si el paquete no existe
+    //boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
+    PaqueteDTO paqueteExiste = (PaqueteDTO) Utils.FetchApi("/paquetes/find/?nombre="+nombre).getEntity();
+    if(paqueteExiste==null) { // Si el paquete no existe
         request.setAttribute("message","Paquete no encontrado");
         request.setAttribute("messageType","error");
         dispatchPage("/pages/paquete/detalle-paquete.jsp", request, response);
         return;
     }
   
-    Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    //Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
+    Map<String, PaqueteDTO> paquetes_espectador = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findByNombreEspectador/?nombreEspectador="+nickname_espectador).getEntity();
     boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
 
     if (paqueteYaComprado) {
@@ -130,7 +136,17 @@ public class DetallePaqueteServlet extends HttpServlet {
       return;
     }
     
-    Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nombre, nickname_espectador);
+    //Fabrica.getInstance().getIPaquete().altaEspectadorAPaquete(nombre, nickname_espectador);
+    AltaEspectadorAPaqueteDTO alta_espectador_a_paquete = new AltaEspectadorAPaqueteDTO();
+    alta_espectador_a_paquete.setNombrePaquete(nombre);
+    alta_espectador_a_paquete.setNickname(nickname_espectador);
+
+    FetchApiOptions options = new FetchApiOptions();
+    String body = new Gson().toJson(alta_espectador_a_paquete);
+    options.setBody(body);
+    options.setMethod("POST");
+
+    Utils.FetchApi("/paquetes/createEspectadorAPaquete/",options);
     request.setAttribute("message", "Paquete Adquirido");
     response.sendRedirect("detalle-paquete" + "?nombre=" + nombre);
   }
