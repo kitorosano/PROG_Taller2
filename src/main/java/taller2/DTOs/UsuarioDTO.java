@@ -1,8 +1,9 @@
 package taller2.DTOs;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class UsuarioDTO {
+public class UsuarioDTO implements Serializable {
   
   private String nickname;
   private String nombre;
@@ -18,7 +19,7 @@ public class UsuarioDTO {
   
   public UsuarioDTO() {
   }
-
+  
   public String getNickname() {
     return nickname;
   }

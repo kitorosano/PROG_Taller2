@@ -1,9 +1,10 @@
 package taller2.DTOs;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class FuncionDTO {
+public class FuncionDTO implements Serializable {
     private String nombre;
     private EspectaculoDTO espectaculo;
     private LocalDateTime fechaHoraInicio;

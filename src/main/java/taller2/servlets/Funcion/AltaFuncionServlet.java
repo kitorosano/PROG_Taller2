@@ -9,11 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import taller2.DTOs.*;
 import taller2.E_EstadoEspectaculo;
-import taller2.utils.FetchApiOptions;
-import taller2.utils.Utils;
+import taller2.utils.Fetch;
 
-import javax.rmi.CORBA.Util;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -29,9 +26,12 @@ import java.util.Map;
 @WebServlet(name = "AltaFuncion", value = "/registro-funcion")
 @MultipartConfig
 public class AltaFuncionServlet extends HttpServlet {
-
-
-
+    
+    Fetch fetch;
+    
+    public void init() {
+        fetch = new Fetch();
+    }
 
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -72,11 +72,12 @@ public class AltaFuncionServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
+                
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
+                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -91,7 +92,7 @@ public class AltaFuncionServlet extends HttpServlet {
                     String artista=art.getNickname();
                     Map<String, EspectaculoDTO> retorno = new HashMap<>();
                     //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-                    Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByArtista?artistaOrganizador="+artista).getEntity();
+                    Map<String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getContentMap(EspectaculoDTO.class);
                     for(EspectaculoDTO esp:espectaculos.values()){
                         if(esp.getEstado()== E_EstadoEspectaculo.ACEPTADO){
                             retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
@@ -126,7 +127,7 @@ public class AltaFuncionServlet extends HttpServlet {
         UsuarioDTO art=(UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String artista=art.getNickname();
         //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-        Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByArtista?artistaOrganizador="+artista).getEntity();
+        Map<String, EspectaculoDTO> espectaculos=fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getContentMap(EspectaculoDTO.class);
         Map<String, EspectaculoDTO> retorno = new HashMap<>();
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
@@ -166,9 +167,7 @@ public class AltaFuncionServlet extends HttpServlet {
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            String body= new Gson().toJson(inputImagen);
-            FetchApiOptions options=new FetchApiOptions("POST",body);
-            urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+            urlImagen= fetch.Set("/database/createImage",inputImagen).Get().getContent(String.class);
             //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         FuncionDTO nueva=new FuncionDTO();
@@ -178,9 +177,7 @@ public class AltaFuncionServlet extends HttpServlet {
         nueva.setFechaRegistro(LocalDateTime.now());
         nueva.setImagen(urlImagen);
         try {
-            String body=new Gson().toJson(nueva);
-            FetchApiOptions options=new FetchApiOptions("POST",body);
-            Utils.FetchApi("/funciones/create",options);
+            fetch.Set("/funciones/create",nueva).Post();
             //fabrica.getIFuncion().altaFuncion(nueva);
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
@@ -196,15 +193,19 @@ public class AltaFuncionServlet extends HttpServlet {
 
     private boolean nombreExistente(String nombrefunc, EspectaculoDTO esp) {      //Devuelve true si hay error
         //Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
-        Map<String, FuncionDTO> funciones= (Map<String, FuncionDTO>) Utils.FetchApi("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).getEntity();
-        if(funciones!=null) {
-            for (FuncionDTO fun : funciones.values()) {
-                if (fun.getNombre().equals(nombrefunc)) {
-                    return true;
+        try {
+            Map<String, FuncionDTO> funciones= fetch.Set("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).Get().getContentMap(FuncionDTO.class);
+            if(funciones!=null) {
+                for (FuncionDTO fun : funciones.values()) {
+                    if (fun.getNombre().equals(nombrefunc)) {
+                        return true;
+                    }
                 }
             }
+            return false;
+        } catch (RuntimeException | IOException e) {
+            throw new RuntimeException(e);
         }
-        return false;
     }
     private boolean fechaInvalida(String fecha){
         try {
@@ -231,15 +232,19 @@ public class AltaFuncionServlet extends HttpServlet {
     }
 
     private List<String> obtenerArtistas(String artista){
-        //Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
-        Map <String, UsuarioDTO> usuarios= (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
-        List<String> artistas = new ArrayList<>();
-        for(UsuarioDTO u:usuarios.values()){
-            if(u.isEsArtista() && !artista.equals(u.getNickname())){
-                artistas.add(u.getNickname());
+        try {
+            //Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+            Map <String, UsuarioDTO> usuarios= fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+            List<String> artistas = new ArrayList<>();
+            for(UsuarioDTO u:usuarios.values()){
+                if(u.isEsArtista() && !artista.equals(u.getNickname())){
+                    artistas.add(u.getNickname());
+                }
             }
+            return artistas;
+        } catch (RuntimeException | IOException e) {
+            throw new RuntimeException(e);
         }
-        return artistas;
     }
 
 }

@@ -1,6 +1,8 @@
 package taller2.DTOs;
 
-public class CategoriaDTO {
+import java.io.Serializable;
+
+public class CategoriaDTO implements Serializable {
     private String nombre;
     public CategoriaDTO(){}
 

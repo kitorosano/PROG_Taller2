@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
-import taller2.utils.Utils;
+import taller2.utils.Fetch;
 
 
 import java.io.IOException;
@@ -17,7 +17,12 @@ import java.util.Map;
 
 @WebServlet(name = "DetalleEspectaculo", value = "/detalle-espectaculo")
 public class DetalleEspectaculoServlet extends HttpServlet {
-
+  
+  Fetch fetch;
+  
+  public void init() {
+    fetch = new Fetch();
+  }
 
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
@@ -57,11 +62,12 @@ public class DetalleEspectaculoServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll/").getEntity();
-        Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll/").getEntity();
-        Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll/").getEntity();
-        Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll/").getEntity();
-        Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll/").getEntity();
+                
+        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
+        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
+        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
+        Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
+        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -73,7 +79,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         String plataforma= request.getParameter("plataforma");
         
         //boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
-        EspectaculoDTO espect = (EspectaculoDTO) Utils.FetchApi("/espectaculos/find/?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
+        EspectaculoDTO espect = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
         if(espect==null) { // Si el espectaculo no existe
           request.setAttribute("message","Espectaculo no encontrado");
           request.setAttribute("messageType","error");
@@ -82,22 +88,22 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         }
         //EspectaculoDTO espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
 
-        EspectaculoDTO espectaculo = (EspectaculoDTO) Utils.FetchApi("/espectaculos/find/?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
+        EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
         request.setAttribute("datos",espectaculo);
     
         //Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
 
-        Map<String, FuncionDTO> funciones=(Map<String, FuncionDTO>) Utils.FetchApi("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).getEntity();
+        Map<String, FuncionDTO> funciones=  fetch.Set("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContentMap(FuncionDTO.class);
         request.setAttribute("funciones",funciones);
         
         //Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
 
-        Map<String, PaqueteDTO> paquetes=(Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).getEntity();
+        Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(PaqueteDTO.class);
         request.setAttribute("paquetes",paquetes);
         
         //Map<String, CategoriaDTO> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
 
-        Map<String, CategoriaDTO> categorias=(Map<String, CategoriaDTO>) Utils.FetchApi("/categorias?nombreEspectaculo="+nombre).getEntity();
+        Map<String, CategoriaDTO> categorias= fetch.Set("/categorias?nombreEspectaculo="+nombre).Get().getContentMap(CategoriaDTO.class);
         request.setAttribute("categorias",categorias);
         
         dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);

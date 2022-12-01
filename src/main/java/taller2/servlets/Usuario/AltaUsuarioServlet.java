@@ -10,8 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import taller2.DTOs.UsuarioDTO;
-import taller2.utils.FetchApiOptions;
-import taller2.utils.Utils;
+import taller2.utils.Fetch;
 
 
 import java.io.IOException;
@@ -21,10 +20,12 @@ import java.time.LocalDate;
 @WebServlet(name = "AltaUsuario", value = "/registro")
 @MultipartConfig
 public class AltaUsuarioServlet extends HttpServlet {
-
-
-
-
+  
+  Fetch fetch;
+  
+  public void init() {
+    fetch = new Fetch();
+  }
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
     RequestDispatcher view = request.getRequestDispatcher(page);
@@ -113,9 +114,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     try {
       if (part.getSize() != 0) {
         InputStream inputImagen = part.getInputStream();
-        String body= new Gson().toJson(inputImagen);
-        FetchApiOptions options=new FetchApiOptions("POST",body);
-        urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+        urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
         //urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
     } catch (RuntimeException e) {
@@ -168,9 +167,7 @@ public class AltaUsuarioServlet extends HttpServlet {
 
     try {
       // Se envia el usuario en la base de datos
-      String body=new Gson().toJson(usuario);
-      FetchApiOptions options=new FetchApiOptions("POST",body);
-      Utils.FetchApi("/usuarios/create",options);
+      fetch.Set("/usuarios/create", usuario).Post();
       //fabrica.getIUsuario().altaUsuario(usuario);
 
       // Redireccionar a la pantalla de login
@@ -213,15 +210,23 @@ public class AltaUsuarioServlet extends HttpServlet {
   }
 
   private boolean nombreExistenteNickname(String nombreUsuario) {      //Devuelve true si hay error
-    UsuarioDTO usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname?nickname="+nombreUsuario).getEntity();
-    //Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorNickname(nombreUsuario);
-    return usuario != null;
+    try {
+      UsuarioDTO usuario = fetch.Set("/usuarios/findByNickname?nickname="+nombreUsuario).Get().getContent(UsuarioDTO.class);
+      return usuario != null;
+    } catch (RuntimeException e) {
+      return false;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private boolean nombreExistenteCorreo(String correo) {      //Devuelve true si hay error
-    UsuarioDTO usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo?correo="+correo).getEntity();
-    //Optional<UsuarioDTO> usuario =fabrica.getIUsuario().obtenerUsuarioPorCorreo(correo);
-    return usuario != null;
+    try {
+      UsuarioDTO usuario = fetch.Set("/usuarios/findByCorreo?correo="+correo).Get().getContent(UsuarioDTO.class);
+      return usuario != null;
+    } catch (RuntimeException | IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }

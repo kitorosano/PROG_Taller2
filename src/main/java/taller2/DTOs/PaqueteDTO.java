@@ -1,8 +1,9 @@
 package taller2.DTOs;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class PaqueteDTO {
+public class PaqueteDTO implements Serializable {
     private String nombre;
     private String descripcion;
     private double descuento;
@@ -11,6 +12,15 @@ public class PaqueteDTO {
     private String imagen;
 
     public PaqueteDTO(){}
+
+    public PaqueteDTO(String nombre, String descripcion, double descuento, LocalDateTime fechaExpiracion, LocalDateTime fechaRegistro, String imagen) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.descuento = descuento;
+        this.fechaExpiracion = fechaExpiracion;
+        this.fechaRegistro = fechaRegistro;
+        this.imagen = imagen;
+    }
 
     public String getNombre() {
         return nombre;
