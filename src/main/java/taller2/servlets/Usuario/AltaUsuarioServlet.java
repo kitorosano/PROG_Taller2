@@ -9,18 +9,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import taller2.DTOs.UsuarioDTO;
 import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.regex.Pattern;
-import java.util.Optional;
 
 @WebServlet(name = "AltaUsuario", value = "/registro")
 @MultipartConfig
@@ -131,7 +127,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     }
 
     // Se especifica el tipo de usuario a crear
-    UsuarioDTO usuario;
+    UsuarioDTO usuario = new UsuarioDTO();
     if(tipo.equals("Artista")){
       if(camposVaciosArtista(descripcion)){
         request.setAttribute("message", "Los campos obligatorios no pueden ser vacios");
@@ -146,15 +142,32 @@ public class AltaUsuarioServlet extends HttpServlet {
         return;
       }
       
-      usuario = new UsuarioDTO(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen, descripcion, biografia, url);
+      // Crear artista
+      usuario.setNickname(nickname);
+      usuario.setNombre(nombre);
+      usuario.setApellido(apellido);
+      usuario.setCorreo(correo);
+      usuario.setFechaNacimiento(fechaNac);
+      usuario.setContrasenia(contrasenia);
+      usuario.setImagen(urlImagen);
+      usuario.setDescripcion(descripcion);
+      usuario.setBiografia(biografia);
+      usuario.setSitioWeb(url);
       usuario.setEsArtista(true);
     } else {
-      usuario = new UsuarioDTO(nickname, nombre, apellido, correo, fechaNac, contrasenia, urlImagen);
+      // Crear espectador
+      usuario.setNickname(nickname);
+      usuario.setNombre(nombre);
+      usuario.setApellido(apellido);
+      usuario.setCorreo(correo);
+      usuario.setFechaNacimiento(fechaNac);
+      usuario.setContrasenia(contrasenia);
+      usuario.setImagen(urlImagen);
       usuario.setEsArtista(false);
     }
 
     try {
-      // Se crea el usuario en la base de datos
+      // Se envia el usuario en la base de datos
       String body=new Gson().toJson(usuario);
       FetchApiOptions options=new FetchApiOptions("POST",body);
       Utils.FetchApi("/usuarios/create",options);

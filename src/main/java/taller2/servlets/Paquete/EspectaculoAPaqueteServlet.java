@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import taller2.DTOs.*;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
 import java.io.IOException;
@@ -102,12 +103,21 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
 
 
         if(espectaculosAagregar!=null){
-            Map<String,EspectaculoDTO> espectaculos=fabrica.getIPaquete().obtenerEspectaculosDePaquete(nombrepaquete);
+            Map<String,EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByPaquete?paquete="+nombrepaquete).getEntity();
             for(String nuevo:espectaculosAagregar){
-                if(espectaculos.get(nuevo)==null){
-                    EspectaculoDTO esp=fabrica.getIEspectaculo().obtenerEspectaculos().get(nuevo);
+                EspectaculoDTO espectaculodto = espectaculos.get(nuevo);
+                if(espectaculodto == null){ // si no existe el espectaculo en el paquete
                     try {
-                        fabrica.getIPaquete().altaEspectaculoAPaquete(esp.getNombre(),nombrepaquete,esp.getPlataforma().getNombre());
+                        AltaEspectaculoAPaqueteDTO altaEspectaculoAPaqueteDTO = new AltaEspectaculoAPaqueteDTO();
+                        altaEspectaculoAPaqueteDTO.setNombrePaquete(nombrepaquete);
+                        altaEspectaculoAPaqueteDTO.setNombreEspectaculo(nuevo);
+                        altaEspectaculoAPaqueteDTO.setNombrePlataforma(espectaculosPaq.get(nuevo).getPlataforma().getNombre());
+                        
+                        FetchApiOptions options = new FetchApiOptions();
+                        options.setMethod("POST");
+                        options.setBody(altaEspectaculoAPaqueteDTO);
+                        
+                        Utils.FetchApi("/paquetes/altaEspectaculoAPaquete", options);
                     } catch (Exception e) {
                         System.out.println(e);
                         dispatchError("Error al agregar los paquetes", request, response);
@@ -119,7 +129,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
     }
     private Map<String, EspectaculoDTO> obtenerEspectaculosSinPaquete(String paquete ){
         Map<String, EspectaculoDTO> espectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-        Map<String, EspectaculoDTO> espectaculosPaquete = fabrica.getIPaquete().obtenerEspectaculosDePaquete(paquete);
+        Map<String, EspectaculoDTO> espectaculosPaquete = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByPaquete?nombrePaquete="+paquete).getEntity();
         for (EspectaculoDTO e : espectaculosPaquete.values()) {
             String clave = e.getNombre() + "-" + e.getPlataforma().getNombre();
             if (espectaculos.containsKey(clave)) {

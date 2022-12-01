@@ -1,5 +1,8 @@
 package taller2.utils;
 
+import com.google.gson.Gson;
+
+import javax.swing.text.html.parser.Entity;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,15 +14,15 @@ public class FetchApiOptions {
   public FetchApiOptions() {
   }
   
-  public FetchApiOptions(String method, String body) {
+  public FetchApiOptions(String method, Object body) {
     this.method = method;
-    this.body = body;
+    this.body = new Gson().toJson(body);
   }
   
-  public FetchApiOptions(Map<String, String> headers, String method, String body) {
+  public FetchApiOptions(Map<String, String> headers, String method, Object body) {
     this.headers = headers;
     this.method = method;
-    this.body = body;
+    this.body = new Gson().toJson(body);
   }
   
   public Map<String, String> getHeaders() {
@@ -37,8 +40,8 @@ public class FetchApiOptions {
     return body;
   }
   
-  public void setBody(String body) {
-    this.body = body;
+  public void setBody(Object body) {
+    this.body = new Gson().toJson(body);
   }
   
   public String getMethod() {

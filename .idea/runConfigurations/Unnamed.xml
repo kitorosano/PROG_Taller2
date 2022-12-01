@@ -5,17 +5,18 @@
     <predefined_log_file id="Tomcat Catalina Log" />
     <predefined_log_file id="Tomcat Manager Log" />
     <predefined_log_file id="Tomcat Host Manager Log" />
+    <option name="adminPort" value="8006" />
     <option name="contextPath" value="/PROG_Taller2" />
     <option name="docBase" value="$PROJECT_DIR$/src/main/webapp" />
     <option name="envOptions">
       <map />
     </option>
-    <option name="port" value="8081" />
+    <option name="port" value="8082" />
     <option name="tomcatInfo">
       <TomcatInfo>
-        <option name="name" value="Apache Tomcat/10.0.26 (11)" />
-        <option name="path" value="$PROJECT_DIR$/../../../../../../../../../../../Program Files/Apache Software Foundation/Tomcat 10.0" />
-        <option name="version" value="10.0.26.0" />
+        <option name="name" value="Apache Tomcat/10.0.23" />
+        <option name="path" value="$PROJECT_DIR$/../../../../../../apache-tomcat-10.0.23" />
+        <option name="version" value="10.0.23.0" />
       </TomcatInfo>
     </option>
     <option name="vmOptions" value="-DDB_URL=jdbc:mysql://193.123.119.52:3306/prog_taller3 -DDB_USER=phpmyadmin -DDB_PASS=contra123" />

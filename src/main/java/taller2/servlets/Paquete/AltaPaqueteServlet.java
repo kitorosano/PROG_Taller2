@@ -123,7 +123,15 @@ public class AltaPaqueteServlet extends HttpServlet {
             dispatchError("Error al guardar la imagen", request, response);
             return;
         }
-        PaqueteDTO nuevo = new PaqueteDTO(nombre,descripcion,descuentoDb, LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")), LocalDateTime.now(), urlImagen);
+        
+        // Crear paquete
+        PaqueteDTO nuevo = new PaqueteDTO();
+        nuevo.setNombre(nombre);
+        nuevo.setDescripcion(descripcion);
+        nuevo.setDescuento(descuentoDb);
+        nuevo.setFechaExpiracion(LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")));
+        nuevo.setFechaRegistro(LocalDateTime.now());
+        nuevo.setImagen(urlImagen);
 
         try {
             String body=new Gson().toJson(nuevo);
