@@ -12,8 +12,6 @@ import taller2.E_EstadoEspectaculo;
 import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
-import javax.rmi.CORBA.Util;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
