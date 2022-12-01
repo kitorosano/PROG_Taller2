@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
 import taller2.utils.Fetch;
 
 
@@ -118,6 +119,18 @@ public class DetalleEspectaculoServlet extends HttpServlet {
   
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-  
+      //String nombreEspectaculo = (String)request.getParameter("nombre");
+      //String nombrePlataforma = (String)request.getParameter("plataforma");
+       // fetch.Set("espectaculo/updateEstado",categoria).Post();
+  }
+
+  @Override
+  protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String nombreEspectaculo = (String)request.getParameter("nombreEspectaculo");
+    String nombrePlataforma = (String)request.getParameter("nombrePlataforma");
+
+    EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo).Get().getContent(EspectaculoDTO.class);
+    espectaculo.setEstado(E_EstadoEspectaculo.FINALIZADO);
+    fetch.Set("espectaculo/updateEstado",espectaculo).Post();
   }
 }

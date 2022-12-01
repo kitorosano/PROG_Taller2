@@ -4,6 +4,7 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="taller2.DTOs.*" %>
+<%@ page import="taller2.E_EstadoEspectaculo" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
@@ -68,6 +69,7 @@
                                 <p data-target="#funciones">Funciones</p>
                                 <% if (esPerfilPropio) { %>
                                     <p data-target="#paquetes">Paquetes adquiridos</p>
+                                    <p data-target="#finalizados">Espectaculos finalizados</p>
                                 <% }
                             } %>
                         </div>
@@ -81,12 +83,39 @@
                                 <h4>Fecha de Nacimiento:<%=usuario.getFechaNacimiento()%></h4>
                             </div>
                             
-                            <% if (usuario instanceof Artista) { %>
+                            <% if (usuario.isEsArtista()) { %>
                                 <div data-content id="datos_artista">
-                                    <h4><%=((Artista) usuario).getDescripcion()%></h4>
-                                    <h4><%=((Artista) usuario).getBiografia()%></h4>
-                                    <h4>Sitio Web:<%=((Artista) usuario).getSitioWeb()%></h4>
+                                    <h4><%=usuario.getDescripcion()%></h4>
+                                    <h4><%=usuario.getBiografia()%></h4>
+                                    <h4>Sitio Web:<%=usuario.getSitioWeb()%></h4>
                                 </div>
+
+                            <div data-content id="finalizados">
+                                <table>
+                                    <tbody>
+                                    <% if (esPerfilPropio ? espectaculos.size() == 0 : espectaculosAceptados.size() == 0) { %>
+                                    <tr>
+                                        <th>
+                                            <h4>
+                                                <%= esPerfilPropio ? "No tienes espectaculos" : "No tiene espectaculos finalizados"%>
+                                            </h4>
+                                        </th>
+                                    </tr>
+                                    <% } else {
+                                        for (EspectaculoDTO elem2 : espectaculos.values()) {
+                                            if (elem2.getEstado() == E_EstadoEspectaculo.FINALIZADO || esPerfilPropio) { %>
+                                    <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem2.getNombre()%>&plataforma=<%=elem2.getPlataforma().getNombre()%>'">
+                                        <th><%=elem2.getNombre()%> </th>
+                                        <th> <%=elem2.getPlataforma().getNombre()%> </th>
+                                    </tr>
+                                    <%          }
+                                    }
+                                    }%>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
                                 
                                 <div data-content id="espectaculos">
                                     <table>

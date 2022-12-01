@@ -2,6 +2,7 @@
 
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="taller2.DTOs.*" %>
+<%@ page import="taller2.E_EstadoEspectaculo" %>
 
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -51,9 +52,12 @@
                             <h5 class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></h5>
                     <%  }   %>
                 </div>
-                <%  if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(((Artista)session.getAttribute("usuarioLogueado")).getNickname())){
-                        if(espectaculo.getEstado()==E_EstadoEspectaculo.ACEPTADO){  %>
+                <%
+                    UsuarioDTO usuarioDTO= (UsuarioDTO) session.getAttribute("usuarioLogueado");
+                    if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(usuarioDTO.getNickname())){
+                        if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
                             <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
+                            <button class="btn2" id="btnDesactivar" onClick="location.href='detalle-espectaculo'">Desactivar Espectaculo</button>
                 <%      }
                     }   %>
                     <div class="tabs">
@@ -136,7 +140,41 @@
                 console.log(target.classList);
             })
         })
-    
+
+
+        /*var request=$.ajax({
+            type:"DELETE",
+            url:"detalle-espectaculo",
+            data: {
+                nombre: <%=espectaculo.getNombre()%>,
+                plataforma: <%=espectaculo.getPlataforma().getNombre()%>
+            },
+        });
+        request.done(function(response) {
+            $("#btnDesactivar").hide();
+            alert("Espectaculo desactivado")
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            alert("Hubo un error")
+        });*/
+
+        //var xhttp = new XMLHttpRequest();
+        //xhttp.open("DELETE", "/detalle-Espectaculo?nombrePlataforma="+<%=espectaculo.getPlataforma().getNombre()%>+"&nombreEspectaculo="+<%=espectaculo.getPlataforma().getNombre()%>,false);
+        //xhttp.send();
+        const http = new XMLHttpRequest();
+        http.open("DELETE","detalle-espectaculo?nombreEspectaculo=<%=espectaculo.getNombre()%>"+"&nombrePlataforma=<%=espectaculo.getPlataforma().getNombre()%>");
+        http.onreadystatechange = function (){
+            if(http.status==200 && http.readyState===XMLHttpRequest.DONE){
+                $("#btnDesactivar").hide();
+                alert("Espectaculo desactivado")
+            }
+            else{
+                alert("Hubo un error")
+            }
+        }
+
+        http.send();
     
     </script>
 </body>
