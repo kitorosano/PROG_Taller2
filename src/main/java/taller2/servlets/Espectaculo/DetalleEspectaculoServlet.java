@@ -80,31 +80,28 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         String plataforma= request.getParameter("plataforma");
         
         //boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
-        EspectaculoDTO espect = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
-        if(espect==null) { // Si el espectaculo no existe
+        EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
+        if(espectaculo==null) { // Si el espectaculo no existe
           request.setAttribute("message","Espectaculo no encontrado");
           request.setAttribute("messageType","error");
           response.sendRedirect("listado-espectaculos");
           return;
         }
-        //EspectaculoDTO espectaculo = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).get();
-
-        EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
         request.setAttribute("datos",espectaculo);
     
         //Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
 
-        Map<String, FuncionDTO> funciones=  fetch.Set("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContentMap(FuncionDTO.class);
+        Map<String, FuncionDTO> funciones=  fetch.Set("/funciones/findByEspectaculoAndPlataforma?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContentMap(FuncionDTO.class);
         request.setAttribute("funciones",funciones);
         
         //Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
 
-        Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(PaqueteDTO.class);
+        Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes/findByspectaculoAndPlataforma?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(PaqueteDTO.class);
         request.setAttribute("paquetes",paquetes);
         
         //Map<String, CategoriaDTO> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
 
-        Map<String, CategoriaDTO> categorias= fetch.Set("/categorias?nombreEspectaculo="+nombre).Get().getContentMap(CategoriaDTO.class);
+        Map<String, CategoriaDTO> categorias= fetch.Set("/categorias/findByEspectaculo?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(CategoriaDTO.class);
         request.setAttribute("categorias",categorias);
         
         dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);
@@ -119,9 +116,19 @@ public class DetalleEspectaculoServlet extends HttpServlet {
   
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      //String nombreEspectaculo = (String)request.getParameter("nombre");
-      //String nombrePlataforma = (String)request.getParameter("plataforma");
-       // fetch.Set("espectaculo/updateEstado",categoria).Post();
+    boolean tipoAccion = Boolean.parseBoolean(request.getParameter("accion"));
+
+      EspectaculoFavoritoDTO dto = new EspectaculoFavoritoDTO();
+
+      dto.setNickname(request.getParameter("nickname"));
+      dto.setNombreEspectaculo(request.getParameter("nombreEspectaculo"));
+      dto.setNombrePlataforma(request.getParameter("nombrePlataforma"));
+
+      if (tipoAccion == true) {
+        fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
+      } else {
+        fetch.Set("/usuarios/deleteEspectaculoFavorito", dto).Delete();
+      }
   }
 
   @Override

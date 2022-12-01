@@ -145,6 +145,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    min-width: 210px;
 }
 .header__right__submenu__userinfo {
     display: flex;

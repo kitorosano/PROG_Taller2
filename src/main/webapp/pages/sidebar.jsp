@@ -13,12 +13,12 @@
     Collections.shuffle(todasPlataformas);
     todasPlataformas = todasPlataformas.subList(0, Math.min(5, todasPlataformas.size()));
     
-    // shuffle usuarios and filter up to 5
     // shuffle categorias and filter up to 5
     List<String> todasCategorias = new ArrayList<>(categoriasMap.keySet());
     Collections.shuffle(todasCategorias);
     todasCategorias = todasCategorias.subList(0, Math.min(5, todasCategorias.size()));
     
+    // shuffle usuarios and filter up to 5
     List<String> todosUsuarios = new ArrayList<>(usuarioMap.keySet());
     Collections.shuffle(todosUsuarios);
     todosUsuarios = todosUsuarios.subList(0, Math.min(5, todosUsuarios.size()));

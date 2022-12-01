@@ -80,24 +80,22 @@ public class DetalleFuncionServlet extends HttpServlet {
         String plataforma =request.getParameter("plataforma");
 
         //boolean funcionExiste = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).isPresent();
-        FuncionDTO funcionExiste = fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getContent(FuncionDTO.class);
-        if(funcionExiste==null) { // Si el espectaculo no existe
+        FuncionDTO funcion = fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getContent(FuncionDTO.class);
+        if(funcion==null) { // Si el espectaculo no existe
           request.setAttribute("message","Funcion no encontrada");
           request.setAttribute("messageType","error");
           response.sendRedirect("listado-funciones");
           return;
         }
-        //FuncionDTO funcion = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).get();
-        FuncionDTO funcion =  fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getContent(FuncionDTO.class);
         request.setAttribute("datos",funcion);
       
         //Map <String, EspectadorRegistradoAFuncionDTO> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre);
-        Map <String, EspectadorRegistradoAFuncionDTO> espectadores= fetch.Set("/EspectadorAFuncion//?nombre="+nombre).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+        Map <String, EspectadorRegistradoAFuncionDTO> espectadores= fetch.Set("/espectadorRegistradoAFuncion?nombre="+nombre).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
         request.setAttribute("espectadores",espectadores);
       
         if(esEspectador) {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuarioLogueado.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas =  fetch.Set("/EspectadorAFuncion/findByNickname?nicknameEspectador="+usuarioLogueado.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas =  fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nicknameEspectador="+usuarioLogueado.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
           if(funciones_registradas.containsKey(nombre)) {
             request.setAttribute("message","Registrado a funcion");
             request.setAttribute("datosRegistro", funciones_registradas.get(nombre));

@@ -27,8 +27,6 @@ public class PaqueteDTO implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty())
-            throw new IllegalArgumentException("El nombre no puede ser vacio");
         this.nombre = nombre;
     }
 
@@ -37,8 +35,6 @@ public class PaqueteDTO implements Serializable {
     }
 
     public void setDescripcion(String descripcion) {
-        if (descripcion == null || descripcion.isEmpty())
-            throw new IllegalArgumentException("La descripcion no puede ser vacia");
         this.descripcion = descripcion;
     }
 
@@ -55,8 +51,6 @@ public class PaqueteDTO implements Serializable {
     }
 
     public void setFechaExpiracion(LocalDateTime fechaExpiracion) {
-        if (fechaExpiracion == null)
-            throw new IllegalArgumentException("Fecha de Expiracion no puede ser vacia");
         this.fechaExpiracion = fechaExpiracion;
     }
 
@@ -65,8 +59,6 @@ public class PaqueteDTO implements Serializable {
     }
 
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        if (fechaRegistro == null)
-            throw new IllegalArgumentException("Fecha de registro no puede ser vacia");
         this.fechaRegistro = fechaRegistro;
     }
 
@@ -75,8 +67,6 @@ public class PaqueteDTO implements Serializable {
     }
 
     public void setImagen(String imagen) {
-        if (imagen == null || imagen.isEmpty())
-            throw new IllegalArgumentException("La imagen no puede ser vacio");
         this.imagen = imagen;
     }
 }

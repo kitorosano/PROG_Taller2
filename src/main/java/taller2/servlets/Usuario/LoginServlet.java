@@ -88,6 +88,7 @@ public class LoginServlet extends HttpServlet {
     try {
       //boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
       UsuarioDTO usuarioExistePorNickname = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
+      System.out.println(usuarioExistePorNickname);
       if (usuarioExistePorNickname==null) { // Si el usuario no existe
         //boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
         UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
@@ -105,7 +106,6 @@ public class LoginServlet extends HttpServlet {
       dispatchError("Error al obtener el usuario", request, response);
       return;
     }
-    
     //error cuando la contraseña es incorrecta
     if(!usuario.getContrasenia().equals(contrasenia)) {
       dispatchError("La contraseña es incorrecta", request, response);
@@ -114,8 +114,8 @@ public class LoginServlet extends HttpServlet {
     
     // Si el usuario existe y la contraseña es correcta, iniciar sesión
     session.setAttribute("usuarioLogueado", usuario);
-    session.setAttribute("esArtista", true);
-    session.setAttribute("esEspectador", false);
+    session.setAttribute("esArtista", usuario.isEsArtista());
+    session.setAttribute("esEspectador", !usuario.isEsArtista());
     response.sendRedirect("home");
   }
   

@@ -1,6 +1,5 @@
 package taller2.servlets.Espectaculo;
 
-import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -205,9 +204,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         nuevoEspectaculo.setArtista(artistaLogueado.getNickname());
         try {
             //fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
-            fetch.Set("espectaculos/create",nuevoEspectaculo).Post();
+            fetch.Set("/espectaculos/create",nuevoEspectaculo).Post();
             for(String categoria : categoriasElegidas){
-                fetch.Set("categorias/createCategoriaAEspectaculo",categoria).Post();
+                fetch.Set("/categorias/createCategoriaAEspectaculo",categoria).Post();
                 //fabrica.getICategoria().altaCategoriaAEspectaculo(categoria, nuevoEspectaculo.getNombre(), nuevoEspectaculo.getPlataforma().getNombre());
             }
             

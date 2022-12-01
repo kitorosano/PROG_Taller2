@@ -5,7 +5,6 @@
   Time: 16:16
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="taller2.DTOs.*" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <div class="header">

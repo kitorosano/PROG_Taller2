@@ -9,6 +9,7 @@
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
     UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
+    boolean esArtista = (boolean) session.getAttribute("esArtista");
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
@@ -26,6 +27,7 @@
     <title>Detalle de espectaculo</title>
     <style><%@ include file="/pages/global.css" %></style>
     <style><%@ include file="/pages/detalles.css" %></style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div class="background_container">
@@ -44,7 +46,9 @@
                 <%-- AGREGAR COMPONENTES ABAJO--%>
                 <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
                 <div class="first-data">
-                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%></h2>
+                    <<h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%>
+                        <span id="favorito" onclick="cambiarFavorito()"><i id="fav" class='fa fa-heart-o red-color'></i></span>
+                    </h2>
                     <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
                     <%  for (CategoriaDTO categoria : categorias.values()) {
                             int nextInt = random.nextInt(0xffffff + 1);
@@ -52,9 +56,7 @@
                             <h5 class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></h5>
                     <%  }   %>
                 </div>
-                <%
-                    UsuarioDTO usuarioDTO= (UsuarioDTO) session.getAttribute("usuarioLogueado");
-                    if(session.getAttribute("esArtista").equals(true) && espectaculo.getArtista().getNickname().equals(usuarioDTO.getNickname())){
+                <% if(esArtista && espectaculo.getArtista().getNickname().equals(usuarioLogueado.getNickname())){
                         if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
                             <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
                             <button class="btn2" id="btnDesactivar" onClick="location.href='detalle-espectaculo'">Desactivar Espectaculo</button>
@@ -175,6 +177,50 @@
 
         http.send();
     
+    </script>
+    <script>
+        let targets = document.querySelectorAll('[data-target]')
+        const content = document.querySelectorAll('[data-content]')
+        let estadoFavorito = false;
+    
+        targets.forEach(target  => {
+            console.log(target);
+        
+            target.addEventListener('click', () => {
+                content.forEach(c => {
+                    c.classList.remove('active')
+                })
+                targets.forEach(ts =>{
+                    ts.classList.remove('active')
+                })
+                console.log(target.classList);
+                const t = document.querySelector(target.dataset.target)
+                t.classList.add('active')
+                target.classList.add('active')
+                console.log(target.classList);
+            })
+        })
+    
+        function cambiarFavorito(){
+            if (estadoFavorito == false){
+                document.getElementById("fav").classList.remove("fa-heart-o");
+                document.getElementById("fav").classList.add("fa-heart");
+                estadoFavorito = true;
+            } else {
+                document.getElementById("fav").classList.remove("fa-heart");
+                document.getElementById("fav").classList.add("fa-heart-o");
+                estadoFavorito = false;
+            }
+        
+            nickname = <%=usuarioLogueado.getNickname()%>;
+            nombrePlataforma = <%=espectaculo.getPlataforma().getNombre()%>;
+            nombreEspectaculo = <%=espectaculo.getNombre()%>;
+        
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "DetalleEspectaculo?accion="+estadoFavorito+"&nickname="+nickname+"&nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo,false);
+            xhttp.send();
+        }
+
     </script>
 </body>
 </html>

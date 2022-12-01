@@ -53,7 +53,7 @@
                     <%-- AGREGAR COMPONENTES ABAJO--%>
                     <img src="<%=usuario.getImagen()%>" alt="Foto de perfil" class="img_perfil">
                     <div class="first-data">
-                        <h2><%=usuario.getNombre() + " " + usuario.getApellido() + " - " + (usuario instanceof Artista ? "Artista" : "Espectador") %></h2>
+                        <h2><%=usuario.getNombre() + " " + usuario.getApellido() + " - " + (usuario.isEsArtista() ? "Artista" : "Espectador") %></h2>
                         <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
                         <% if(esPerfilPropio) {%>
                             <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
@@ -62,7 +62,7 @@
                     <div class="tabs">
                         <div class="menu">
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
-                            <% if (usuario instanceof Artista) { %>
+                            <% if (usuario.isEsArtista()) { %>
                                 <p data-target="#datos_artista">Datos Artista</p>
                                 <p data-target="#espectaculos">Espectaculos</p>
                             <% } else { %>
@@ -179,7 +179,7 @@
                                                 for (AltaEspectadorAPaqueteDTO paquete : paquetes.values()) { %>
                                                     <tr>
                                                         <th>
-                                                            <a href="detalle-paquete?nombre=<%=paquete.getPaquete().getNombre()%>"><%=paquete.getPaquete().getNombre()%>
+                                                            <a href="detalle-paquete?nombre=<%=paquete.getNombrePaquete()%>"><%=paquete.getNombrePaquete()%>
                                                             </a>
                                                         </th>
                                                     </tr>

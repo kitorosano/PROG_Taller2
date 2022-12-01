@@ -16,8 +16,6 @@ public class EspectaculoNuevoEstadoDTO implements Serializable {
     }
 
     public void setNombrePlataforma(String nombrePlataforma) {
-        if (nombrePlataforma == null || nombrePlataforma.isEmpty())
-            throw new IllegalArgumentException("El nombre de la plataforma no puede estar vacio");
         this.nombrePlataforma = nombrePlataforma;
     }
 
@@ -26,8 +24,6 @@ public class EspectaculoNuevoEstadoDTO implements Serializable {
     }
 
     public void setNombreEspectaculo(String nombreEspectaculo) {
-        if (nombreEspectaculo == null || nombreEspectaculo.isEmpty())
-            throw new IllegalArgumentException("El nombre del espectaculo no puede estar vacio");
         this.nombreEspectaculo = nombreEspectaculo;
     }
 
@@ -36,8 +32,6 @@ public class EspectaculoNuevoEstadoDTO implements Serializable {
     }
 
     public void setNuevoEstado(E_EstadoEspectaculo nuevoEstado) {
-        if (nuevoEstado == null)
-            throw new IllegalArgumentException("El nuevo estado no puede ser nulo");
         this.nuevoEstado = nuevoEstado;
     }
 }
