@@ -18,7 +18,30 @@ public class UsuarioDTO {
   
   public UsuarioDTO() {
   }
-  
+
+  public UsuarioDTO(String nickname, String nombre, String apellido, String correo, LocalDate fechaNacimiento, String contrasenia, String imagen) {
+    this.nickname = nickname;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.correo = correo;
+    this.fechaNacimiento = fechaNacimiento;
+    this.contrasenia = contrasenia;
+    this.imagen = imagen;
+  }
+
+  public UsuarioDTO(String nickname, String nombre, String apellido, String correo, LocalDate fechaNacimiento, String contrasenia, String imagen, String descripcion, String biografia, String sitioWeb) {
+    this.nickname = nickname;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.correo = correo;
+    this.fechaNacimiento = fechaNacimiento;
+    this.contrasenia = contrasenia;
+    this.imagen = imagen;
+    this.descripcion = descripcion;
+    this.biografia = biografia;
+    this.sitioWeb = sitioWeb;
+  }
+
   public String getNickname() {
     return nickname;
   }

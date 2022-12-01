@@ -1,14 +1,18 @@
-package taller2.servlets.FuncionDTO;
+package taller2.servlets.Funcion;
 
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
+import javax.rmi.CORBA.Util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,11 +72,11 @@ public class AltaFuncionServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -83,12 +87,13 @@ public class AltaFuncionServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 boolean esArtista= (boolean) session.getAttribute("esArtista");
                 if(esArtista){
-                    Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+                    UsuarioDTO art=(UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
                     String artista=art.getNickname();
                     Map<String, EspectaculoDTO> retorno = new HashMap<>();
-                    Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+                    //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+                    Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByArtista?artistaOrganizador="+artista).getEntity();
                     for(EspectaculoDTO esp:espectaculos.values()){
-                        if(esp.getEstado()==E_EstadoEspectaculo.ACEPTADO){
+                        if(esp.getEstado()== E_EstadoEspectaculo.ACEPTADO){
                             retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
                         }
                     }
@@ -117,9 +122,11 @@ public class AltaFuncionServlet extends HttpServlet {
         String urlImagen="https://i.imgur.com/EDotlnM.png";
         Part part=request.getPart("imagen");
         String[] artistasInvitados = request.getParameterValues("artInvitado");
-        Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+        //Artista art=(Artista) request.getSession().getAttribute("usuarioLogueado");
+        UsuarioDTO art=(UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String artista=art.getNickname();
-        Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+        //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
+        Map<String, EspectaculoDTO> espectaculos= (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findByArtista?artistaOrganizador="+artista).getEntity();
         Map<String, EspectaculoDTO> retorno = new HashMap<>();
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
@@ -159,12 +166,22 @@ public class AltaFuncionServlet extends HttpServlet {
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+            String body= new Gson().toJson(inputImagen);
+            FetchApiOptions options=new FetchApiOptions("POST",body);
+            urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+            //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
-        FuncionDTO nueva=new FuncionDTO(nombrefuncion,esp,fechahora,LocalDateTime.now(), urlImagen);
+        FuncionDTO nueva=new FuncionDTO();
+        nueva.setNombre(nombrefuncion);
+        nueva.setEspectaculo(esp);
+        nueva.setFechaHoraInicio(fechahora);
+        nueva.setFechaRegistro(LocalDateTime.now());
+        nueva.setImagen(urlImagen);
         try {
-            fabrica.getIFuncion().altaFuncion(nueva);
-            //TODO: VER COMO AGREGAR ARTISTAS INVITADOS
+            String body=new Gson().toJson(nueva);
+            FetchApiOptions options=new FetchApiOptions("POST",body);
+            Utils.FetchApi("/funciones/create",options);
+            //fabrica.getIFuncion().altaFuncion(nueva);
             response.sendRedirect(request.getContextPath()); // redirigir a un servlet (por url)
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -178,7 +195,8 @@ public class AltaFuncionServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombrefunc, EspectaculoDTO esp) {      //Devuelve true si hay error
-        Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
+        //Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
+        Map<String, FuncionDTO> funciones= (Map<String, FuncionDTO>) Utils.FetchApi("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).getEntity();
         if(funciones!=null) {
             for (FuncionDTO fun : funciones.values()) {
                 if (fun.getNombre().equals(nombrefunc)) {
@@ -213,10 +231,11 @@ public class AltaFuncionServlet extends HttpServlet {
     }
 
     private List<String> obtenerArtistas(String artista){
-        Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        //Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
+        Map <String, UsuarioDTO> usuarios= (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
         List<String> artistas = new ArrayList<>();
         for(UsuarioDTO u:usuarios.values()){
-            if(u instanceof Artista && !artista.equals(u.getNickname())){
+            if(u.isEsArtista() && !artista.equals(u.getNickname())){
                 artistas.add(u.getNickname());
             }
         }

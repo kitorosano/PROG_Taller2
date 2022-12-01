@@ -1,5 +1,6 @@
 package taller2.servlets.Espectaculo;
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -7,12 +8,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import taller2.DTOs.*;
 import taller2.E_EstadoEspectaculo;
+import taller2.utils.FetchApiOptions;
 import taller2.utils.Utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,11 +61,11 @@ public class AltaEspectaculoServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios").getEntity();
+                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
+                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
+                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
+                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categoriasAll").getEntity();
+                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -112,9 +112,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         
         // Seteo valores para los campos select del formulario
         try {
-            Map<String, PlataformaDTO> plataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas").getEntity();
+            Map<String, PlataformaDTO> plataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
             request.setAttribute("plataformas", plataformas);
-            Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias").getEntity();
+            Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
             request.setAttribute("categorias", categorias);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener las plataformas y categorias", request, response);
@@ -161,7 +161,10 @@ public class AltaEspectaculoServlet extends HttpServlet {
         try {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
-                urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+                String body= new Gson().toJson(inputImagen);
+                FetchApiOptions options=new FetchApiOptions("POST",body);
+                //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
+                urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -173,12 +176,12 @@ public class AltaEspectaculoServlet extends HttpServlet {
         PlataformaDTO plataforma;
         try {
             //
-            Optional<PlataformaDTO> optional = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
-            if (!optional.isPresent()) {
+            //plataforma = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
+            plataforma = (PlataformaDTO) Utils.FetchApi("/plataforma/findById?nombre="+nombplataforma).getEntity();
+            if (plataforma==null) {
                 dispatchError("Error, plataforma no encontrada", request, response);
                 return;
             }
-            plataforma = optional.get();
         } catch (RuntimeException e) {
             e.printStackTrace();
             dispatchError("Error al crear el espectaculo", request, response);
@@ -200,9 +203,15 @@ public class AltaEspectaculoServlet extends HttpServlet {
         nuevoEspectaculo.setPlataforma(plataforma.getNombre());
         nuevoEspectaculo.setArtista(artistaLogueado.getNickname());
         try {
-            fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
+            String body= new Gson().toJson(nuevoEspectaculo);
+            FetchApiOptions options=new FetchApiOptions("POST",body);
+            //fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
+            Utils.FetchApi("espectaculos/create",options);
             for(String categoria : categoriasElegidas){
-                fabrica.getICategoria().altaCategoriaAEspectaculo(categoria, nuevoEspectaculo.getNombre(), nuevoEspectaculo.getPlataforma().getNombre());
+                String bodyCat=new Gson().toJson(categoria);
+                FetchApiOptions options1=new FetchApiOptions("POST",bodyCat);
+                Utils.FetchApi("categorias/createCategoriaAEspectaculo",options1);
+                //fabrica.getICategoria().altaCategoriaAEspectaculo(categoria, nuevoEspectaculo.getNombre(), nuevoEspectaculo.getPlataforma().getNombre());
             }
             
             // No hacer un redirect, mas bien un dispatch a la pagina, para mostrar el mensaje de exito
@@ -222,8 +231,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
     }
 
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
-        Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
-        return espectaculo.isPresent();
+        //Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
+        EspectaculoDTO espectaculo= (EspectaculoDTO) Utils.FetchApi("/espectaculo/find?nombreEspectaculo="+nombreesp+"&nombrePlataforma="+plataforma).getEntity();
+        return espectaculo != null;
     }
 
     private boolean cantidadEspectadores(int maximo, int minimo) {      //Devuelve true si hay error
