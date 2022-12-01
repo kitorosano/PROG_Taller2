@@ -1,5 +1,6 @@
 package taller2.servlets.Usuario;
 
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,15 +9,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
-import taller2.utils.Utils;
+import taller2.utils.Fetch;
 
 
 import java.io.IOException;
 
 @WebServlet(name = "Login", value = "/login")
 public class LoginServlet extends HttpServlet {
-
-
+  
+  Fetch fetch;
+  
+  public void init() {
+    fetch = new Fetch();
+  }
+  
+  
   protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
     RequestDispatcher view = request.getRequestDispatcher(page);
@@ -80,18 +87,18 @@ public class LoginServlet extends HttpServlet {
     
     try {
       //boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-      UsuarioDTO usuarioExistePorNickname =(UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
+      UsuarioDTO usuarioExistePorNickname = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
       if (usuarioExistePorNickname==null) { // Si el usuario no existe
         //boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-        UsuarioDTO usuarioExistePorCorreo = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
+        UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
         if (usuarioExistePorCorreo==null) {
           //error cuando el usuario no existe
           dispatchError("El usuario no existe", request, response);
           return;
         }
-        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByCorreo/?correo="+nickname).getEntity();
+        usuario = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
       } else {
-        usuario = (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname/?nickname="+nickname).getEntity();
+        usuario = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
       }
     } catch (RuntimeException e) {
       e.printStackTrace();

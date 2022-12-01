@@ -1,10 +1,11 @@
 package taller2.DTOs;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class EspectadorRegistradoAFuncionDTO {
+public class EspectadorRegistradoAFuncionDTO implements Serializable {
   
-  private UsuarioDTO espectador;
+  private String espectador;
   private FuncionDTO funcion;
   private PaqueteDTO paquete;
   private boolean canjeado;
@@ -14,10 +15,10 @@ public class EspectadorRegistradoAFuncionDTO {
   public EspectadorRegistradoAFuncionDTO() {
   }
   
-  public UsuarioDTO getEspectador() {
+  public String getEspectador() {
     return espectador;
   }
-  public void setEspectador(UsuarioDTO espectador) {
+  public void setEspectador(String espectador) {
     this.espectador = espectador;
   }
   

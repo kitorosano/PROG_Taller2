@@ -1,8 +1,9 @@
 package taller2.DTOs;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class AltaEspectadorRegistradoAFuncionDTO {
+public class AltaEspectadorRegistradoAFuncionDTO implements Serializable {
   
   private String espectador;
   private String funcion;

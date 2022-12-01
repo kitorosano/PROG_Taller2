@@ -6,8 +6,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import taller2.DTOs.*;
-import taller2.utils.FetchApiOptions;
-import taller2.utils.Utils;
+import taller2.utils.Fetch;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,10 +16,12 @@ import java.util.Map;
 @WebServlet(name = "ModificarUsuario", value = "/modificar-usuario")
 @MultipartConfig
 public class ModificarUsuario extends HttpServlet {
-
-
-
-
+    
+    Fetch fetch;
+    
+    public void init() {
+        fetch = new Fetch();
+    }
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         RequestDispatcher view = request.getRequestDispatcher(page);
@@ -60,11 +61,12 @@ public class ModificarUsuario extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = (Map<String, PlataformaDTO>) Utils.FetchApi("/plataformas/findAll").getEntity();
-                Map<String, EspectaculoDTO> todosEspectaculos = (Map<String, EspectaculoDTO>) Utils.FetchApi("/espectaculos/findAll").getEntity();
-                Map<String, PaqueteDTO> todosPaquetes = (Map<String, PaqueteDTO>) Utils.FetchApi("/paquetes/findAll").getEntity();
-                Map<String, CategoriaDTO> todasCategorias  = (Map<String, CategoriaDTO>) Utils.FetchApi("/categorias/findAll").getEntity();
-                Map<String, UsuarioDTO> todosUsuarios = (Map<String, UsuarioDTO>) Utils.FetchApi("/usuarios/findAll").getEntity();
+                
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
+                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
 
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
@@ -87,7 +89,7 @@ public class ModificarUsuario extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UsuarioDTO usuarioSession= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String nickname= usuarioSession.getNickname();
-        UsuarioDTO usu= (UsuarioDTO) Utils.FetchApi("/usuarios/findByNickname?nickname="+nickname).getEntity();
+        UsuarioDTO usu=fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
         if(usu!=null) {
             //usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
             request.setAttribute("tipo", "espectador");
@@ -135,9 +137,7 @@ public class ModificarUsuario extends HttpServlet {
         String urlImagen="";
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            String body= new Gson().toJson(inputImagen);
-            FetchApiOptions options=new FetchApiOptions("POST",body);
-            urlImagen= (String) Utils.FetchApi("/database",options).getEntity();
+            urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
             //urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         if(usu!=null){
@@ -165,10 +165,8 @@ public class ModificarUsuario extends HttpServlet {
             usu.setSitioWeb(url);
         }
         try {
-            // Se crea el usuario en la base de datos
-            String body=new Gson().toJson(usu);
-            FetchApiOptions options=new FetchApiOptions("PUT",body);
-            Utils.FetchApi("/usuarios/updateByNickname",options);
+            // Se modifica el usuario en la base de datos
+            fetch.Set("/usuarios/updateByNickname",usu).Put();
             //fabrica.getIUsuario().modificarUsuario(usu);
 
             // Redireccionar a la pantalla de login

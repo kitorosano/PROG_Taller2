@@ -1,6 +1,8 @@
 package taller2.DTOs;
 
-public class AltaEspectaculoAPaqueteDTO {
+import java.io.Serializable;
+
+public class AltaEspectaculoAPaqueteDTO implements Serializable {
   public String nombrePaquete;
   public String nombreEspectaculo;
   public String nombrePlataforma;

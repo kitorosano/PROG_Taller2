@@ -1,9 +1,10 @@
 package taller2.DTOs;
 
-
 import taller2.E_EstadoEspectaculo;
 
-public class EspectaculoNuevoEstadoDTO {
+import java.io.Serializable;
+
+public class EspectaculoNuevoEstadoDTO implements Serializable {
     private String nombrePlataforma;
     private String nombreEspectaculo;
     private E_EstadoEspectaculo nuevoEstado;

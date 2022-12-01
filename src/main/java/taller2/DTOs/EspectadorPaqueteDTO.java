@@ -1,8 +1,9 @@
 package taller2.DTOs;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class EspectadorPaqueteDTO {
+public class EspectadorPaqueteDTO implements Serializable {
   private UsuarioDTO espectador;
   private PaqueteDTO paquete;
   private LocalDateTime fechaRegistro;

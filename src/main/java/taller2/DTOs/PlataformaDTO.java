@@ -1,6 +1,8 @@
 package taller2.DTOs;
 
-public class PlataformaDTO {
+import java.io.Serializable;
+
+public class PlataformaDTO implements Serializable {
     private String nombre;
     private String descripcion;
     private String url;
@@ -38,7 +40,7 @@ public class PlataformaDTO {
         if (url == null || url.isEmpty())
             throw new IllegalArgumentException("El url no puede ser vacio");
             //queda validar url
-        if (url.matches(regexURL)) {
+        if (!url.matches(regexURL)) {
             throw new IllegalArgumentException("El url no es valido");
         }
         this.url = url;

@@ -1,11 +1,11 @@
 package taller2.DTOs;
 
-
 import taller2.E_EstadoEspectaculo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class EspectaculoDTO {
+public class EspectaculoDTO implements Serializable {
   
   private String nombre;
   private String descripcion;
