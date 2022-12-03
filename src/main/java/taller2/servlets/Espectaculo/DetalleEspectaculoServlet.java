@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
 import taller2.utils.Fetch;
 
 
@@ -110,17 +111,27 @@ public class DetalleEspectaculoServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     boolean tipoAccion = Boolean.parseBoolean(request.getParameter("accion"));
-  
-    EspectaculoFavoritoDTO dto = new EspectaculoFavoritoDTO();
-  
-    dto.setNickname(request.getParameter("nickname"));
-    dto.setNombreEspectaculo(request.getParameter("nombreEspectaculo"));
-    dto.setNombrePlataforma(request.getParameter("nombrePlataforma"));
-  
-    if (tipoAccion == true) {
-      fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
-    } else {
-      fetch.Set("/usuarios/deleteEspectaculoFavorito", dto).Delete();
-    }
+
+      EspectaculoFavoritoDTO dto = new EspectaculoFavoritoDTO();
+
+      dto.setNickname(request.getParameter("nickname"));
+      dto.setNombreEspectaculo(request.getParameter("nombreEspectaculo"));
+      dto.setNombrePlataforma(request.getParameter("nombrePlataforma"));
+
+      if (tipoAccion == true) {
+        fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
+      } else {
+        fetch.Set("/usuarios/deleteEspectaculoFavorito", dto).Delete();
+      }
+  }
+
+  @Override
+  protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String nombreEspectaculo = (String)request.getParameter("nombreEspectaculo");
+    String nombrePlataforma = (String)request.getParameter("nombrePlataforma");
+
+    EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo).Get().getEspectaculo();
+    espectaculo.setEstado(E_EstadoEspectaculo.FINALIZADO);
+    fetch.Set("espectaculo/updateEstado",espectaculo).Post();
   }
 }

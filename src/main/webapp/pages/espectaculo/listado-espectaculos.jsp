@@ -11,6 +11,7 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Collection" %>
+<%@ page import="taller2.E_EstadoEspectaculo" %>
 
 <%  // Cargamos el usuarioLogueado en cada pantalla
     UsuarioDTO usuarioLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
@@ -140,7 +141,9 @@
             let celdaPlataforma;
             let celdaArtista;
         
-            <%for (EspectaculoDTO elem : espectaculosFiltrados.values()) {%>
+            <%for (EspectaculoDTO elem : espectaculosFiltrados.values()) {
+                if(elem.getEstado()!=E_EstadoEspectaculo.FINALIZADO){
+            %>
                 nuevaFila = TABLA.insertRow(-1);
                 celdaEspectaculo = nuevaFila.insertCell(0);
                 celdaCategorias = nuevaFila.insertCell(1);
@@ -160,7 +163,10 @@
                     nuevaFila.addEventListener("click", function(){
                         window.location.href = "detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>";
                     });
-            <% } %>
+            <%
+                }
+            }
+             %>
         }
       
         //FUNCION PARA BUSCAR POR ESPECTACULOS EN TIEMPO REAL

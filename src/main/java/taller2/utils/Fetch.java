@@ -33,7 +33,7 @@ public class Fetch {
   private String content;
   private int responseCode;
   private String responseMessage;
-  private static String prefix = "http://localhost:8081/api";
+  private static String prefix = System.getProperty("API_URL");
   
   public Fetch(){}
   public Fetch(String url) {
