@@ -9,9 +9,9 @@
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
     FuncionDTO funcion= (FuncionDTO) request.getAttribute("datos");
-    Map<String, EspectadorRegistradoAFuncionDTO> espectador_registrado_funcion = (Map<String, EspectadorRegistradoAFuncionDTO>) request.getAttribute("espectadores");
+    Map<String, UsuarioDTO> espectador_registrado_funcion = (Map<String, UsuarioDTO>) request.getAttribute("espectadores");
     int contador = espectador_registrado_funcion.size();
-    EspectadorRegistradoAFuncionDTO registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());
+    UsuarioDTO registro = espectador_registrado_funcion.get(usuarioLogueado.getNickname());
 
 %>
 <html>
@@ -62,9 +62,9 @@
                             <div data-content id="espectadores">
                                 <table >
                                     <tbody>
-                                    <%  for (EspectadorRegistradoAFuncionDTO espect_reg_funcion : espectador_registrado_funcion.values()) {    %>
+                                    <%  for (UsuarioDTO espect_reg_funcion : espectador_registrado_funcion.values()) {    %>
                                     <tr>
-                                        <th onClick="location.href='perfil?nickname=<%=espect_reg_funcion.getEspectador().getNickname()%>'"> <%=espect_reg_funcion.getEspectador().getNickname()%>  </th>
+                                        <th onClick="location.href='perfil?nickname=<%=espect_reg_funcion.getNickname()%>'"> <%=espect_reg_funcion.getNickname()%>  </th>
                                     </tr>
                                     <%  }   %>
                                     </tbody>

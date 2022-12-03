@@ -61,11 +61,11 @@ public class DetalleUsuarioServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll/").Get().getContentMap(PlataformaDTO.class);
-        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll/").Get().getContentMap(EspectaculoDTO.class);
-        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getContentMap(PaqueteDTO.class);
-        Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll/").Get().getContentMap(CategoriaDTO.class);
-        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getContentMap(UsuarioDTO.class);
+        Map<String, PlataformaDTO> todasPlataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+        Map<String, EspectaculoDTO> todosEspectaculos =  fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getMapPaquete();
+        Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll/").Get().getMapCategoria();
+        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getMapUsuario();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -83,20 +83,20 @@ public class DetalleUsuarioServlet extends HttpServlet {
         // Si el usuario no viene vacio y no es mi perfil entonces buscar por nickname
         if(!nickname.isEmpty() && !esPerfilPropio) {
           //boolean usuarioExistePorNickname = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-          UsuarioDTO usuarioExistePorNickname =fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
+          UsuarioDTO usuarioExistePorNickname = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getUsuario();
           if (usuarioExistePorNickname==null) { // Si el usuario no existe por nickname, buscar por email
             //boolean usuarioExistePorCorreo = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-            UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
+            UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getUsuario();
             if (usuarioExistePorCorreo==null) { // Si el usuario no existe por correo, redirigir al listado de usuarios
               request.setAttribute("respuesta", "Usuario no encontrado");
               response.sendRedirect("listado-usuarios");
               return;
             }
             //usuario = fabrica.getIUsuario().obtenerUsuarioPorCorreo(nickname).get();
-              usuario = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
+              usuario = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getUsuario();
           } else {
             //usuario = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
-              usuario = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
+              usuario = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getUsuario();
           }
         } else {
           // Si el usuario viene vacio o es mi perfil, traer el usuario logueado
@@ -107,17 +107,17 @@ public class DetalleUsuarioServlet extends HttpServlet {
         // Si el usuario es artista, entonces mostramos sus espectaculos
         if(usuario.isEsArtista()) {
           //Map <String, EspectaculoDTO> espectaculos=fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(usuario.getNickname());
-          Map <String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+usuario.getNickname()).Get().getContentMap(EspectaculoDTO.class);
+          Map<String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+usuario.getNickname()).Get().getMapEspectaculo();
           request.setAttribute("espectaculos", espectaculos);
         }
         // Si el usuario es espectador, entonces mostramos sus funciones a las que esta registrado y sus paquetes comprados
         else {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones=fabrica.getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuario.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nicknameEspectador="+usuario.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+usuario.getNickname()).Get().getMapEspectadorRegistradoAFuncion();
           request.setAttribute("funciones",funciones);
           
           //Map<String, AltaEspectadorAPaqueteDTO> paquetes=fabrica.getIPaquete().obtenerPaquetesPorEspectador(usuario.getNickname());
-          Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+usuario.getNickname()).Get().getContentMap(PaqueteDTO.class);
+          Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+usuario.getNickname()).Get().getMapPaquete();
           request.setAttribute("paquetes",paquetes);
         }
         

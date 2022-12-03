@@ -60,11 +60,11 @@ public class RegistroAFuncion extends HttpServlet {
         try {
             if(sessionIniciada) {
                 
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -82,9 +82,9 @@ public class RegistroAFuncion extends HttpServlet {
                     UsuarioDTO esp= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
                     String nombreEsp=esp.getNickname();
                     //FuncionDTO fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
-                    FuncionDTO fun= fetch.Set("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+funcion).Get().getContent(FuncionDTO.class);
+                    FuncionDTO fun= fetch.Set("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+funcion).Get().getFuncion();
                     //Map<String, EspectadorRegistradoAFuncionDTO> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
-                    Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+nombreEsp).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+                    Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+nombreEsp).Get().getMapEspectadorRegistradoAFuncion();
                     //Obtengo los paquetes del espectador que tienen el espectaculo asociado
                     Map<String, PaqueteDTO> paquetes = obtenerPaquetesEspectadorEspectaculo(espectaculo, plataforma, nombreEsp);
                     
@@ -119,8 +119,8 @@ public class RegistroAFuncion extends HttpServlet {
     
             //Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
             //FuncionDTO fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
-            FuncionDTO fun= fetch.Set("funciones?nombrePlataforma="+plataforma+"nombreEspectaculo="+espectaculo+"nombreFuncion="+funcion).Get().getContent(FuncionDTO.class);
-            Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+espectador).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+            FuncionDTO fun= fetch.Set("funciones?nombrePlataforma="+plataforma+"nombreEspectaculo="+espectaculo+"nombreFuncion="+funcion).Get().getFuncion();
+            Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+espectador).Get().getMapEspectadorRegistradoAFuncion();
             Map<String, PaqueteDTO> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,espectador);
             PaqueteDTO paq=null;
     
@@ -130,7 +130,7 @@ public class RegistroAFuncion extends HttpServlet {
     
             Map<String, EspectadorRegistradoAFuncionDTO> FuncionesCanjeadas = new HashMap<>();
             //int cantMaxEspect = fabrica.getIFuncion().obtenerEspectadoresRegistradosAFuncion(funcion).size();
-            Map<String,UsuarioDTO> espectadores= fetch.Set("/espectadorRegistradoAFuncion/findByFuncion?nombreFuncion="+funcion).Get().getContentMap(UsuarioDTO.class);
+            Map<String,UsuarioDTO> espectadores= fetch.Set("/espectadorRegistradoAFuncion/findByFuncion?nombreFuncion="+funcion).Get().getMapUsuario();
             int cantMaxEspect=espectadores.size();
     
             if (cantMaxEspect == fun.getEspectaculo().getMaxEspectadores()) {
@@ -140,7 +140,7 @@ public class RegistroAFuncion extends HttpServlet {
             } else {
                 if (registrosCanjeados != null) {
                     if (registrosCanjeados.length == 3) {
-                        Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname=" + espectador).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+                        Map<String, EspectadorRegistradoAFuncionDTO> funciones = fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname=" + espectador).Get().getMapEspectadorRegistradoAFuncion();
                         for (String registro : registrosCanjeados) {
                             //EspectadorRegistradoAFuncionDTO canjeada = fabrica.getIFuncion().obtenerFuncionesRegistradasDelEspectador(espectador).get(registro);
                             EspectadorRegistradoAFuncionDTO canjeada = funciones.get(registro);
@@ -155,7 +155,7 @@ public class RegistroAFuncion extends HttpServlet {
                     costo = fun.getEspectaculo().getCosto();
                 }
                 if (!paquete.equals("undefined") && costo != 0) {
-                    Map<String, PaqueteDTO> paquetesEspectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador=" + espectador).Get().getContentMap(PaqueteDTO.class);
+                    Map<String, PaqueteDTO> paquetesEspectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador=" + espectador).Get().getMapPaquete();
                     //paq = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador).get(paquete).getPaquete();
                     paq = paquetesEspectador.get(paquete);
                     costo = fun.getEspectaculo().getCosto() - (fun.getEspectaculo().getCosto() * paq.getDescuento() / 100);
@@ -180,9 +180,9 @@ public class RegistroAFuncion extends HttpServlet {
     private Map<String,PaqueteDTO> obtenerPaquetesEspectadorEspectaculo(String espectaculo,String plataforma, String espectador ){
         try {
             //Map<String, PaqueteDTO> paquetesEspectaculo = fabrica.getIPaquete().obtenerPaquetesDeEspectaculo(espectaculo,plataforma);
-            Map<String, PaqueteDTO> paquetesEspectaculo= fetch.Set("/paquetes/findByspectaculoAndPlataforma?nombreEspectaculo="+espectaculo+"&nombrePlataforma="+plataforma).Get().getContentMap(PaqueteDTO.class);
+            Map<String, PaqueteDTO> paquetesEspectaculo= fetch.Set("/paquetes/findByEspectaculoAndPlataforma?nombreEspectaculo="+espectaculo+"&nombrePlataforma="+plataforma).Get().getMapPaquete();
             //Map<String, AltaEspectadorAPaqueteDTO> paquetesEspectador = fabrica.getIPaquete().obtenerPaquetesPorEspectador(espectador);
-            Map<String, PaqueteDTO> paquetesEspectador= fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+espectador).Get().getContentMap(PaqueteDTO.class);
+            Map<String, PaqueteDTO> paquetesEspectador= fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+espectador).Get().getMapPaquete();
             Map<String, PaqueteDTO> paquetes= new HashMap<>();
             for(PaqueteDTO paq :paquetesEspectador.values()){
                 if (paquetesEspectaculo.get(paq.getNombre())!=null) {

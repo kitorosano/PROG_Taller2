@@ -60,11 +60,11 @@ public class DetalleFuncionServlet extends HttpServlet {
     try {
       if(sessionIniciada) {
                 
-        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-        Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+        Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -80,7 +80,7 @@ public class DetalleFuncionServlet extends HttpServlet {
         String plataforma =request.getParameter("plataforma");
 
         //boolean funcionExiste = Fabrica.getInstance().getIFuncion().obtenerFuncion(plataforma, espectaculo, nombre).isPresent();
-        FuncionDTO funcion = fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getContent(FuncionDTO.class);
+        FuncionDTO funcion = fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getFuncion();
         if(funcion==null) { // Si el espectaculo no existe
           request.setAttribute("message","Funcion no encontrada");
           request.setAttribute("messageType","error");
@@ -90,12 +90,12 @@ public class DetalleFuncionServlet extends HttpServlet {
         request.setAttribute("datos",funcion);
       
         //Map <String, EspectadorRegistradoAFuncionDTO> espectadores=Fabrica.getInstance().getIFuncion().obtenerEspectadoresRegistradosAFuncion(nombre);
-        Map <String, EspectadorRegistradoAFuncionDTO> espectadores= fetch.Set("/espectadorRegistradoAFuncion?nombre="+nombre).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+        Map <String, UsuarioDTO> espectadores= fetch.Set("/espectadorRegistradoAFuncion/findByFuncion?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+nombre).Get().getMapUsuario();
         request.setAttribute("espectadores",espectadores);
-      
+        
         if(esEspectador) {
           //Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(usuarioLogueado.getNickname());
-          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas =  fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nicknameEspectador="+usuarioLogueado.getNickname()).Get().getContentMap(EspectadorRegistradoAFuncionDTO.class);
+          Map<String, EspectadorRegistradoAFuncionDTO> funciones_registradas =  fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+usuarioLogueado.getNickname()).Get().getMapEspectadorRegistradoAFuncion();
           if(funciones_registradas.containsKey(nombre)) {
             request.setAttribute("message","Registrado a funcion");
             request.setAttribute("datosRegistro", funciones_registradas.get(nombre));

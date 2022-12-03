@@ -58,11 +58,11 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -74,7 +74,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                 boolean esArtista= (boolean) session.getAttribute("esArtista");
                 if(esArtista) {
                     String paquete = request.getParameter("paquete");
-                    Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getContentMap(PlataformaDTO.class);
+                    Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getMapPlataforma();
                     //Obtengo los espectaculos que no estan en el paquete
                     Map<String, EspectaculoDTO> espectaculos= obtenerEspectaculosSinPaquete(paquete);
                     request.setAttribute("plataformas", plataformas);
@@ -96,7 +96,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] espectaculosAagregar = request.getParameterValues("espAgregar");
         String nombrepaquete=request.getParameter("paquete");
-        Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getContentMap(PlataformaDTO.class);
+        Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getMapPlataforma();
         //Obtengo los espectaculos que no estan en el paquete
         Map<String, EspectaculoDTO> espectaculosPaq= obtenerEspectaculosSinPaquete(nombrepaquete);
         request.setAttribute("plataformas", plataformas);
@@ -104,7 +104,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
 
 
         if(espectaculosAagregar!=null){
-            Map<String,EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByPaquete?paquete="+nombrepaquete).Get().getContentMap(EspectaculoDTO.class);
+            Map<String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByPaquete?paquete="+nombrepaquete).Get().getMapEspectaculo();
             for(String nuevo:espectaculosAagregar){
                 EspectaculoDTO espectaculodto = espectaculos.get(nuevo);
                 if(espectaculodto == null){ // si no existe el espectaculo en el paquete
@@ -126,8 +126,8 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
     }
     private Map<String, EspectaculoDTO> obtenerEspectaculosSinPaquete(String paquete ){
         try {
-            Map<String, EspectaculoDTO> espectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-            Map<String, EspectaculoDTO> espectaculosPaquete = fetch.Set("/espectaculos/findByPaquete?nombrePaquete="+paquete).Get().getContentMap(EspectaculoDTO.class);
+            Map<String, EspectaculoDTO> espectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+            Map<String, EspectaculoDTO> espectaculosPaquete = fetch.Set("/espectaculos/findByPaquete?nombrePaquete="+paquete).Get().getMapEspectaculo();
             for (EspectaculoDTO e : espectaculosPaquete.values()) {
                 String clave = e.getNombre() + "-" + e.getPlataforma().getNombre();
                 if (espectaculos.containsKey(clave)) {

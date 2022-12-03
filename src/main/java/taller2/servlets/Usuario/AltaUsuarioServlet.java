@@ -114,7 +114,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     try {
       if (part.getSize() != 0) {
         InputStream inputImagen = part.getInputStream();
-        urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
+        urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
         //urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
     } catch (RuntimeException e) {
@@ -211,7 +211,7 @@ public class AltaUsuarioServlet extends HttpServlet {
 
   private boolean nombreExistenteNickname(String nombreUsuario) {      //Devuelve true si hay error
     try {
-      UsuarioDTO usuario = fetch.Set("/usuarios/findByNickname?nickname="+nombreUsuario).Get().getContent(UsuarioDTO.class);
+      UsuarioDTO usuario = fetch.Set("/usuarios/findByNickname?nickname="+nombreUsuario).Get().getUsuario();
       return usuario != null;
     } catch (RuntimeException e) {
       return false;
@@ -222,7 +222,7 @@ public class AltaUsuarioServlet extends HttpServlet {
 
   private boolean nombreExistenteCorreo(String correo) {      //Devuelve true si hay error
     try {
-      UsuarioDTO usuario = fetch.Set("/usuarios/findByCorreo?correo="+correo).Get().getContent(UsuarioDTO.class);
+      UsuarioDTO usuario = fetch.Set("/usuarios/findByCorreo?correo="+correo).Get().getUsuario();
       return usuario != null;
     } catch (RuntimeException | IOException e) {
       throw new RuntimeException(e);

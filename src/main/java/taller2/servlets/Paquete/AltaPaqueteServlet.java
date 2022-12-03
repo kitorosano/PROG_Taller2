@@ -65,11 +65,11 @@ public class AltaPaqueteServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -115,7 +115,7 @@ public class AltaPaqueteServlet extends HttpServlet {
         try {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
-                urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
+                urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
                 //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
             }
         } catch (RuntimeException e) {
@@ -150,7 +150,7 @@ public class AltaPaqueteServlet extends HttpServlet {
 
     private boolean nombreExistente(String nombrepaq) {      //Devuelve true si hay error
         try {
-            Map<String, PaqueteDTO> paquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
+            Map<String, PaqueteDTO> paquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
             for (PaqueteDTO paq : paquetes.values()) {
                 if (paq.getNombre().equals(nombrepaq)) {
                     return true;

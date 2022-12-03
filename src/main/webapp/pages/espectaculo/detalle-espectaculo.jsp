@@ -46,7 +46,7 @@
                 <%-- AGREGAR COMPONENTES ABAJO--%>
                 <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
                 <div class="first-data">
-                    <<h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%>
+                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%>
                         <span id="favorito" onclick="cambiarFavorito()"><i id="fav" class='fa fa-heart-o red-color'></i></span>
                     </h2>
                     <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>

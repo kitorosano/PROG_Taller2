@@ -63,11 +63,11 @@ public class AltaEspectaculoServlet extends HttpServlet {
         boolean sessionIniciada = checkSession(request, response);
         try {
             if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -114,9 +114,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         
         // Seteo valores para los campos select del formulario
         try {
-            Map<String, PlataformaDTO> plataformas =  fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
+            Map<String, PlataformaDTO> plataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
             request.setAttribute("plataformas", plataformas);
-            Map<String, CategoriaDTO> categorias = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
+            Map<String, CategoriaDTO> categorias =  fetch.Set("/categorias/findAll").Get().getMapCategoria();
             request.setAttribute("categorias", categorias);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener las plataformas y categorias", request, response);
@@ -164,7 +164,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
                 //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
-                urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
+                urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -177,7 +177,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         try {
             //
             //plataforma = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
-            plataforma = fetch.Set("/plataforma/findById?nombre="+nombplataforma).Get().getContent(PlataformaDTO.class);
+            plataforma = fetch.Set("/plataforma/findByNombre?nombre="+nombplataforma).Get().getPlataforma();
             if (plataforma==null) {
                 dispatchError("Error, plataforma no encontrada", request, response);
                 return;
@@ -229,7 +229,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
         try {
             //Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
-            EspectaculoDTO espectaculo= fetch.Set("/espectaculo/find?nombreEspectaculo="+nombreesp+"&nombrePlataforma="+plataforma).Get().getContent(EspectaculoDTO.class);
+            EspectaculoDTO espectaculo= fetch.Set("/espectaculo/find?nombreEspectaculo="+nombreesp+"&nombrePlataforma="+plataforma).Get().getEspectaculo();
             return espectaculo != null;
         } catch (RuntimeException | IOException e) {
             throw new RuntimeException(e);

@@ -36,9 +36,9 @@
                         </div>
                         <div class="content-area-content">
                             <% for(EspectaculoDTO esp : todosEspectaculos) { %>
-                                <div class="content-area-content-item">
+                                <div class="content-area-content-item" onclick="redirectEspectaculo('<%=esp.getNombre()%>', '<%=esp.getPlataforma().getNombre()%>')" >
                                     <div class="content-area-content-item-img">
-                                        <img src="<%=esp.getImagen()%>" alt="imagen" />
+                                        <img src="<%=esp.getImagen()%>" alt="imagen"/>
                                     </div>
                                     <div class="content-area-content-item-name">
                                         <h3><%=esp.getNombre()%></h3>
@@ -55,7 +55,7 @@
                             </div>
                             <div class="content-area-content">
                                 <% for(PaqueteDTO paq : todosPaquetes) { %>
-                                <div class="content-area-content-item">
+                                <div class="content-area-content-item" onclick="redirectPaquete('<%=paq.getNombre()%>')">
                                     <div class="content-area-content-item-img">
                                         <img src="<%=paq.getImagen()%>" alt="imagen" />
                                     </div>
@@ -71,5 +71,14 @@
             </section>
         </main>
     </div>
+
+    <script>
+        function redirectEspectaculo(nombre, plataforma) {
+            window.location.href = "detalle-espectaculo?nombre=" + nombre + "&plataforma=" + plataforma;
+        }
+        function redirectPaquete(nombre) {
+            window.location.href = "detalle-paquete?nombre=" + nombre;
+        }
+    </script>
 </body>
 </html>

@@ -61,11 +61,11 @@ public class DetallePaqueteServlet extends HttpServlet {
     boolean sessionIniciada = checkSession(request, response);
     try {
       if(sessionIniciada) {
-        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll/").Get().getContentMap(PlataformaDTO.class);
-        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll/").Get().getContentMap(EspectaculoDTO.class);
-        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getContentMap(PaqueteDTO.class);
-        Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll/").Get().getContentMap(CategoriaDTO.class);
-        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getContentMap(UsuarioDTO.class);
+        Map<String, PlataformaDTO> todasPlataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+        Map<String, EspectaculoDTO> todosEspectaculos =  fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getMapPaquete();
+        Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll/").Get().getMapCategoria();
+        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getMapUsuario();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -79,7 +79,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         String nombre = request.getParameter("nombre");
     
         //boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
-        PaqueteDTO paqueteExiste = fetch.Set("/paquetes/find?nombre="+nombre).Get().getContent(PaqueteDTO.class);
+        PaqueteDTO paqueteExiste = fetch.Set("/paquetes/find?nombre="+nombre).Get().getPaquete();
         if(paqueteExiste==null) { // Si el paquete no existe
           request.setAttribute("message","Paquete no encontrado");
           request.setAttribute("messageType","error");
@@ -87,16 +87,16 @@ public class DetallePaqueteServlet extends HttpServlet {
           return;
         }
         //PaqueteDTO paquete = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).get();
-        PaqueteDTO paquete = fetch.Set("/paquetes/find?nombre="+nombre).Get().getContent(PaqueteDTO.class);
+        PaqueteDTO paquete = fetch.Set("/paquetes/find?nombre="+nombre).Get().getPaquete();
         request.setAttribute("datos",paquete);
         
         //Map<String, EspectaculoDTO> espectaculos = Fabrica.getInstance().getIPaquete().obtenerEspectaculosDePaquete(nombre);
-        Map<String, EspectaculoDTO> espectaculos = fetch.Set("/espectaculos/findByPaquete?nombrePaquete="+nombre).Get().getContentMap(EspectaculoDTO.class);
+        Map<String, EspectaculoDTO> espectaculos = fetch.Set("/espectaculos/findByPaquete?nombrePaquete="+nombre).Get().getMapEspectaculo();
         request.setAttribute("espectaculos",espectaculos);
         
         if(esEspectador) {
             //Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(usuarioLogueado.getNickname());
-          Map<String, PaqueteDTO> paquetes_espectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+usuarioLogueado.getNickname()).Get().getContentMap(PaqueteDTO.class);
+          Map<String, PaqueteDTO> paquetes_espectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+usuarioLogueado.getNickname()).Get().getMapPaquete();
             if(paquetes_espectador.containsKey(nombre)) {
                 request.setAttribute("message","Paquete Adquirido");
                 request.setAttribute("fechaCompra", paquetes_espectador.get(nombre).getFechaRegistro());
@@ -120,7 +120,7 @@ public class DetallePaqueteServlet extends HttpServlet {
     UsuarioDTO usuSession=(UsuarioDTO)session.getAttribute("usuarioLogueado");
     String nickname_espectador= usuSession.getNickname();
     //boolean paqueteExiste = Fabrica.getInstance().getIPaquete().obtenerPaquete(nombre).isPresent();
-    PaqueteDTO paqueteExiste = fetch.Set("/paquetes/find?nombre="+nombre).Get().getContent(PaqueteDTO.class);
+    PaqueteDTO paqueteExiste = fetch.Set("/paquetes/find?nombre="+nombre).Get().getPaquete();
     if(paqueteExiste==null) { // Si el paquete no existe
         request.setAttribute("message","Paquete no encontrado");
         request.setAttribute("messageType","error");
@@ -129,7 +129,7 @@ public class DetallePaqueteServlet extends HttpServlet {
     }
   
     //Map<String, EspectadorPaqueteDTO> paquetes_espectador = Fabrica.getInstance().getIPaquete().obtenerPaquetesPorEspectador(nickname_espectador);
-    Map<String, PaqueteDTO> paquetes_espectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+nickname_espectador).Get().getContentMap(PaqueteDTO.class);
+    Map<String, PaqueteDTO> paquetes_espectador = fetch.Set("/paquetes/findByNombreEspectador?nombreEspectador="+nickname_espectador).Get().getMapPaquete();
     boolean paqueteYaComprado = paquetes_espectador.containsKey(nombre); // Si el paquete no está comprado, paquete_comprado es null
 
     if (paqueteYaComprado) {

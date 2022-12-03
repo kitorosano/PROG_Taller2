@@ -57,24 +57,24 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Si no hay sesión, redirigir a login
-        boolean sessionIniciada = checkSession(request, response);
+        boolean logueado = checkSession(request, response);
         try {
-            if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
-    
-                request.setAttribute("todasPlataformas", todasPlataformas);
-                request.setAttribute("todosEspectaculos", todosEspectaculos);
-                request.setAttribute("todosPaquetes", todosPaquetes);
-                request.setAttribute("todasCategorias", todasCategorias);
-                request.setAttribute("todosUsuarios", todosUsuarios);
-                dispatchPage("/pages/index.jsp", request, response);
-            } else {
+            if(!logueado) {
                 response.sendRedirect("login");
+                return;
             }
+            Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+            Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+            Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+            Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+            Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
+
+            request.setAttribute("todasPlataformas", todasPlataformas);
+            request.setAttribute("todosEspectaculos", todosEspectaculos);
+            request.setAttribute("todosPaquetes", todosPaquetes);
+            request.setAttribute("todasCategorias", todasCategorias);
+            request.setAttribute("todosUsuarios", todosUsuarios);
+            dispatchPage("/pages/index.jsp", request, response);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }

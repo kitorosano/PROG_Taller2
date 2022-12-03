@@ -62,11 +62,11 @@ public class ModificarUsuario extends HttpServlet {
         try {
             if(sessionIniciada) {
                 
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
 
             
                 request.setAttribute("todasPlataformas", todasPlataformas);
@@ -89,7 +89,7 @@ public class ModificarUsuario extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UsuarioDTO usuarioSession= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String nickname= usuarioSession.getNickname();
-        UsuarioDTO usu=fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
+        UsuarioDTO usu= fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getUsuario();
         if(usu!=null) {
             //usu = fabrica.getIUsuario().obtenerUsuarioPorNickname(nickname).get();
             request.setAttribute("tipo", "espectador");
@@ -137,7 +137,7 @@ public class ModificarUsuario extends HttpServlet {
         String urlImagen="";
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getContent(String.class);
+            urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
             //urlImagen= Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         if(usu!=null){

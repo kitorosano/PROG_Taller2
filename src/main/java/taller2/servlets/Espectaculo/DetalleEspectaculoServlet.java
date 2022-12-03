@@ -63,11 +63,11 @@ public class DetalleEspectaculoServlet extends HttpServlet {
     try {
       if(sessionIniciada) {
                 
-        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-        Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+        Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+        Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+        Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+        Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+        Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
       
         request.setAttribute("todasPlataformas", todasPlataformas);
         request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -79,7 +79,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
         String plataforma= request.getParameter("plataforma");
         
         //boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
-        EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContent(EspectaculoDTO.class);
+        EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getEspectaculo();
         if(espectaculo==null) { // Si el espectaculo no existe
           request.setAttribute("message","Espectaculo no encontrado");
           request.setAttribute("messageType","error");
@@ -87,20 +87,14 @@ public class DetalleEspectaculoServlet extends HttpServlet {
           return;
         }
         request.setAttribute("datos",espectaculo);
-    
-        //Map<String, FuncionDTO> funciones=Fabrica.getInstance().getIFuncion().obtenerFuncionesDeEspectaculo(plataforma,nombre);
 
-        Map<String, FuncionDTO> funciones=  fetch.Set("/funciones/findByEspectaculoAndPlataforma?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getContentMap(FuncionDTO.class);
+        Map<String, FuncionDTO> funciones=  fetch.Set("/funciones/findByEspectaculoAndPlataforma?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getMapFuncion();
         request.setAttribute("funciones",funciones);
-        
-        //Map<String, PaqueteDTO> paquetes=Fabrica.getInstance().getIPaquete().obtenerPaquetesDeEspectaculo(nombre, plataforma);
 
-        Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes/findByspectaculoAndPlataforma?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(PaqueteDTO.class);
+        Map<String, PaqueteDTO> paquetes= fetch.Set("/paquetes/findByEspectaculoAndPlataforma?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getMapPaquete();
         request.setAttribute("paquetes",paquetes);
-        
-        //Map<String, CategoriaDTO> categorias= Fabrica.getInstance().getICategoria().obtenerCategoriasDeEspectaculo(nombre);
 
-        Map<String, CategoriaDTO> categorias= fetch.Set("/categorias/findByEspectaculo?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getContentMap(CategoriaDTO.class);
+        Map<String, CategoriaDTO> categorias= fetch.Set("/categorias/findByEspectaculoAndPlataforma?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getMapCategoria();
         request.setAttribute("categorias",categorias);
         
         dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);

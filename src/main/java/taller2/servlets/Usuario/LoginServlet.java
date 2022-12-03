@@ -87,19 +87,18 @@ public class LoginServlet extends HttpServlet {
     
     try {
       //boolean usuarioExistePorNickname = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorNickname(nickname).isPresent();
-      UsuarioDTO usuarioExistePorNickname = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
-      System.out.println(usuarioExistePorNickname);
+      UsuarioDTO usuarioExistePorNickname = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getUsuario();
       if (usuarioExistePorNickname==null) { // Si el usuario no existe
         //boolean usuarioExistePorCorreo = Fabrica.getInstance().getIUsuario().obtenerUsuarioPorCorreo(nickname).isPresent();
-        UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
+        UsuarioDTO usuarioExistePorCorreo = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getUsuario();
         if (usuarioExistePorCorreo==null) {
           //error cuando el usuario no existe
           dispatchError("El usuario no existe", request, response);
           return;
         }
-        usuario = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getContent(UsuarioDTO.class);
+        usuario = fetch.Set("/usuarios/findByCorreo?correo="+nickname).Get().getUsuario();
       } else {
-        usuario = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getContent(UsuarioDTO.class);
+        usuario = fetch.Set("/usuarios/findByNickname?nickname="+nickname).Get().getUsuario();
       }
     } catch (RuntimeException e) {
       e.printStackTrace();

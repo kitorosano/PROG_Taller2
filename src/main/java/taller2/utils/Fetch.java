@@ -3,7 +3,6 @@ package taller2.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.Primitives;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -13,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClients;
+import taller2.DTOs.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -27,17 +29,19 @@ import java.util.Map;
 public class Fetch {
   
   private String url;
-  private String body = null;
-  private String content = null;
-  private static String prefix = "http://localhost:8081/api/";
+  private String body;
+  private String content;
+  private int responseCode;
+  private String responseMessage;
+  private static String prefix = "http://localhost:8081/api";
   
   public Fetch(){}
   public Fetch(String url) {
-    this.url = prefix + url;
+    this.url = url.replace(" ", "%20");
   }
   
   public Fetch(String url, Object body) {
-    this.url = url;
+    this.url = url.replace(" ", "%20");
     this.body = new Gson().toJson(body);
   }
   
@@ -50,12 +54,16 @@ public class Fetch {
       HttpResponse response = client.execute((HttpUriRequest) request);
       String responseString = new BasicResponseHandler().handleResponse(response);
   
-      if (response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 201) {
-        throw new RuntimeException(response.getStatusLine().getReasonPhrase());
+      this.responseCode = response.getStatusLine().getStatusCode();
+      this.responseMessage = response.getStatusLine().getReasonPhrase();
+      if (this.responseCode != 200 && this.responseCode != 201) {
+        throw new RuntimeException(this.responseMessage);
       }
       this.content = responseString;
     } catch (HttpResponseException e) {
-      System.out.println(e.getMessage());
+      this.responseCode = e.getStatusCode();
+      this.responseMessage = e.getMessage();
+      throw new RuntimeException(this.responseMessage);
     }
     return this;
   }
@@ -170,32 +178,95 @@ public class Fetch {
     return body;
   }
   public Fetch Set(String url) {
-    this.url = url;
+    this.url = url.replace(" ", "%20");
     this.content = null;
+    this.responseCode = 0;
+    this.responseMessage = null;
     return this;
   }
   public Fetch Set(String url, Object body) {
-    this.url = url;
+    this.url = url.replace(" ", "%20");
     this.body = new Gson().toJson(body);
     this.content = null;
     return this;
   }
-  
-  public <T> T getContent(Class<T> classOfT) throws JsonSyntaxException {
-    //return new Gson().fromJson(this.content, classOfT);
-    T object = new Gson().fromJson(this.content, TypeToken.get(classOfT));
-    return Primitives.wrap(classOfT).cast(object);
-  }
-  
-  //get content map
-  public <T> Map<String, T> getContentMap(Class<T> classOfT) throws JsonSyntaxException {
-    Type type = new TypeToken<Map<String, T>>(){}.getType();
-    Map<String, T> map = new Gson().fromJson(this.content, type);
-    return map;
-  }
-  
-  public String getContentString() {
+  public String getContent() {
     return this.content;
   }
+  
+  public UsuarioDTO getUsuario() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, UsuarioDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, UsuarioDTO> getMapUsuario() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, UsuarioDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public EspectaculoDTO getEspectaculo() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, EspectaculoDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, EspectaculoDTO> getMapEspectaculo() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, EspectaculoDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public FuncionDTO getFuncion() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, FuncionDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, FuncionDTO> getMapFuncion() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, FuncionDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public PlataformaDTO getPlataforma() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, PlataformaDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, PlataformaDTO> getMapPlataforma() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, PlataformaDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public PaqueteDTO getPaquete() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, PaqueteDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, PaqueteDTO> getMapPaquete() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, PaqueteDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public CategoriaDTO getCategoria() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, CategoriaDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, CategoriaDTO> getMapCategoria() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, CategoriaDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public EspectadorRegistradoAFuncionDTO getEspectadorRegistradoAFuncion() throws JsonSyntaxException {
+    return new Gson().fromJson(this.content, EspectadorRegistradoAFuncionDTO.class);
+  }
+  
+  //convert content json to map
+  public Map<String, EspectadorRegistradoAFuncionDTO> getMapEspectadorRegistradoAFuncion() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, EspectadorRegistradoAFuncionDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+  
+  public String getString() {
+    return new Gson().fromJson(this.content, String.class);
+  }
+  
   
 }

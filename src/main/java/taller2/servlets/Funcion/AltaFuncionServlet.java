@@ -73,11 +73,11 @@ public class AltaFuncionServlet extends HttpServlet {
         try {
             if(sessionIniciada) {
                 
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll").Get().getMapPaquete();
+                Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll").Get().getMapCategoria();
+                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll").Get().getMapUsuario();
     
                 request.setAttribute("todasPlataformas", todasPlataformas);
                 request.setAttribute("todosEspectaculos", todosEspectaculos);
@@ -92,7 +92,7 @@ public class AltaFuncionServlet extends HttpServlet {
                     String artista=art.getNickname();
                     Map<String, EspectaculoDTO> retorno = new HashMap<>();
                     //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-                    Map<String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getContentMap(EspectaculoDTO.class);
+                    Map<String, EspectaculoDTO> espectaculos= fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getMapEspectaculo();
                     for(EspectaculoDTO esp:espectaculos.values()){
                         if(esp.getEstado()== E_EstadoEspectaculo.ACEPTADO){
                             retorno.put(esp.getNombre()+"-"+esp.getPlataforma().getNombre(),esp);
@@ -127,7 +127,7 @@ public class AltaFuncionServlet extends HttpServlet {
         UsuarioDTO art=(UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
         String artista=art.getNickname();
         //Map<String, EspectaculoDTO> espectaculos = fabrica.getIEspectaculo().obtenerEspectaculosPorArtista(artista);
-        Map<String, EspectaculoDTO> espectaculos=fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getContentMap(EspectaculoDTO.class);
+        Map<String, EspectaculoDTO> espectaculos=fetch.Set("/espectaculos/findByArtista?artistaOrganizador="+artista).Get().getMapEspectaculo();
         Map<String, EspectaculoDTO> retorno = new HashMap<>();
         List<String> artistas=obtenerArtistas(artista);
         if(artistasInvitados!=null){
@@ -167,7 +167,7 @@ public class AltaFuncionServlet extends HttpServlet {
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen= fetch.Set("/database/createImage",inputImagen).Get().getContent(String.class);
+            urlImagen= fetch.Set("/database/createImage",inputImagen).Get().getString();
             //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         FuncionDTO nueva=new FuncionDTO();
@@ -194,7 +194,7 @@ public class AltaFuncionServlet extends HttpServlet {
     private boolean nombreExistente(String nombrefunc, EspectaculoDTO esp) {      //Devuelve true si hay error
         //Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         try {
-            Map<String, FuncionDTO> funciones= fetch.Set("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).Get().getContentMap(FuncionDTO.class);
+            Map<String, FuncionDTO> funciones= fetch.Set("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).Get().getMapFuncion();
             if(funciones!=null) {
                 for (FuncionDTO fun : funciones.values()) {
                     if (fun.getNombre().equals(nombrefunc)) {
@@ -234,7 +234,7 @@ public class AltaFuncionServlet extends HttpServlet {
     private List<String> obtenerArtistas(String artista){
         try {
             //Map <String, UsuarioDTO> usuarios = Fabrica.getInstance().getIUsuario().obtenerUsuarios();
-            Map <String, UsuarioDTO> usuarios= fetch.Set("/usuarios/findAll").Get().getContentMap(UsuarioDTO.class);
+            Map <String, UsuarioDTO> usuarios= fetch.Set("/usuarios/findAll").Get().getMapUsuario();
             List<String> artistas = new ArrayList<>();
             for(UsuarioDTO u:usuarios.values()){
                 if(u.isEsArtista() && !artista.equals(u.getNickname())){

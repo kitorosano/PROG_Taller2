@@ -56,74 +56,74 @@ public class ListadoEspectaculosServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Si no hay sesión, redirigir a login
-        boolean sessionIniciada = checkSession(request, response);
-        try {
-            if(sessionIniciada) {
-                Map<String, PlataformaDTO> todasPlataformas = fetch.Set("/plataformas/findAll/").Get().getContentMap(PlataformaDTO.class);
-                Map<String, EspectaculoDTO> todosEspectaculos = fetch.Set("/espectaculos/findAll/").Get().getContentMap(EspectaculoDTO.class);
-                Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getContentMap(PaqueteDTO.class);
-                Map<String, CategoriaDTO> todasCategorias  = fetch.Set("/categorias/findAll/").Get().getContentMap(CategoriaDTO.class);
-                Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getContentMap(UsuarioDTO.class);
-            
-                request.setAttribute("todasPlataformas", todasPlataformas);
-                request.setAttribute("todosEspectaculos", todosEspectaculos);
-                request.setAttribute("todosPaquetes", todosPaquetes);
-                request.setAttribute("todasCategorias", todasCategorias);
-                request.setAttribute("todosUsuarios", todosUsuarios);
-                String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
-                String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
-                Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
-                Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
-    
-                // Si se llega con un filtrado vacio
-                if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
-                    espectaculosFiltrados = fetch.Set("/espectaculos/findAll").Get().getContentMap(EspectaculoDTO.class);
-                    request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
-                }
-                // Si se llega con un filtrado de plataforma
-                else if (!filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
-                    //espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
-
-                    espectaculosFiltrados = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
-                    request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
-                }
-                // Si se llega con un filtrado de categoria
-                else if (filtroPlataforma.isEmpty() && !filtroCategoria.isEmpty()) {
-                    //espectaculosFiltrados = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
-
-                    espectaculosFiltrados = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
-                    request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
-                }
-                // Si llega con un filtrado de plataforma y categoria
-                else {
-                  
-                    //Map<String, EspectaculoDTO> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
-                    Map<String, EspectaculoDTO> espectaculosDePlataforma = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getContentMap(EspectaculoDTO.class);
-
-                    //Map<String, EspectaculoDTO> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
-                    Map<String, EspectaculoDTO> espectaculosDeCategoria = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getContentMap(EspectaculoDTO.class);
-                
-                    for (EspectaculoDTO espectaculo : espectaculosDeCategoria.values()){
-                        if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
-                            espectaculosFiltrados.put(espectaculo.getNombre(), espectaculo);
-                        }
-                    }
-                    request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
-                }
-                
-                // Cargar categorias de los espectaculos filtrados
-                for (EspectaculoDTO espectaculo : espectaculosFiltrados.values()){
-                    //Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
-                    Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fetch.Set("/categorias/findByEspectaculo?nombreEspectaculo="+espectaculo.getNombre()).Get().getContentMap(CategoriaDTO.class);
-                    categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
-                }
-                request.setAttribute("categoriasEspectaculosFiltrados", categoriasEspectaculosFiltrados);
-                
-                dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
-            } else {
-                response.sendRedirect("login");
+      // Si no hay sesión, redirigir a login
+      boolean logueado = checkSession(request, response);
+      try {
+            if(!logueado) {
+              response.sendRedirect("login");
+              return;
             }
+            Map<String, PlataformaDTO> todasPlataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
+            Map<String, EspectaculoDTO> todosEspectaculos =  fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+            Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getMapPaquete();
+            Map<String, CategoriaDTO> todasCategorias = fetch.Set("/categorias/findAll/").Get().getMapCategoria();
+            Map<String, UsuarioDTO> todosUsuarios = fetch.Set("/usuarios/findAll/").Get().getMapUsuario();
+        
+            request.setAttribute("todasPlataformas", todasPlataformas);
+            request.setAttribute("todosEspectaculos", todosEspectaculos);
+            request.setAttribute("todosPaquetes", todosPaquetes);
+            request.setAttribute("todasCategorias", todasCategorias);
+            request.setAttribute("todosUsuarios", todosUsuarios);
+            String filtroPlataforma = request.getParameter("filtroPlataforma") != null ? request.getParameter("filtroPlataforma") : "";
+            String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
+            Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
+            Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
+
+            // Si se llega con un filtrado vacio
+            if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
+                espectaculosFiltrados = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+            }
+            // Si se llega con un filtrado de plataforma
+            else if (!filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
+                //espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
+
+                espectaculosFiltrados = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getMapEspectaculo();
+                request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+            }
+            // Si se llega con un filtrado de categoria
+            else if (filtroPlataforma.isEmpty() && !filtroCategoria.isEmpty()) {
+                //espectaculosFiltrados = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
+
+                espectaculosFiltrados = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getMapEspectaculo();
+                request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+            }
+            // Si llega con un filtrado de plataforma y categoria
+            else {
+              
+                //Map<String, EspectaculoDTO> espectaculosDePlataforma = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
+                Map<String, EspectaculoDTO> espectaculosDePlataforma = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getMapEspectaculo();
+
+                //Map<String, EspectaculoDTO> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
+                Map<String, EspectaculoDTO> espectaculosDeCategoria = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getMapEspectaculo();
+            
+                for (EspectaculoDTO espectaculo : espectaculosDeCategoria.values()){
+                    if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
+                        espectaculosFiltrados.put(espectaculo.getNombre(), espectaculo);
+                    }
+                }
+                request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
+            }
+            
+            // Cargar categorias de los espectaculos filtrados
+            for (EspectaculoDTO espectaculo : espectaculosFiltrados.values()){
+                //Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fabrica.getICategoria().obtenerCategoriasDeEspectaculo(espectaculo.getNombre());
+                Map<String,CategoriaDTO> categoriasEspectaculoFiltrado = fetch.Set("/categorias/findByEspectaculoAndPlataforma?nombreEspectaculo="+espectaculo.getNombre() + "&nombrePlataforma="+ espectaculo.getPlataforma().getNombre()).Get().getMapCategoria();
+                categoriasEspectaculosFiltrados.put(espectaculo.getNombre(), categoriasEspectaculoFiltrado);
+            }
+            request.setAttribute("categoriasEspectaculosFiltrados", categoriasEspectaculosFiltrados);
+            
+            dispatchPage("/pages/espectaculo/listado-espectaculos.jsp", request, response);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener datos para los componentes de la pagina", request, response);
         }
