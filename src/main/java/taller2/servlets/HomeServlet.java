@@ -21,10 +21,6 @@ public class HomeServlet extends HttpServlet {
     
     public void init() {
         fetch = new Fetch();
-        Dotenv.configure()
-            .filename(".env")
-            .systemProperties()
-            .load();
     }
     protected void dispatchPage(String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
