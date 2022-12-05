@@ -10,8 +10,10 @@
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
     
     PaqueteDTO paquete = (PaqueteDTO) request.getAttribute("datos");
-    String respuesta = (String) request.getAttribute("respuesta");
+    String respuesta = (String) request.getAttribute("message");
+    System.out.print(respuesta);
     Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
+    System.out.println(esEspectador);
     
     Map<String, EspectaculoDTO> espectaculos = (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos");
 
