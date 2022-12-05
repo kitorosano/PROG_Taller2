@@ -89,7 +89,8 @@
                                 <table >
                                     <tbody>
                                     <%  for (FuncionDTO funcion : funciones.values()) {
-                                            if(funcion.getFechaHoraInicio().plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
+                                        LocalDateTime fechahora=LocalDateTime.parse(funcion.getFechaHoraInicio());
+                                            if(fechahora.plusHours((long)espectaculo.getDuracion()).isAfter(LocalDateTime.now())){   %>
                                                 <tr>
                                                     <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
                                                 </tr>

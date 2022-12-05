@@ -7,13 +7,13 @@ public class PaqueteDTO implements Serializable {
     private String nombre;
     private String descripcion;
     private double descuento;
-    private LocalDateTime fechaExpiracion;
-    private LocalDateTime fechaRegistro;
+    private String fechaExpiracion;
+    private String fechaRegistro;
     private String imagen;
 
     public PaqueteDTO(){}
 
-    public PaqueteDTO(String nombre, String descripcion, double descuento, LocalDateTime fechaExpiracion, LocalDateTime fechaRegistro, String imagen) {
+    public PaqueteDTO(String nombre, String descripcion, double descuento, String fechaExpiracion, String fechaRegistro, String imagen) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.descuento = descuento;
@@ -46,19 +46,19 @@ public class PaqueteDTO implements Serializable {
         this.descuento = descuento;
     }
 
-    public LocalDateTime getFechaExpiracion() {
+    public String getFechaExpiracion() {
         return fechaExpiracion;
     }
 
-    public void setFechaExpiracion(LocalDateTime fechaExpiracion) {
+    public void setFechaExpiracion(String fechaExpiracion) {
         this.fechaExpiracion = fechaExpiracion;
     }
 
-    public LocalDateTime getFechaRegistro() {
+    public String getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+    public void setFechaRegistro(String fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 

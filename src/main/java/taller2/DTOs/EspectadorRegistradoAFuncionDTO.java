@@ -10,7 +10,7 @@ public class EspectadorRegistradoAFuncionDTO implements Serializable {
   private PaqueteDTO paquete;
   private boolean canjeado;
   private double costo;
-  private LocalDateTime fechaRegistro;
+  private String fechaRegistro;
   
   public EspectadorRegistradoAFuncionDTO() {
   }
@@ -50,10 +50,10 @@ public class EspectadorRegistradoAFuncionDTO implements Serializable {
     this.costo = costo;
   }
   
-  public LocalDateTime getFechaRegistro() {
+  public String getFechaRegistro() {
     return fechaRegistro;
   }
-  public void setFechaRegistro(LocalDateTime fechaRegistro) {
+  public void setFechaRegistro(String fechaRegistro) {
     this.fechaRegistro = fechaRegistro;
   }
 }

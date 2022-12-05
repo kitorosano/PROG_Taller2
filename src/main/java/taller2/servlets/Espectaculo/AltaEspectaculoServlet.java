@@ -198,7 +198,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         nuevoEspectaculo.setUrl(url);
         nuevoEspectaculo.setCosto(costo);
         nuevoEspectaculo.setEstado(E_EstadoEspectaculo.INGRESADO);
-        nuevoEspectaculo.setFechaRegistro(LocalDateTime.now());
+        nuevoEspectaculo.setFechaRegistro(LocalDateTime.now().toString());
         nuevoEspectaculo.setImagen(urlImagen);
         nuevoEspectaculo.setPlataforma(plataforma.getNombre());
         nuevoEspectaculo.setArtista(artistaLogueado.getNickname());
@@ -206,14 +206,18 @@ public class AltaEspectaculoServlet extends HttpServlet {
             //fabrica.getIEspectaculo().altaEspectaculo(nuevoEspectaculo);
             fetch.Set("/espectaculos/create",nuevoEspectaculo).Post();
             for(String categoria : categoriasElegidas){
-                fetch.Set("/categorias/createCategoriaAEspectaculo",categoria).Post();
+                AltaCategoriaAEspectaculoDTO altaCategoriaAEspectaculoDTO=new AltaCategoriaAEspectaculoDTO();
+                altaCategoriaAEspectaculoDTO.setNombreCategoria(categoria);
+                altaCategoriaAEspectaculoDTO.setNombreEspectaculo(nombre);
+                altaCategoriaAEspectaculoDTO.setNombrePlataforma(plataforma.getNombre());
+                fetch.Set("/categorias/createCategoriaAEspectaculo",altaCategoriaAEspectaculoDTO).Post();
                 //fabrica.getICategoria().altaCategoriaAEspectaculo(categoria, nuevoEspectaculo.getNombre(), nuevoEspectaculo.getPlataforma().getNombre());
             }
             
             // No hacer un redirect, mas bien un dispatch a la pagina, para mostrar el mensaje de exito
             request.setAttribute("message", "Espectaculo creado con exito");
             request.setAttribute("messageType", "success");
-            dispatchPage("/pages/espectaculos/registro-espectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             dispatchError("Error al crear el espectaculo", request, response); // devolver a una pagina (por jsp) manteniendo la misma url

@@ -49,7 +49,7 @@ public class RegistroAFuncion extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("message", errorMessage);
         request.setAttribute("messageType","error");
-        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/funcion/registro-espectadores-a-funcion.jsp");
         view.forward(request, response);
     }
 
@@ -82,7 +82,7 @@ public class RegistroAFuncion extends HttpServlet {
                     UsuarioDTO esp= (UsuarioDTO) request.getSession().getAttribute("usuarioLogueado");
                     String nombreEsp=esp.getNickname();
                     //FuncionDTO fun = fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get();
-                    FuncionDTO fun= fetch.Set("/funciones?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+funcion).Get().getFuncion();
+                    FuncionDTO fun= fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+funcion).Get().getFuncion();
                     //Map<String, EspectadorRegistradoAFuncionDTO> registros = Fabrica.getInstance().getIFuncion().obtenerFuncionesRegistradasDelEspectador(nombreEsp);
                     Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+nombreEsp).Get().getMapEspectadorRegistradoAFuncion();
                     //Obtengo los paquetes del espectador que tienen el espectaculo asociado
@@ -119,7 +119,7 @@ public class RegistroAFuncion extends HttpServlet {
     
             //Espectador esp= (Espectador) fabrica.getIUsuario().obtenerUsuarios().get(espectador);
             //FuncionDTO fun = (fabrica.getIFuncion().obtenerFuncion(plataforma, espectaculo, funcion).get());
-            FuncionDTO fun= fetch.Set("funciones?nombrePlataforma="+plataforma+"nombreEspectaculo="+espectaculo+"nombreFuncion="+funcion).Get().getFuncion();
+            FuncionDTO fun= fetch.Set("/funciones/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+espectaculo+"&nombreFuncion="+funcion).Get().getFuncion();
             Map<String, EspectadorRegistradoAFuncionDTO> registros= fetch.Set("/espectadorRegistradoAFuncion/findByNickname?nickname="+espectador).Get().getMapEspectadorRegistradoAFuncion();
             Map<String, PaqueteDTO> paquetes=obtenerPaquetesEspectadorEspectaculo(espectaculo,plataforma,espectador);
             PaqueteDTO paq=null;
@@ -160,13 +160,19 @@ public class RegistroAFuncion extends HttpServlet {
                     paq = paquetesEspectador.get(paquete);
                     costo = fun.getEspectaculo().getCosto() - (fun.getEspectaculo().getCosto() * paq.getDescuento() / 100);
                 }
-                EspectadorRegistradoAFuncionDTO nuevo = new EspectadorRegistradoAFuncionDTO();
+                AltaEspectadorRegistradoAFuncionDTO nuevo = new AltaEspectadorRegistradoAFuncionDTO();
                 nuevo.setEspectador(esp.getNickname());
-                nuevo.setFuncion(fun);
-                nuevo.setPaquete(paq);
-                nuevo.setCanjeado(true);
-                nuevo.setFechaRegistro(LocalDateTime.now());
-    
+                nuevo.setFuncion(fun.getNombre());
+                nuevo.setEspectaculo(fun.getEspectaculo().getNombre());
+                nuevo.setPlataforma(fun.getEspectaculo().getPlataforma().getNombre());
+                nuevo.setCanjeado(false);
+                nuevo.setFechaRegistro(LocalDateTime.now().toString());
+                nuevo.setCosto(costo);
+                if(paq!=null){
+                    nuevo.setPaquete(paq.getNombre());
+                }else{
+                    nuevo.setPaquete(null);
+                }
                 fetch.Set("/espectadorRegistradoAFuncion/create", nuevo).Post();
                 //fabrica.getIFuncion().registrarEspectadorAFuncion(nuevo);
                 response.sendRedirect("home");

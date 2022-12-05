@@ -12,7 +12,7 @@ public class AltaEspectadorRegistradoAFuncionDTO implements Serializable {
   private String paquete;
   private boolean canjeado;
   private double costo;
-  private LocalDateTime fechaRegistro;
+  private String fechaRegistro;
   
   public AltaEspectadorRegistradoAFuncionDTO() {
   }
@@ -66,10 +66,10 @@ public class AltaEspectadorRegistradoAFuncionDTO implements Serializable {
     this.costo = costo;
   }
   
-  public LocalDateTime getFechaRegistro() {
+  public String getFechaRegistro() {
     return fechaRegistro;
   }
-  public void setFechaRegistro(LocalDateTime fechaRegistro) {
+  public void setFechaRegistro(String fechaRegistro) {
     this.fechaRegistro = fechaRegistro;
   }
 }

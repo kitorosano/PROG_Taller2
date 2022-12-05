@@ -34,7 +34,7 @@
                 <h3>Registrar espectaculo en paquete</h3>
             </div>
             <section>
-                <%@ include file="../sidebar.jsp" %>
+                <%@ include file="/pages/sidebar.jsp" %>
                 <div class="main-container">
                 <%-- AGREGAR COMPONENTES ABAJO--%>
                     <div class="input-container">

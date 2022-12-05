@@ -173,8 +173,8 @@ public class AltaFuncionServlet extends HttpServlet {
         FuncionDTO nueva=new FuncionDTO();
         nueva.setNombre(nombrefuncion);
         nueva.setEspectaculo(esp);
-        nueva.setFechaHoraInicio(fechahora);
-        nueva.setFechaRegistro(LocalDateTime.now());
+        nueva.setFechaHoraInicio(fechahora.toString());
+        nueva.setFechaRegistro(LocalDateTime.now().toString());
         nueva.setImagen(urlImagen);
         try {
             fetch.Set("/funciones/create",nueva).Post();
@@ -194,7 +194,7 @@ public class AltaFuncionServlet extends HttpServlet {
     private boolean nombreExistente(String nombrefunc, EspectaculoDTO esp) {      //Devuelve true si hay error
         //Map<String, FuncionDTO> funciones = fabrica.getIFuncion().obtenerFuncionesDeEspectaculo(esp.getPlataforma().getNombre(),esp.getNombre());
         try {
-            Map<String, FuncionDTO> funciones= fetch.Set("/funcion/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).Get().getMapFuncion();
+            Map<String, FuncionDTO> funciones= fetch.Set("/funciones/findByEspectaculoAndPlataforma?nombrePlataforma="+esp.getPlataforma().getNombre()+"&nombreEspectaculo="+esp.getNombre()).Get().getMapFuncion();
             if(funciones!=null) {
                 for (FuncionDTO fun : funciones.values()) {
                     if (fun.getNombre().equals(nombrefunc)) {
