@@ -12,6 +12,7 @@ import taller2.DTOs.*;
 import taller2.utils.Fetch;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @WebServlet(name = "DetallePaquete", value = "/detalle-paquete")
@@ -143,6 +144,7 @@ public class DetallePaqueteServlet extends HttpServlet {
     AltaEspectadorAPaqueteDTO alta_espectador_a_paquete = new AltaEspectadorAPaqueteDTO();
     alta_espectador_a_paquete.setNombrePaquete(nombre);
     alta_espectador_a_paquete.setNickname(nickname_espectador);
+    alta_espectador_a_paquete.setFechaRegistro(LocalDateTime.now().toString());
 
     fetch.Set("/paquetes/createEspectadorAPaquete",alta_espectador_a_paquete).Post();
     request.setAttribute("message", "Paquete Adquirido");
