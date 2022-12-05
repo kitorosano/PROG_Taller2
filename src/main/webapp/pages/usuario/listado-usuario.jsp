@@ -43,6 +43,7 @@
                         <table class="tablaUsuarios" id="tabla">
                             <thead>
                             <tr>
+                                <th> </th>
                                 <th>Nickname</th>
                                 <th>Tipo de usuario</th>
                             </tr>
@@ -74,11 +75,20 @@
             let nuevaFila;
             let celdaNickname;
             let celdaTipo;
+            let celdaImg;
+            let imagen;
     
             <% for (UsuarioDTO elem : usuarioMap.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
-                celdaNickname = nuevaFila.insertCell(0);
-                celdaTipo = nuevaFila.insertCell(1);
+                celdaImg = nuevaFila.insertCell(0);
+                celdaNickname = nuevaFila.insertCell(1);
+                celdaTipo = nuevaFila.insertCell(2);
+
+                imagen = document.createElement("img");
+                imagen.src = "<%=elem.getImagen()%>";
+                imagen.style.width = "80px";
+                imagen.style.height = "80px";
+                celdaImg.appendChild(imagen);
     
                 celdaNickname.innerHTML = "<%=elem.getNickname()%>";
                 <% if (elem.isEsArtista()){%>

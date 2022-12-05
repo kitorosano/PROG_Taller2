@@ -79,6 +79,13 @@ public class ListadoEspectaculosServlet extends HttpServlet {
             Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
             Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
 
+            //Obtengo los espectaculos favoritos del usuario
+            HttpSession session = request.getSession();
+            String usuarioLogueadoNickname = ((UsuarioDTO) session.getAttribute("usuarioLogueado")).getNickname();
+
+            Map<String, String> espectaculosFavoritos = fetch.Set("/usuarios/findEspectaculosFavoritos?nickname="+usuarioLogueadoNickname).Get().getMapEspectaculosFavoritos();
+            request.setAttribute("espectaculosFavoritos", espectaculosFavoritos);
+
             // Si se llega con un filtrado vacio
             if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
                 espectaculosFiltrados = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
@@ -131,5 +138,26 @@ public class ListadoEspectaculosServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean tipoAccion = Boolean.parseBoolean(request.getParameter("accion"));
+
+        EspectaculoFavoritoDTO dto = new EspectaculoFavoritoDTO();
+
+        String nickname = request.getParameter("nickname");
+        String nombreEspectaculo = request.getParameter("nombreEspectaculo");
+        String nombrePlataforma = request.getParameter("nombrePlataforma");
+
+        System.out.println(nickname);
+        System.out.println(nombreEspectaculo);
+        System.out.println(nombrePlataforma);
+
+        dto.setNickname(nickname);
+        dto.setNombreEspectaculo(nombreEspectaculo);
+        dto.setNombrePlataforma(nombrePlataforma);
+
+        if (tipoAccion == true) {
+            fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
+        } else {
+            fetch.Set("/usuarios/deleteEspectaculoFavorito", dto).Delete();
+        }
     }
 }

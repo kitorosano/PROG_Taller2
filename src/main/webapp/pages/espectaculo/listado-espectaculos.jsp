@@ -23,6 +23,7 @@
   String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
   Map<String, EspectaculoDTO> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
   Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, CategoriaDTO>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
+  Map<String, String> espectaculosFavoritos = (Map<String, String>) request.getAttribute("espectaculosFavoritos");
 %>
 
 <!DOCTYPE html>
@@ -30,6 +31,7 @@
 <head>
   <style><%@ include file="/pages/global.css" %></style>
   <style><%@ include file="/pages/espectaculo/listado-espectaculos.css" %></style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>CoronaTicketsUY</title>
 </head>
@@ -84,6 +86,7 @@
                     <table class="tablaEspectaculos" id="tabla">
                         <thead>
                             <tr>
+                                <th> </th>
                                 <th>Nombre</th>
                                 <th>Categorias</th>
                                 <th>Plataforma</th>
@@ -140,17 +143,67 @@
             let celdaCategorias;
             let celdaPlataforma;
             let celdaArtista;
+            let celdaFavorito;
+            let celdaImg;
+
+            let favoritoSpan;
+            let favoritoI;
+            let oculto;
+            let textnode;
+
+            let imagen
         
             <%for (EspectaculoDTO elem : espectaculosFiltrados.values()) {
                 if(elem.getEstado()!=E_EstadoEspectaculo.FINALIZADO){
             %>
                 nuevaFila = TABLA.insertRow(-1);
-                celdaEspectaculo = nuevaFila.insertCell(0);
-                celdaCategorias = nuevaFila.insertCell(1);
-                celdaPlataforma = nuevaFila.insertCell(2);
-                celdaArtista = nuevaFila.insertCell(3);
-          
-                celdaEspectaculo.innerHTML = "<%=elem.getNombre()%>";
+                celdaImg = nuevaFila.insertCell(0);
+                celdaEspectaculo = nuevaFila.insertCell(1);
+                celdaCategorias = nuevaFila.insertCell(2);
+                celdaPlataforma = nuevaFila.insertCell(3);
+                celdaArtista = nuevaFila.insertCell(4);
+                celdaFavorito= nuevaFila.insertCell(5);
+
+                celdaEspectaculo.innerText = "<%=elem.getNombre()%>";
+
+                imagen = document.createElement("img");
+                imagen.src = "<%=elem.getImagen()%>";
+                imagen.style.width = "80px";
+                imagen.style.height = "80px";
+                celdaImg.appendChild(imagen);
+
+                favoritoSpan = document.createElement("SPAN");
+                favoritoI = document.createElement("I");
+
+                oculto = document.createElement("input");
+                oculto.setAttribute("type", "hidden");
+                oculto.setAttribute("name", "accion");
+
+                favoritoI.classList.add('fa');
+                favoritoI.style = "color:#DC143C";
+                <% if (espectaculosFavoritos.get(elem.getNombre()) != null){ %>
+                    favoritoI.classList.add('fa-heart');
+                    oculto.setAttribute("value", "true");
+                <% } else { %>
+                    favoritoI.classList.add('fa-heart-o');
+                    oculto.setAttribute("value", "false");
+                <% } %>
+
+                textnode = document.createTextNode("<%=elem.getCantidadFavoritos()%>");
+
+                //favoritoSpan.prepend(favoritoDiv);
+                //favoritoSpan.prepend(textnode);
+                favoritoSpan.appendChild(favoritoI);
+                celdaFavorito.innerText = "    "
+                celdaFavorito.appendChild(textnode);
+                celdaFavorito.prepend(favoritoSpan);
+
+                //favoritoSpan.appendChild(textnode);
+
+                //favoritoDiv.appendChild(favoritoI);
+                //favoritoDiv.appendChild(textnode);
+
+
                 celdaCategorias.innerHTML = "";
                 <%
                 Collection<CategoriaDTO> categoriasEspectaculoFiltrado = categoriasEspectaculosFiltrados.get(elem.getNombre()).values();

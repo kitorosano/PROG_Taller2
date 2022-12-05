@@ -85,7 +85,7 @@ public class Fetch {
     try(OutputStream os = con.getOutputStream()) {
       os.write(out);
     }
-    
+
     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
     String inputLine;
     while ((inputLine = in.readLine()) != null) {
@@ -98,7 +98,7 @@ public class Fetch {
       throw new RuntimeException(con.getResponseMessage());
     }
   
-    this.content = inputLine;
+    //this.content = inputLine;
     return this;
   }
   
@@ -261,6 +261,11 @@ public class Fetch {
   //convert content json to map
   public Map<String, EspectadorRegistradoAFuncionDTO> getMapEspectadorRegistradoAFuncion() throws JsonSyntaxException {
     Type type = new TypeToken<Map<String, EspectadorRegistradoAFuncionDTO>>(){}.getType();
+    return new Gson().fromJson(this.content, type);
+  }
+
+  public Map<String, String> getMapEspectaculosFavoritos() throws JsonSyntaxException {
+    Type type = new TypeToken<Map<String, String>>(){}.getType();
     return new Gson().fromJson(this.content, type);
   }
   
