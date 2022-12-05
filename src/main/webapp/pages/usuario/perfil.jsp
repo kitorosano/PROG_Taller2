@@ -17,7 +17,7 @@
     Boolean esPerfilPropio = request.getAttribute("esPerfilPropio") != null ? (Boolean) request.getAttribute("esPerfilPropio") : false;
 	Map<String, EspectaculoDTO> espectaculos = request.getAttribute("espectaculos") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculos") : new HashMap<>();
 	Map<String, EspectadorRegistradoAFuncionDTO> funciones = request.getAttribute("funciones") != null ? (Map<String, EspectadorRegistradoAFuncionDTO>) request.getAttribute("funciones") : new HashMap<>();
-	Map<String, AltaEspectadorAPaqueteDTO> paquetes = request.getAttribute("paquetes") != null ? (Map<String, AltaEspectadorAPaqueteDTO>) request.getAttribute("paquetes") : new HashMap<>();
+	Map<String, PaqueteDTO> paquetes = request.getAttribute("paquetes") != null ? (Map<String, PaqueteDTO>) request.getAttribute("paquetes") : new HashMap<>();
 	String json = new Gson().toJson(usuario);
     
     Map<String, EspectaculoDTO> espectaculosAceptados = espectaculos.values()
@@ -25,6 +25,7 @@
                                                                  .filter(e -> e.getEstado().equals(E_EstadoEspectaculo.ACEPTADO))
                                                                  .collect(Collectors.toMap(EspectaculoDTO::getNombre, e -> e));
 
+    System.out.println("es perfil propio?:"+esPerfilPropio);
 %>
 <html>
 <head>
@@ -41,7 +42,7 @@
         <div id="message" class="hidden <%=messageType%>" role="alert">
             <%=message%>
         </div>
-        
+
         <main class="coronaTicketsUY">
             <%@ include file="/pages/header.jsp" %>
             <div class="page-title">
@@ -61,15 +62,19 @@
                     </div>
                     <div class="tabs">
                         <div class="menu">
+
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
                             <% if (usuario.isEsArtista()) { %>
                                 <p data-target="#datos_artista">Datos Artista</p>
                                 <p data-target="#espectaculos">Espectaculos</p>
-                            <% } else { %>
+                                 <% if (esPerfilPropio) { %>
+                                    <p data-target="#finalizados">Espectaculos finalizados</p>
+                                  <% } %>
+                            <% }
+                            else { %>
                                 <p data-target="#funciones">Funciones</p>
                                 <% if (esPerfilPropio) { %>
                                     <p data-target="#paquetes">Paquetes adquiridos</p>
-                                    <p data-target="#finalizados">Espectaculos finalizados</p>
                                 <% }
                             } %>
                         </div>
@@ -93,7 +98,7 @@
                             <div data-content id="finalizados">
                                 <table>
                                     <tbody>
-                                    <% if (esPerfilPropio ? espectaculos.size() == 0 : espectaculosAceptados.size() == 0) { %>
+                                    <% if (esPerfilPropio && espectaculos.size() == 0 ) { %>
                                     <tr>
                                         <th>
                                             <h4>
@@ -108,8 +113,8 @@
                                         <th><%=elem2.getNombre()%> </th>
                                         <th> <%=elem2.getPlataforma().getNombre()%> </th>
                                     </tr>
-                                    <%          }
-                                    }
+                                     <%     }
+                                        }
                                     }%>
                                     </tbody>
                                 </table>
@@ -176,10 +181,10 @@
                                                 </th>
                                             </tr>
                                         <% } else {
-                                                for (AltaEspectadorAPaqueteDTO paquete : paquetes.values()) { %>
+                                                for (PaqueteDTO paquete : paquetes.values()) { %>
                                                     <tr>
                                                         <th>
-                                                            <a href="detalle-paquete?nombre=<%=paquete.getNombrePaquete()%>"><%=paquete.getNombrePaquete()%>
+                                                            <a href="detalle-paquete?nombre=<%=paquete.getNombre()%>"><%=paquete.getNombre()%>
                                                             </a>
                                                         </th>
                                                     </tr>
