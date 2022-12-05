@@ -177,7 +177,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
         try {
             //
             //plataforma = fabrica.getIPlataforma().obtenerPlataforma(nombplataforma);
-            plataforma = fetch.Set("/plataforma/findByNombre?nombre="+nombplataforma).Get().getPlataforma();
+            plataforma = fetch.Set("/plataformas/findByNombre?nombre="+nombplataforma).Get().getPlataforma();
             if (plataforma==null) {
                 dispatchError("Error, plataforma no encontrada", request, response);
                 return;
@@ -213,7 +213,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
             // No hacer un redirect, mas bien un dispatch a la pagina, para mostrar el mensaje de exito
             request.setAttribute("message", "Espectaculo creado con exito");
             request.setAttribute("messageType", "success");
-            dispatchPage("/pages/espectaculo/registro-espectaculo.jsp", request, response);
+            dispatchPage("/pages/espectaculos/registro-espectaculo.jsp", request, response);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             dispatchError("Error al crear el espectaculo", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
@@ -229,7 +229,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     private boolean nombreExistente(String nombreesp, String plataforma) {      //Devuelve true si hay error
         try {
             //Optional<AltaEspectaculoDTO> espectaculo = fabrica.getIEspectaculo().obtenerEspectaculo(plataforma, nombreesp);
-            EspectaculoDTO espectaculo= fetch.Set("/espectaculo/find?nombreEspectaculo="+nombreesp+"&nombrePlataforma="+plataforma).Get().getEspectaculo();
+            EspectaculoDTO espectaculo= fetch.Set("/espectaculos/find?nombreEspectaculo="+nombreesp+"&nombrePlataforma="+plataforma).Get().getEspectaculo();
             return espectaculo != null;
         } catch (RuntimeException | IOException e) {
             throw new RuntimeException(e);

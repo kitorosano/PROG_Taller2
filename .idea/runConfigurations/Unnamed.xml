@@ -14,9 +14,9 @@
     <option name="port" value="8082" />
     <option name="tomcatInfo">
       <TomcatInfo>
-        <option name="name" value="Apache Tomcat/10.0.27" />
-        <option name="path" value="$PROJECT_DIR$/../../../../../../Program Files/Apache Software Foundation/Tomcat 10.0_Tomcat10.0.27" />
-        <option name="version" value="10.0.27.0" />
+        <option name="name" value="Apache Tomcat/10.0.26" />
+        <option name="path" value="$PROJECT_DIR$/../../../../apache-tomcat-10.0.26" />
+        <option name="version" value="10.0.26.0" />
       </TomcatInfo>
     </option>
     <option name="vmOptions" value="-DAPI_URL=http://localhost:8081/api" />
