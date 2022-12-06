@@ -128,7 +128,7 @@ public class Fetch {
     in.close();
     con.disconnect();
 
-    if(con.getResponseCode() != 200) {
+    if(con.getResponseCode() != 200 && con.getResponseCode() != 201 ) {
       throw new RuntimeException(con.getResponseMessage());
     }
 

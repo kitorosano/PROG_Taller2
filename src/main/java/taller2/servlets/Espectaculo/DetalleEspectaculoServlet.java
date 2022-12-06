@@ -128,7 +128,7 @@ public class DetalleEspectaculoServlet extends HttpServlet {
       dto.setNickname(nickname);
       dto.setNombreEspectaculo(nombreEspectaculo);
       dto.setNombrePlataforma(nombrePlataforma);
-
+    System.out.println("el espectaculo es"+dto);
       if (tipoAccion == true) {
         fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
       } else {
@@ -138,11 +138,17 @@ public class DetalleEspectaculoServlet extends HttpServlet {
 
   @Override
   protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String nombreEspectaculo = (String)request.getParameter("nombreEspectaculo");
-    String nombrePlataforma = (String)request.getParameter("nombrePlataforma");
-
-    EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo).Get().getEspectaculo();
-    espectaculo.setEstado(E_EstadoEspectaculo.FINALIZADO);
-    fetch.Set("espectaculo/updateEstado",espectaculo).Post();
+    String nombreEspectaculo = (String)request.getParameter("nombre");
+    String nombrePlataforma = (String)request.getParameter("plataforma");
+    EspectaculoNuevoEstadoDTO espectaculo = new EspectaculoNuevoEstadoDTO();
+    System.out.println("el nombre del espectaculo es:"+nombreEspectaculo);
+    System.out.println("la plataforma es:"+nombrePlataforma);
+   // EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo).Get().getEspectaculo();
+    espectaculo.setNombreEspectaculo(nombreEspectaculo);
+    espectaculo.setNombrePlataforma(nombrePlataforma);
+    espectaculo.setNuevoEstado(E_EstadoEspectaculo.FINALIZADO);
+    System.out.println("el espectaculo es"+espectaculo);
+    System.out.println("el nuevo estado es:"+E_EstadoEspectaculo.FINALIZADO);
+    fetch.Set("/espectaculos/updateEstado",espectaculo).Put();
   }
 }
