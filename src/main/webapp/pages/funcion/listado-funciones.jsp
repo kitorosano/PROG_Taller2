@@ -82,6 +82,7 @@
                         <table class="tablaFunciones" id="tabla">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Nombre</th>
                                 <th>Plataforma</th>
                                 <th>Espectaculo</th>

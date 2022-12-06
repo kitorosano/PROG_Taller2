@@ -113,9 +113,9 @@ public class ListadoEspectaculosServlet extends HttpServlet {
 
                 //Map<String, EspectaculoDTO> espectaculosDeCategoria = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
                 Map<String, EspectaculoDTO> espectaculosDeCategoria = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getMapEspectaculo();
-            
+
                 for (EspectaculoDTO espectaculo : espectaculosDeCategoria.values()){
-                    if (espectaculosDePlataforma.containsKey(espectaculo.getNombre())){
+                    if (espectaculo.getPlataforma().getNombre().equals(filtroPlataforma)){
                         espectaculosFiltrados.put(espectaculo.getNombre(), espectaculo);
                     }
                 }

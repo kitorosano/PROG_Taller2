@@ -43,6 +43,7 @@
                         <table class="tablaPaquetes" id="tabla">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                             </tr>
