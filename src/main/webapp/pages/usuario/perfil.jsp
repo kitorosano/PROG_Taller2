@@ -108,7 +108,7 @@
                                     </tr>
                                     <% } else {
                                         for (EspectaculoDTO elem2 : espectaculos.values()) {
-                                            if (elem2.getEstado() == E_EstadoEspectaculo.FINALIZADO || esPerfilPropio) { %>
+                                            if (elem2.getEstado() == E_EstadoEspectaculo.FINALIZADO && esPerfilPropio) { %>
                                     <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem2.getNombre()%>&plataforma=<%=elem2.getPlataforma().getNombre()%>'">
                                         <th><%=elem2.getNombre()%> </th>
                                         <th> <%=elem2.getPlataforma().getNombre()%> </th>
@@ -135,7 +135,7 @@
                                             </tr>
                                         <% } else {
                                                 for (EspectaculoDTO elem : espectaculos.values()) {
-                                                    if (elem.getEstado() == E_EstadoEspectaculo.ACEPTADO || esPerfilPropio) { %>
+                                                    if (elem.getEstado() == E_EstadoEspectaculo.ACEPTADO && esPerfilPropio) { %>
                                                         <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'">
                                                             <th><%=elem.getNombre()%> </th>
                                                             <th> <%=elem.getPlataforma().getNombre()%> </th>

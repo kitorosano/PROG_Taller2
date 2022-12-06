@@ -94,14 +94,20 @@
     //border-radius: 3px;
 }
 
+.div_butons_esp{
+    grid-column: 3/5;
+    grid-row: 3;
+    display: flex;
+    justify-content: space-around;
+}
+
 .btn2{
     display: inline-block;
     margin-top: 31px;
     margin-bottom: 1px;
     margin-right: 10px;
     padding: 1px 1px;
-    grid-column: 3;
-    grid-row: 3;
+
     //border-radius: 3px;
 }
 

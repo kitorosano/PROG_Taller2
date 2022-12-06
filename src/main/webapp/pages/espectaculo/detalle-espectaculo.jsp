@@ -78,12 +78,15 @@
                 </div>
                 <% if(esArtista && espectaculo.getArtista().getNickname().equals(usuarioLogueado.getNickname())){
                         if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
-                            <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
-                            <button  id="btnDesactivar5" >Desactivar Espectaculo</button>
+                            <div class="div_butons_esp">
+                                <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
+                                <button class="btn2" id="btnDesactivar" onclick="desactivar_espectaculo()" >Desactivar Espectaculo</button>
+                            </div>
+
                 <%      }
 
                     }   %>
-                    <button  id="btnDesactivar" >Desactivar Espectaculo</button>
+
                     <div class="tabs">
                         <div class="menu">
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
@@ -178,8 +181,8 @@
                 window.location.href = "listado-espectaculos";
             }
             else{
-                alert("Hubo un error")
-                alert("el estatus es"+http.status);
+                alert("cargando")
+
                 console.log(http.status);
             }
 
@@ -187,9 +190,7 @@
 
         http.send();
     }
-    document.getElementById("btnDesactivar").addEventListener("click",function (){
-        desactivar_espectaculo();
-    });
+
 
         //targets = document.querySelectorAll('[data-target]')
 
