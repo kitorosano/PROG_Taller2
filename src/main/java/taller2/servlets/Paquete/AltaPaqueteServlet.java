@@ -54,7 +54,7 @@ public class AltaPaqueteServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("message", errorMessage);
         request.setAttribute("messageType","error");
-        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/registro-paquete.jsp");
         view.forward(request, response);
     }
 

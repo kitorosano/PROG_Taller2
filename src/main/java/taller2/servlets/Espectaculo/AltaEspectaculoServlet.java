@@ -96,7 +96,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UsuarioDTO artistaLogueado = (UsuarioDTO) session.getAttribute("usuarioLogueado");
-        
+
         String nombre = request.getParameter("nombre");
         String nombplataforma = request.getParameter("plataforma");
         String descripcion = request.getParameter("descripcion");
@@ -115,9 +115,9 @@ public class AltaEspectaculoServlet extends HttpServlet {
         // Seteo valores para los campos select del formulario
         try {
             Map<String, PlataformaDTO> plataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
-            request.setAttribute("plataformas", plataformas);
+            request.setAttribute("todasPlataformas", plataformas);
             Map<String, CategoriaDTO> categorias =  fetch.Set("/categorias/findAll").Get().getMapCategoria();
-            request.setAttribute("categorias", categorias);
+            request.setAttribute("todasCategorias", categorias);
         } catch (RuntimeException e) {
             dispatchError("Error al obtener las plataformas y categorias", request, response);
             return;
