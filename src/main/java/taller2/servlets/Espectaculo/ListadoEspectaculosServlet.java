@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import taller2.DTOs.*;
+import taller2.E_EstadoEspectaculo;
 import taller2.utils.Fetch;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class ListadoEspectaculosServlet extends HttpServlet {
             String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
             Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
             Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
+            Map<String, EspectaculoDTO> espectaculos = new HashMap<>();
 
             //Obtengo los espectaculos favoritos del usuario
             HttpSession session = request.getSession();
@@ -88,21 +90,36 @@ public class ListadoEspectaculosServlet extends HttpServlet {
 
             // Si se llega con un filtrado vacio
             if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
-                espectaculosFiltrados = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                espectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
+                for (EspectaculoDTO esp : espectaculos.values()){
+                    if (esp.getEstado() == E_EstadoEspectaculo.ACEPTADO){
+                        espectaculosFiltrados.put(esp.getNombre(), esp);
+                    }
+                }
                 request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
             }
             // Si se llega con un filtrado de plataforma
             else if (!filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {
                 //espectaculosFiltrados = fabrica.getIEspectaculo().obtenerEspectaculosPorPlataforma(filtroPlataforma);
 
-                espectaculosFiltrados = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getMapEspectaculo();
+                espectaculos = fetch.Set("/espectaculos/findByPlataforma?nombrePlataforma="+filtroPlataforma).Get().getMapEspectaculo();
+                for (EspectaculoDTO esp : espectaculos.values()){
+                    if (esp.getEstado() == E_EstadoEspectaculo.ACEPTADO){
+                        espectaculosFiltrados.put(esp.getNombre(), esp);
+                    }
+                }
                 request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
             }
             // Si se llega con un filtrado de categoria
             else if (filtroPlataforma.isEmpty() && !filtroCategoria.isEmpty()) {
                 //espectaculosFiltrados = fabrica.getICategoria().obtenerEspectaculosDeCategoria(filtroCategoria);
 
-                espectaculosFiltrados = fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getMapEspectaculo();
+                espectaculos= fetch.Set("/espectaculos/findByCategoria?nombreCategoria="+filtroCategoria).Get().getMapEspectaculo();
+                for (EspectaculoDTO esp : espectaculos.values()){
+                    if (esp.getEstado() == E_EstadoEspectaculo.ACEPTADO){
+                        espectaculosFiltrados.put(esp.getNombre(), esp);
+                    }
+                }
                 request.setAttribute("espectaculosFiltrados", espectaculosFiltrados);
             }
             // Si llega con un filtrado de plataforma y categoria
@@ -145,10 +162,6 @@ public class ListadoEspectaculosServlet extends HttpServlet {
         String nickname = request.getParameter("nickname");
         String nombreEspectaculo = request.getParameter("nombreEspectaculo");
         String nombrePlataforma = request.getParameter("nombrePlataforma");
-
-        System.out.println(nickname);
-        System.out.println(nombreEspectaculo);
-        System.out.println(nombrePlataforma);
 
         dto.setNickname(nickname);
         dto.setNombreEspectaculo(nombreEspectaculo);
