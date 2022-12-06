@@ -47,7 +47,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("message", errorMessage);
         request.setAttribute("messageType","error");
-        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/paquete/registro-espectaculo-a-paquete.jsp");
         view.forward(request, response);
     }
     
@@ -74,10 +74,10 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                 boolean esArtista= (boolean) session.getAttribute("esArtista");
                 if(esArtista) {
                     String paquete = request.getParameter("paquete");
-                    Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getMapPlataforma();
+                    //Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getMapPlataforma();
                     //Obtengo los espectaculos que no estan en el paquete
                     Map<String, EspectaculoDTO> espectaculos= obtenerEspectaculosSinPaquete(paquete);
-                    request.setAttribute("plataformas", plataformas);
+                    request.setAttribute("plataformas", todasPlataformas);
                     request.setAttribute("espectaculos", espectaculos);
                     request.setAttribute("paquete", paquete);
                     dispatchPage("/pages/paquete/registro-espectaculo-a-paquete.jsp", request, response);
@@ -96,7 +96,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] espectaculosAagregar = request.getParameterValues("espAgregar");
         String nombrepaquete=request.getParameter("paquete");
-        Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas").Get().getMapPlataforma();
+        Map<String, PlataformaDTO> plataformas = fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
         //Obtengo los espectaculos que no estan en el paquete
         Map<String, EspectaculoDTO> espectaculosPaq= obtenerEspectaculosSinPaquete(nombrepaquete);
         request.setAttribute("plataformas", plataformas);
@@ -114,7 +114,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                         altaEspectaculoAPaqueteDTO.setNombreEspectaculo(nuevo);
                         altaEspectaculoAPaqueteDTO.setNombrePlataforma(espectaculosPaq.get(nuevo).getPlataforma().getNombre());
                         
-                        fetch.Set("/paquetes/altaEspectaculoAPaquete", altaEspectaculoAPaqueteDTO).Post();
+                        fetch.Set("/paquetes/createEspectaculoAPaquete", altaEspectaculoAPaqueteDTO).Post();
                     } catch (Exception e) {
                         System.out.println(e);
                         dispatchError("Error al agregar los paquetes", request, response);
@@ -124,7 +124,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath());
     }
-    private Map<String, EspectaculoDTO> obtenerEspectaculosSinPaquete(String paquete ){
+    private Map<String, EspectaculoDTO> obtenerEspectaculosSinPaquete(String paquete ){ //Devuelve los espectaculos que no estan en el paquete
         try {
             Map<String, EspectaculoDTO> espectaculos = fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
             Map<String, EspectaculoDTO> espectaculosPaquete = fetch.Set("/espectaculos/findByPaquete?nombrePaquete="+paquete).Get().getMapEspectaculo();

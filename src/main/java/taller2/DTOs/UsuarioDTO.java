@@ -9,7 +9,7 @@ public class UsuarioDTO implements Serializable {
   private String nombre;
   private String apellido;
   private String correo;
-  private LocalDate fechaNacimiento;
+  private String fechaNacimiento;
   private String contrasenia;
   private String imagen;
   private String descripcion;
@@ -52,11 +52,11 @@ public class UsuarioDTO implements Serializable {
     this.correo = correo;
   }
   
-  public LocalDate getFechaNacimiento() {
+  public String getFechaNacimiento() {
     return fechaNacimiento;
   }
   
-  public void setFechaNacimiento(LocalDate fechaNacimiento) {
+  public void setFechaNacimiento(String fechaNacimiento) {
     this.fechaNacimiento = fechaNacimiento;
   }
   

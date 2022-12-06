@@ -51,7 +51,7 @@ public class ModificarUsuario extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setAttribute("message", errorMessage);
         request.setAttribute("messageType","error");
-        RequestDispatcher view = request.getRequestDispatcher("/pages/espectaculo/registro-espectaculo.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/pages/usuario/modificar-usuario.jsp");
         view.forward(request, response);
     }
 
@@ -143,7 +143,7 @@ public class ModificarUsuario extends HttpServlet {
         if(usu!=null){
             usu.setNombre(nombre);
             usu.setApellido(apellido);
-            usu.setFechaNacimiento(fechaNac);
+            usu.setFechaNacimiento(fechaNac.toString());
             usu.setContrasenia(contrasenia);
             if(!urlImagen.equals(""))
                 usu.setImagen(urlImagen);
@@ -175,7 +175,7 @@ public class ModificarUsuario extends HttpServlet {
         } catch (RuntimeException e){
             System.out.println(e.getMessage());
             // Error al crear el usuario
-            dispatchError("Error al crear el usuario", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
+            dispatchError("Error al modificar informacion", request, response); // devolver a una pagina (por jsp) manteniendo la misma url
             return;
         }
     }

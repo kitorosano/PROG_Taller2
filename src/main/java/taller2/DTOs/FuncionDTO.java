@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public class FuncionDTO implements Serializable {
     private String nombre;
     private EspectaculoDTO espectaculo;
-    private LocalDateTime fechaHoraInicio;
-    private LocalDateTime fechaRegistro;
+    private String fechaHoraInicio;
+    private String fechaRegistro;
     String imagen;
 
     public FuncionDTO(){}
@@ -29,19 +29,19 @@ public class FuncionDTO implements Serializable {
         this.nombre = nombre;
     }
 
-    public LocalDateTime getFechaHoraInicio() {
+    public String getFechaHoraInicio() {
         return fechaHoraInicio;
     }
 
-    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
+    public void setFechaHoraInicio(String fechaHoraInicio) {
         this.fechaHoraInicio = fechaHoraInicio;
     }
 
-    public LocalDateTime getFechaRegistro() {
+    public String getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+    public void setFechaRegistro(String fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 

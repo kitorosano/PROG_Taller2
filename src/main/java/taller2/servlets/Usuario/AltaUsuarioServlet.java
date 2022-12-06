@@ -146,7 +146,7 @@ public class AltaUsuarioServlet extends HttpServlet {
       usuario.setNombre(nombre);
       usuario.setApellido(apellido);
       usuario.setCorreo(correo);
-      usuario.setFechaNacimiento(fechaNac);
+      usuario.setFechaNacimiento(fechaNac.toString());
       usuario.setContrasenia(contrasenia);
       usuario.setImagen(urlImagen);
       usuario.setDescripcion(descripcion);
@@ -159,7 +159,7 @@ public class AltaUsuarioServlet extends HttpServlet {
       usuario.setNombre(nombre);
       usuario.setApellido(apellido);
       usuario.setCorreo(correo);
-      usuario.setFechaNacimiento(fechaNac);
+      usuario.setFechaNacimiento(fechaNac.toString());
       usuario.setContrasenia(contrasenia);
       usuario.setImagen(urlImagen);
       usuario.setEsArtista(false);

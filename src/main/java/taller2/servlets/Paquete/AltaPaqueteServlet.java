@@ -129,8 +129,8 @@ public class AltaPaqueteServlet extends HttpServlet {
         nuevo.setNombre(nombre);
         nuevo.setDescripcion(descripcion);
         nuevo.setDescuento(descuentoDb);
-        nuevo.setFechaExpiracion(LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")));
-        nuevo.setFechaRegistro(LocalDateTime.now());
+        nuevo.setFechaExpiracion(LocalDateTime.of(vigenciaDate, LocalTime.parse("00:00:00")).toString());
+        nuevo.setFechaRegistro(LocalDateTime.now().toString());
         nuevo.setImagen(urlImagen);
 
         try {

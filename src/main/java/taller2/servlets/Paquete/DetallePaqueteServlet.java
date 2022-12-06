@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.core.Response;
 import taller2.DTOs.*;
 import taller2.utils.Fetch;
 
@@ -73,6 +74,7 @@ public class DetallePaqueteServlet extends HttpServlet {
         request.setAttribute("todosPaquetes", todosPaquetes);
         request.setAttribute("todasCategorias", todasCategorias);
         request.setAttribute("todosUsuarios", todosUsuarios);
+        request.setAttribute("message","No es null");   //Para que al comparar en el jsp no sea null
       
         HttpSession session = request.getSession();
         Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");

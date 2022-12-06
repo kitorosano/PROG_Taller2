@@ -15,7 +15,7 @@ public class EspectaculoDTO implements Serializable {
   private String url;
   private double costo;
   private E_EstadoEspectaculo estado;
-  private LocalDateTime fechaRegistro;
+  private String fechaRegistro;
   private String imagen;
   private PlataformaDTO plataforma;
   private UsuarioDTO artista;
@@ -82,10 +82,10 @@ public class EspectaculoDTO implements Serializable {
     this.estado = estado;
   }
   
-  public LocalDateTime getFechaRegistro() {
+  public String getFechaRegistro() {
     return fechaRegistro;
   }
-  public void setFechaRegistro(LocalDateTime fechaRegistro) {
+  public void setFechaRegistro(String fechaRegistro) {
     this.fechaRegistro = fechaRegistro;
   }
   
