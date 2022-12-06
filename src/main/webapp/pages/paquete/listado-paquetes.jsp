@@ -75,11 +75,20 @@
             let nuevaFila;
             let celdaNombre;
             let celdaDescripcion;
+            let celdaImg;
+            let imagen;
     
             <% for (PaqueteDTO elem : paquetesMap.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
-                celdaNombre = nuevaFila.insertCell(0);
-                celdaDescripcion = nuevaFila.insertCell(1);
+                celdaImg = nuevaFila.insertCell(0);
+                celdaNombre = nuevaFila.insertCell(1);
+                celdaDescripcion = nuevaFila.insertCell(2);
+
+                imagen = document.createElement("img");
+                imagen.src = "<%=elem.getImagen()%>";
+                imagen.style.width = "80px";
+                imagen.style.height = "80px";
+                celdaImg.appendChild(imagen);
     
                 celdaNombre.innerHTML = "<%=elem.getNombre()%>";
                 celdaDescripcion.innerHTML = "<%=elem.getDescripcion()%>";

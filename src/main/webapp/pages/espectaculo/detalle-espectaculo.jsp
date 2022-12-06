@@ -17,9 +17,16 @@
     Map<String, CategoriaDTO> categorias = (Map<String, CategoriaDTO>) request.getAttribute("categorias");
     Map<String, FuncionDTO> funciones = (Map<String, FuncionDTO>) request.getAttribute("funciones");
     Map<String, PaqueteDTO> paquetes = (Map<String, PaqueteDTO>) request.getAttribute("paquetes");
-    
     EspectaculoDTO espectaculo= (EspectaculoDTO) request.getAttribute("datos");
-    
+    Map<String, String> espectaculosFavoritos = (Map<String, String>) request.getAttribute("espectaculosFavoritos");
+    boolean esFavorito = false;
+
+    for (String e : espectaculosFavoritos.values()){
+        if (e.equals(espectaculo.getNombre())){
+            esFavorito = true;
+        }
+    }
+
     Random random = new Random();
 %>
 <html>
@@ -28,6 +35,14 @@
     <style><%@ include file="/pages/global.css" %></style>
     <style><%@ include file="/pages/detalles.css" %></style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    i{
+        color: #DC143C;
+    }
+    #fav:hover {
+        cursor: pointer;
+    }
+    </style>
 </head>
 <body>
     <div class="background_container">
@@ -47,14 +62,19 @@
                 <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
                 <div class="first-data">
                     <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%>
-                        <span id="favorito" onclick="cambiarFavorito()"><i id="fav" class='fa fa-heart-o red-color'></i></span>
-                    </h2>
+                        <span id="favorito" ><i style="color: #DC143C; hover: cursor pointer" <%if (esFavorito){ %>
+                                                class='fa fa-heart'
+                                <% }else{ %>
+                                                class='fa fa-heart-o'
+                                <% } %>
+                                                <% if((Boolean) session.getAttribute("esEspectador")){%> id="fav" onclick="cambiarFavorito()"<% } %>></i></span>
+                    <span><%=espectaculo.getCantidadFavoritos()%></span></h2>
                     <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
                     <%  for (CategoriaDTO categoria : categorias.values()) {
                             int nextInt = random.nextInt(0xffffff + 1);
                             String randomColor = String.format("#%06x", nextInt); %>
                             <h5 class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></h5>
-                    <%  }   %>
+                    <%  }  %>
                 </div>
                 <% if(esArtista && espectaculo.getArtista().getNickname().equals(usuarioLogueado.getNickname())){
                         if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
@@ -124,6 +144,7 @@
     <script>
         let targets = document.querySelectorAll('[data-target]')
         const content = document.querySelectorAll('[data-content]')
+        let estadoFavorito = <%=esFavorito%>;
     
         targets.forEach(target  => {
             console.log(target);
@@ -143,26 +164,7 @@
             })
         })
 
-
-        /*var request=$.ajax({
-            type:"DELETE",
-            url:"detalle-espectaculo",
-            data: {
-                nombre:
-            },
-        });
-        request.done(function(response) {
-            $("#btnDesactivar").hide();
-            alert("Espectaculo desactivado")
-        });
-
-        request.fail(function(jqXHR, textStatus) {
-            alert("Hubo un error")
-        });*/
-
-        //var xhttp = new XMLHttpRequest();
-        //xhttp.open("DELETE", "/detalle-Espectaculo?nombrePlataforma="+<%=espectaculo.getPlataforma().getNombre()%>+"&nombreEspectaculo="+<%=espectaculo.getPlataforma().getNombre()%>,false);
-        //xhttp.send();
+        /*
         const http = new XMLHttpRequest();
         http.open("DELETE","detalle-espectaculo?nombreEspectaculo=<%=espectaculo.getNombre()%>"+"&nombrePlataforma=<%=espectaculo.getPlataforma().getNombre()%>");
         http.onreadystatechange = function (){
@@ -176,16 +178,13 @@
         }
 
         http.send();
-    
-    </script>
-    <script>
-        let targets = document.querySelectorAll('[data-target]')
-        const content = document.querySelectorAll('[data-content]')
-        let estadoFavorito = false;
-    
+        */
+
+        //targets = document.querySelectorAll('[data-target]')
+
         targets.forEach(target  => {
             console.log(target);
-        
+
             target.addEventListener('click', () => {
                 content.forEach(c => {
                     c.classList.remove('active')
@@ -200,7 +199,7 @@
                 console.log(target.classList);
             })
         })
-    
+
         function cambiarFavorito(){
             if (estadoFavorito == false){
                 document.getElementById("fav").classList.remove("fa-heart-o");
@@ -211,16 +210,17 @@
                 document.getElementById("fav").classList.add("fa-heart-o");
                 estadoFavorito = false;
             }
-        
-            nickname = <%=usuarioLogueado.getNickname()%>;
-            nombrePlataforma = <%=espectaculo.getPlataforma().getNombre()%>;
-            nombreEspectaculo = <%=espectaculo.getNombre()%>;
-        
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "DetalleEspectaculo?accion="+estadoFavorito+"&nickname="+nickname+"&nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo,false);
-            xhttp.send();
-        }
 
+            nickname = "<%=usuarioLogueado.getNickname()%>";
+            nombrePlataforma = "<%=espectaculo.getPlataforma().getNombre()%>";
+            nombreEspectaculo = "<%=espectaculo.getNombre()%>";
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "detalle-espectaculo?accion="+estadoFavorito+"&nickname="+nickname+"&nombrePlataforma="+nombrePlataforma+"&nombreEspectaculo="+nombreEspectaculo,false);
+            xhttp.send();
+            return;
+        }
+    
     </script>
 </body>
 </html>

@@ -173,13 +173,23 @@
             let celdaPlataforma;
             let celdaEspectaculo;
             let celdaInicio;
+            let celdaImg;
+            let imagen;
     
             <%for (FuncionDTO elem : funcionesFiltradas.values()) {%>
                 nuevaFila = TABLA.insertRow(-1);
-                celdaNombre = nuevaFila.insertCell(0);
-                celdaPlataforma = nuevaFila.insertCell(1);
-                celdaEspectaculo = nuevaFila.insertCell(2);
-                celdaInicio = nuevaFila.insertCell(3);
+                celdaImg = nuevaFila.insertCell(0);
+                celdaNombre = nuevaFila.insertCell(1);
+                celdaPlataforma = nuevaFila.insertCell(2);
+                celdaEspectaculo = nuevaFila.insertCell(3);
+                celdaInicio = nuevaFila.insertCell(4);
+
+                imagen = document.createElement("img");
+                imagen.src = "<%=elem.getImagen()%>";
+                imagen.style.width = "80px";
+                imagen.style.height = "80px";
+                celdaImg.appendChild(imagen);
+
     
                 celdaNombre.innerHTML = "<%=elem.getNombre()%>";
                 celdaPlataforma.innerHTML = "<%=elem.getEspectaculo().getPlataforma().getNombre()%>";

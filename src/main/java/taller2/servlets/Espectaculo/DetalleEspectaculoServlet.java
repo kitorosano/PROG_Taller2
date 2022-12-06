@@ -78,6 +78,10 @@ public class DetalleEspectaculoServlet extends HttpServlet {
     
         String nombre = request.getParameter("nombre");
         String plataforma= request.getParameter("plataforma");
+
+        HttpSession session = request.getSession();
+        Boolean esEspectador = (Boolean) session.getAttribute("esEspectador");
+        String usuarioLogueadoNickname = ((UsuarioDTO) session.getAttribute("usuarioLogueado")).getNickname();
         
         //boolean espectaculoExiste = Fabrica.getInstance().getIEspectaculo().obtenerEspectaculo(plataforma, nombre).isPresent();
         EspectaculoDTO espectaculo = fetch.Set("/espectaculos/find?nombrePlataforma="+plataforma+"&nombreEspectaculo="+nombre).Get().getEspectaculo();
@@ -97,6 +101,9 @@ public class DetalleEspectaculoServlet extends HttpServlet {
 
         Map<String, CategoriaDTO> categorias= fetch.Set("/categorias/findByEspectaculoAndPlataforma?nombreEspectaculo="+nombre+"&nombrePlataforma="+plataforma).Get().getMapCategoria();
         request.setAttribute("categorias",categorias);
+
+        Map<String, String> espectaculosFavoritos = fetch.Set("/usuarios/findEspectaculosFavoritos?nickname="+usuarioLogueadoNickname).Get().getMapEspectaculosFavoritos();
+        request.setAttribute("espectaculosFavoritos", espectaculosFavoritos);
         
         dispatchPage("/pages/espectaculo/detalle-espectaculo.jsp" , request, response);
       } else {
@@ -110,13 +117,17 @@ public class DetalleEspectaculoServlet extends HttpServlet {
   
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    boolean tipoAccion = Boolean.parseBoolean(request.getParameter("accion"));
+      boolean tipoAccion = Boolean.parseBoolean(request.getParameter("accion"));
 
       EspectaculoFavoritoDTO dto = new EspectaculoFavoritoDTO();
 
-      dto.setNickname(request.getParameter("nickname"));
-      dto.setNombreEspectaculo(request.getParameter("nombreEspectaculo"));
-      dto.setNombrePlataforma(request.getParameter("nombrePlataforma"));
+      String nickname = request.getParameter("nickname");
+      String nombreEspectaculo = request.getParameter("nombreEspectaculo");
+      String nombrePlataforma = request.getParameter("nombrePlataforma");
+
+      dto.setNickname(nickname);
+      dto.setNombreEspectaculo(nombreEspectaculo);
+      dto.setNombrePlataforma(nombrePlataforma);
 
       if (tipoAccion == true) {
         fetch.Set("/usuarios/createEspectaculoFavorito", dto).Post();
