@@ -79,9 +79,11 @@
                 <% if(esArtista && espectaculo.getArtista().getNickname().equals(usuarioLogueado.getNickname())){
                         if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
                             <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
-                            <button class="btn2" id="btnDesactivar" onClick="location.href='detalle-espectaculo'">Desactivar Espectaculo</button>
+                            <button  id="btnDesactivar5" >Desactivar Espectaculo</button>
                 <%      }
+
                     }   %>
+                    <button  id="btnDesactivar" >Desactivar Espectaculo</button>
                     <div class="tabs">
                         <div class="menu">
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
@@ -164,21 +166,29 @@
             })
         })
 
-        /*
+    function desactivar_espectaculo(){
         const http = new XMLHttpRequest();
-        http.open("DELETE","detalle-espectaculo?nombreEspectaculo=<%=espectaculo.getNombre()%>"+"&nombrePlataforma=<%=espectaculo.getPlataforma().getNombre()%>");
+        http.open("DELETE","detalle-espectaculo?nombre=<%=espectaculo.getNombre()%>"+"&plataforma=<%=espectaculo.getPlataforma().getNombre()%>");
         http.onreadystatechange = function (){
             if(http.status==200 && http.readyState===XMLHttpRequest.DONE){
                 $("#btnDesactivar").hide();
                 alert("Espectaculo desactivado")
+
+                window.location.href = "listado-espectaculos";
             }
             else{
                 alert("Hubo un error")
+                alert("el estatus es"+http.status);
+                console.log(http.status);
             }
+
         }
 
         http.send();
-        */
+    }
+    document.getElementById("btnDesactivar").addEventListener("click",function (){
+        desactivar_espectaculo();
+    });
 
         //targets = document.querySelectorAll('[data-target]')
 
