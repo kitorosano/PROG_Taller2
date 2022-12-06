@@ -61,14 +61,14 @@
                 <%-- AGREGAR COMPONENTES ABAJO--%>
                 <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
                 <div class="first-data">
-                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%>
-                        <span id="favorito" ><i style="color: #DC143C; hover: cursor pointer" <%if (esFavorito){ %>
+                    <h2><span id="favorito" ><i style="color: #DC143C; hover: cursor pointer" <%if (esFavorito){ %>
                                                 class='fa fa-heart'
-                                <% }else{ %>
+                            <% }else{ %>
                                                 class='fa fa-heart-o'
-                                <% } %>
+                            <% } %>
                                                 <% if((Boolean) session.getAttribute("esEspectador")){%> id="fav" onclick="cambiarFavorito()"<% } %>></i></span>
-                    <span><%=espectaculo.getCantidadFavoritos()%></span></h2>
+                        <span><%=espectaculo.getCantidadFavoritos()%></span></h2>
+                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%></h2>
                     <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
                     <%  for (CategoriaDTO categoria : categorias.values()) {
                             int nextInt = random.nextInt(0xffffff + 1);
