@@ -42,7 +42,7 @@
                     <img src="https://cdn-icons-png.flaticon.com/512/44/44248.png" alt="Foto del paquete" class="img_perfil">
                     <div class="first-data">
                         <h2><%=paquete.getNombre()%></h2>
-                        <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+                        <h4>Fecha de expiracion: <span class="notbold"><%=paquete.getFechaExpiracion().replace("T", " ")%></span></h4>
                     </div>
                     <%  if(respuesta != "Paquete Adquirido" && esEspectador.equals(true) ){ %>
                             <form class="form" action="detalle-paquete" method="POST">
@@ -68,14 +68,14 @@
         
                         <div class="content">
                             <div data-content id="datos_generales" class="active">
-                                <h4>Nombre:<%=paquete.getNombre()%></h4>
-                                <h4>Descuento:<%=paquete.getDescuento()%></h4>
-                                <h4>Fecha de registro:<%=paquete.getFechaRegistro()%></h4>
-                                <h4>Fecha de expiracion:<%=paquete.getFechaExpiracion()%></h4>
+                                <h4>Nombre: <span class="notbold"><%=paquete.getNombre()%></span></h4>
+                                <h4>Descuento: <span class="notbold"><%=paquete.getDescuento()%></span></h4>
+                                <h4>Fecha de registro: <span class="notbold"><%=paquete.getFechaRegistro().replace("T", " ")%></span></h4>
+                                <h4>Fecha de expiracion: <span class="notbold"><%=paquete.getFechaExpiracion().replace("T", " ")%></span></h4>
                             </div>
         
                             <div data-content id="descripcion">
-                                <h4><%=paquete.getDescripcion()%></h4>
+                                <h4><span class="notbold"><%=paquete.getDescripcion()%></span></h4>
                             </div>
                             
                             <div data-content id="espectaculos">

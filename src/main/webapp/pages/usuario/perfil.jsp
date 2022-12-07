@@ -55,7 +55,7 @@
                     <img src="<%=usuario.getImagen()%>" alt="Foto de perfil" class="img_perfil">
                     <div class="first-data">
                         <h2><%=usuario.getNombre() + " " + usuario.getApellido() + " - " + (usuario.isEsArtista() ? "Artista" : "Espectador") %></h2>
-                        <h4><%=usuario.getNickname() + " / " + usuario.getCorreo()%></h4>
+                        <h4><span class="notbold"><%=usuario.getNickname() + " / " + usuario.getCorreo()%></span></h4>
                         <% if(esPerfilPropio) {%>
                             <a class="btn" href="modificar-usuario?nickname=<%=usuario.getNickname()%>">Modificar usuario</a>
                         <% } %>
@@ -81,18 +81,18 @@
                         
                         <div class="content">
                             <div data-content id="datos_generales" class="active">
-                                <h4>Nombre:<%=usuario.getNombre()%></h4>
-                                <h4>Apellido:<%=usuario.getApellido()%></h4>
-                                <h4>Nickname:<%=usuario.getNickname()%></h4>
-                                <h4>Correo:<%=usuario.getCorreo()%></h4>
-                                <h4>Fecha de Nacimiento:<%=usuario.getFechaNacimiento()%></h4>
+                                <h4>Nombre: <span class="notbold"><%=usuario.getNombre()%></span></h4>
+                                <h4>Apellido: <span class="notbold"><%=usuario.getApellido()%></span></h4>
+                                <h4>Nickname: <span class="notbold"><%=usuario.getNickname()%></span></h4>
+                                <h4>Correo: <span class="notbold"><%=usuario.getCorreo()%></span></h4>
+                                <h4>Fecha de Nacimiento: <span class="notbold"><%=usuario.getFechaNacimiento()%></span></h4>
                             </div>
                             
                             <% if (usuario.isEsArtista()) { %>
                                 <div data-content id="datos_artista">
-                                    <h4><%=usuario.getDescripcion()%></h4>
-                                    <h4><%=usuario.getBiografia()%></h4>
-                                    <h4>Sitio Web:<%=usuario.getSitioWeb()%></h4>
+                                    <h4>Descripción: <span class="notbold"><%=usuario.getDescripcion()%></span></h4>
+                                    <h4>Biografia: <span class="notbold"><%=usuario.getBiografia()%></span></h4>
+                                    <h4>Sitio Web:<span class="notbold"><%=usuario.getSitioWeb()%></span></h4>
                                 </div>
 
                             <div data-content id="finalizados">
@@ -135,7 +135,7 @@
                                             </tr>
                                         <% } else {
                                                 for (EspectaculoDTO elem : espectaculos.values()) {
-                                                    if (elem.getEstado() == E_EstadoEspectaculo.ACEPTADO && esPerfilPropio) { %>
+                                                    if (elem.getEstado() == E_EstadoEspectaculo.ACEPTADO) { %>
                                                         <tr onclick="location.href='detalle-espectaculo?nombre=<%=elem.getNombre()%>&plataforma=<%=elem.getPlataforma().getNombre()%>'">
                                                             <th><%=elem.getNombre()%> </th>
                                                             <th> <%=elem.getPlataforma().getNombre()%> </th>

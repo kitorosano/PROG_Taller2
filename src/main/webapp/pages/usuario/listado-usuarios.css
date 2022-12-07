@@ -5,6 +5,14 @@
     margin-bottom: 200px;
 }
 
+.busqueda{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+    gap: 10px;
+}
+
 .tablaUsuarios td, .tablaUsuarios th, h2{
     padding: 8px;
     align-items: start;
@@ -17,5 +25,14 @@ tbody td:hover {
     cursor: pointer;
 }
 
+tbody tr:hover {
+    background-color: #ddd;
+}
 
 
+#txtBuscar {
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid #ddd;
+}

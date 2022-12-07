@@ -23,7 +23,7 @@
                 <div class="header__right__submenu__userinfo">
                     <img src="<%= usuarioLogueado != null ? usuarioLogueado.getImagen() : "https://i.imgur.com/e4W1PV0.png"%>" alt="user_img">
                     <div class="header__right__submenu__userinfo__text">
-                        <h3><%= session.getAttribute("esArtista") != null && (boolean)session.getAttribute("esArtista") ? "Artista" : "Usuario" %></h3>
+                        <h3><%= session.getAttribute("esArtista") != null ? (boolean)session.getAttribute("esArtista") ? "Artista" : "Usuario": "Invitado" %></h3>
                         <hr>
                         <span><%= usuarioLogueado != null ? usuarioLogueado.getCorreo() : "" %></span>
                     </div>
@@ -99,10 +99,7 @@
         </div>
         <div class="header__right">
             <div class="header__right__search">
-                <input type="text" placeholder="Buscar espectaculo, paquete, y más...">
-                <button type="submit">
-                    <img src="https://i.imgur.com/wkx2zCs.png" alt="search">
-                </button>
+                <input id="generalsearch" type="text" placeholder="Buscar espectaculo, paquete, y más...">
             </div>
         </div>
     </div>

@@ -38,7 +38,7 @@
                     <img src="<%=funcion.getImagen()%>" alt="Foto de la funcion" class="img_perfil">
                     <div class="first-data">
                         <h2><%=funcion.getNombre()%></h2>
-                        <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
+                        <h4 style="margin-top: 10px">Espectaculo: <span class="notbold"> <%=funcion.getEspectaculo().getNombre()%></span></h4>
                     <% if((Boolean) session.getAttribute("esEspectador") && registro==null){
                             if(contador +1 <= funcion.getEspectaculo().getMaxEspectadores()){ %>
                                 <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
@@ -54,10 +54,10 @@
                         </div>
                         <div class="content">
                             <div data-content id="datos_generales" class="active">
-                                <h4>Nombre:<%=funcion.getNombre()%></h4>
-                                <h4>Espectaculo:<%=funcion.getEspectaculo().getNombre()%></h4>
-                                <h4>Fecha y hora de inicio:<%=funcion.getFechaHoraInicio()%></h4>
-                                <h4>Fecha de registro:<%=funcion.getFechaRegistro()%></h4>
+                                <h4>Nombre: <span class="notbold"> <%=funcion.getNombre()%></span></h4>
+                                <h4>Espectaculo: <span class="notbold"> <%=funcion.getEspectaculo().getNombre()%></span></h4>
+                                <h4>Fecha y hora de inicio: <span class="notbold"> <%=funcion.getFechaHoraInicio().replace("T", " ")%></span></h4>
+                                <h4>Fecha de registro: <span class="notbold"> <%=funcion.getFechaRegistro().replace("T", " ")%></span></h4>
                             </div>
                             <div data-content id="espectadores">
                                 <table >

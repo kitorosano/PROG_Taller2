@@ -36,20 +36,20 @@
 %>
 <div class="sidebars">
     <div class="sidebar">
-    <div class="sidebar__item">
-        <h4>Plataformas</h4>
-        <ul>
-            <% for (String pl : todasPlataformas) { %>
-            <%-- TODO: LLEVAR A LISTADO DE ESPECTACULOS POR PLATAFORMA --%>
-                <li><a href="listado-espectaculos?filtroPlataforma=<%=pl%>"><%=pl%></a></li>
-                <hr>
-            <% } %>
-        </ul>
-    </div>
+        <div class="sidebar__item">
+            <h4>Filtrar por plataforma:</h4>
+            <ul>
+                <% for (String pl : todasPlataformas) { %>
+                <%-- TODO: LLEVAR A LISTADO DE ESPECTACULOS POR PLATAFORMA --%>
+                    <li><a href="listado-espectaculos?filtroPlataforma=<%=pl%>"><%=pl%></a></li>
+                    <hr>
+                <% } %>
+            </ul>
+        </div>
     </div>
     <div class="sidebar">
         <div class="sidebar__item">
-            <h4>Categorias</h4>
+            <h4>Filtrar por categoría:</h4>
             <ul>
                 <% for (String cat : todasCategorias) { %>
                 <%-- TODO: LLEVAR A LISTADO DE ESPECTACULOS POR PLATAFORMA --%>
@@ -61,7 +61,7 @@
     </div>
     <div class="sidebar">
         <div class="sidebar__item">
-            <h4>Usuarios</h4>
+            <h4>Buscar usuario:</h4>
             <ul>
                 <% for (String usu : todosUsuarios) { %>
                 <%-- TODO: LLEVAR A LISTADO DE ESPECTACULOS POR CATEGORIA --%>

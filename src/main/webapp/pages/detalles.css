@@ -102,13 +102,14 @@
 }
 
 .btn2{
-    display: inline-block;
-    margin-top: 31px;
-    margin-bottom: 1px;
-    margin-right: 10px;
-    padding: 1px 1px;
-
-    //border-radius: 3px;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 25px 5px 0 0;
 }
 
 .form{
@@ -133,4 +134,15 @@
 .respuesta{
     grid-column: 3;
     grid-row: 3;
+}
+
+h2 {
+    font-size: 20px;
+}
+h5 {
+    margin-top: 3px
+}
+
+.notbold {
+    font-weight: normal;
 }

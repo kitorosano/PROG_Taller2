@@ -72,14 +72,13 @@
                         </div>
                         <div>
                             <button type="submit">Buscar</button>
-                            <button onclick="resetForm()">Resetear</button>
+                            <button onclick="resetForm()">Reset</button>
                         </div>
                     </form>
                 </div>
             
                 <div class="busqueda">
-                    <label for="txtBuscar">Filtrar espectaculo: </label>
-                    <input type="text" name="buscarEspectaculo" id="txtBuscar" value="Espectaculo...">
+                    <input type="text" name="buscarEspectaculo" id="txtBuscar" placeholder="Filtrar espectaculo...">
                 </div>
             
                 <div>
@@ -91,6 +90,7 @@
                                 <th>Categorias</th>
                                 <th>Plataforma</th>
                                 <th>Artista</th>
+                                <th>Favoritos</th>
                             </tr>
                         </thead>
                         <tbody id="cuerpoTabla">

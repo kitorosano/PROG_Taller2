@@ -35,8 +35,7 @@
                 <div class="main-container">
                     <%-- AGREGAR COMPONENTES ABAJO--%>
                     <div class="busqueda">
-                        <label for="txtBuscar">Filtrar paquete: </label>
-                        <input type="text" name="buscarPaquete" id="txtBuscar" value="Nombre...">
+                        <input type="text" name="buscarPaquete" id="txtBuscar" placeholder="Filtrar paquete...">
                     </div>
                     <br />
                     <div>

@@ -34,8 +34,7 @@
                 <div class="main-container">
                     <%-- AGREGAR COMPONENTES ABAJO--%>
                     <div class="busqueda">
-                        <label for="txtBuscar">Filtrar Usuario: </label>
-                        <input type="text" name="buscarUsuario" id="txtBuscar" value="Nickname...">
+                        <input type="text" name="buscarUsuario" id="txtBuscar" placeholder="Filtrar isuario...">
                     </div>
                     <br />
                     <div>

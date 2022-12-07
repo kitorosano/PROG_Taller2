@@ -72,10 +72,9 @@
                             </div>
                         </form>
                     </div>
-            
+
                     <div class="busqueda">
-                        <label for="txtBuscar">Filtrar funcion: </label>
-                        <input type="text" name="buscarFuncion" id="txtBuscar" value="Funcion...">
+                        <input type="text" name="buscarFuncion" id="txtBuscar" placeholder="Filtrar función...">
                     </div>
             
                     <div>

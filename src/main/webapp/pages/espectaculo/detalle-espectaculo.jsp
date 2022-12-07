@@ -61,6 +61,14 @@
                 <%-- AGREGAR COMPONENTES ABAJO--%>
                 <img src="<%=espectaculo.getImagen()%>" alt="Foto del espectaculo" class="img_perfil">
                 <div class="first-data">
+                    
+                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%></h2>
+                    <h5> <%  for (CategoriaDTO categoria : categorias.values()) {
+                        int nextInt = random.nextInt(0xffffff + 1);
+                        String randomColor = String.format("#%06x", nextInt); %>
+                        <span class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></span>
+                        <%  }  %>
+                    </h5>
                     <h2><span id="favorito" ><i style="color: #DC143C; hover: cursor pointer" <%if (esFavorito){ %>
                                                 class='fa fa-heart'
                             <% }else{ %>
@@ -68,19 +76,12 @@
                             <% } %>
                                                 <% if((Boolean) session.getAttribute("esEspectador")){%> id="fav" onclick="cambiarFavorito()"<% } %>></i></span>
                         <span><%=espectaculo.getCantidadFavoritos()%></span></h2>
-                    <h2><%=espectaculo.getNombre()%> - <%=espectaculo.getPlataforma().getNombre()%></h2>
-                    <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
-                    <%  for (CategoriaDTO categoria : categorias.values()) {
-                            int nextInt = random.nextInt(0xffffff + 1);
-                            String randomColor = String.format("#%06x", nextInt); %>
-                            <h5 class="sticker" style="background-color: <%= randomColor %>"><%=categoria.getNombre()%></h5>
-                    <%  }  %>
                 </div>
                 <% if(esArtista && espectaculo.getArtista().getNickname().equals(usuarioLogueado.getNickname())){
                         if(espectaculo.getEstado()== E_EstadoEspectaculo.ACEPTADO){  %>
                             <div class="div_butons_esp">
                                 <button class="btn2" onClick="location.href='registro-funcion'">Añadir funcion</button>
-                                <button class="btn2" id="btnDesactivar" onclick="desactivar_espectaculo()" >Desactivar Espectaculo</button>
+                                <button class="btn2" id="btnDesactivar" onclick="desactivar_espectaculo()" >Desactivar</button>
                             </div>
 
                 <%      }
@@ -96,19 +97,19 @@
                         </div>
                         <div class="content">
                             <div data-content id="datos_generales" class="active">
-                                <h4>Nombre:<%=espectaculo.getNombre()%></h4>
-                                <h4>Duración:<%=espectaculo.getDuracion()%>hs</h4>
-                                <h4>Mínimo de espectadores:<%=espectaculo.getMinEspectadores()%></h4>
-                                <h4>Máximo de espectadores:<%=espectaculo.getMaxEspectadores()%></h4>
-                                <h4>Url:<%=espectaculo.getUrl()%></h4>
-                                <h4>Costo:<%=espectaculo.getCosto()%></h4>
-                                <h4>Fecha de registro:<%=espectaculo.getFechaRegistro()%></h4>
+                                <h4>Nombre: <span class="notbold"> <%=espectaculo.getNombre()%></span></h4>
+                                <h4>Duración: <span class="notbold"><%=espectaculo.getDuracion()%>hs</span></h4>
+                                <h4>Mínimo de espectadores: <span class="notbold"><%=espectaculo.getMinEspectadores()%></span></h4>
+                                <h4>Máximo de espectadores: <span class="notbold"><%=espectaculo.getMaxEspectadores()%></span></h4>
+                                <h4>Url: <span class="notbold"><%=espectaculo.getUrl()%></span></h4>
+                                <h4>Costo: <span class="notbold"><%=espectaculo.getCosto()%></span></h4>
+                                <h4>Fecha de registro: <span class="notbold"><%=espectaculo.getFechaRegistro()%></span></h4>
                                 <br>
-                                <h4>Nombre de plataforma:<%=espectaculo.getPlataforma().getNombre()%></h4>
-                                <h4 >Artista organizador: <span class="seleccion" onClick="location.href='perfil?nickname=<%=espectaculo.getArtista().getNickname()%>'"><%=espectaculo.getArtista().getNickname()%> </span></h4>
+                                <h4>Nombre de plataforma: <span class="notbold"><%=espectaculo.getPlataforma().getNombre()%></span></h4>
+                                <h4 >Artista organizador: <span class="seleccion notbold" onClick="location.href='perfil?nickname=<%=espectaculo.getArtista().getNickname()%>'"><%=espectaculo.getArtista().getNickname()%> </span></h4>
                             </div>
                             <div data-content id="descripcion">
-                                <h4><%=espectaculo.getDescripcion()%></h4>
+                                <h4><span class="notbold"><%=espectaculo.getDescripcion()%></span></h4>
                             </div>
                             <div data-content id="funciones">
                                 <table >
@@ -121,7 +122,7 @@
                                                 </tr>
                                     <%      } else { %>
                                                 <tr>
-                                                    <th>No existen funciones proximas</th>
+                                                    <th> <%=funcion.getNombre()%> - <span class="notbold">Finalizado</span>  </th>
                                                 </tr>
                                     <%      }
                                         }   %>
