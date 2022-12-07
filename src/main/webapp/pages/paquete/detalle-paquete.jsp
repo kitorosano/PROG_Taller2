@@ -52,6 +52,13 @@
                     <%  }else if((respuesta == "Paquete Adquirido") || (respuesta=="Paquete no encontrado")) { %>
                             <h4 class="respuesta"><%=respuesta%></h4>
                     <%  } %>
+
+                    <%  if(usuarioLogueado.isEsArtista() ){ %>
+                        <div class="div_butons_esp">
+                            <button class="btn2" onClick="location.href='registro-espectaculo-a-paquete?paquete=<%=paquete.getNombre()%>'"> Agregar espectaculo al paquete </button>
+                        </div>
+                    <%  } %>
+
                     <div class="tabs">
                         <div class="menu">
                             <p data-target="#datos_generales" class="active">Datos Generales</p>
