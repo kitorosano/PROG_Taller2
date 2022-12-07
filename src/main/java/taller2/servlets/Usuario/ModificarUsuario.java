@@ -167,6 +167,18 @@ public class ModificarUsuario extends HttpServlet {
         try {
             // Se modifica el usuario en la base de datos
             fetch.Set("/usuarios/updateByNickname",usu).Put();
+            usuarioSession.setNombre(usu.getNombre());
+            usuarioSession.setApellido(usu.getApellido());
+            usuarioSession.setContrasenia(usu.getContrasenia());
+            usuarioSession.setFechaNacimiento(usu.getFechaNacimiento());
+            usuarioSession.setImagen(usu.getImagen());
+
+            if(tipo.equals("artista")){
+                usuarioSession.setDescripcion(usu.getDescripcion());
+                usuarioSession.setBiografia(usu.getBiografia());
+                usuarioSession.setSitioWeb(usu.getSitioWeb());
+            }
+
             //fabrica.getIUsuario().modificarUsuario(usu);
 
             // Redireccionar a la pantalla de login
@@ -193,6 +205,9 @@ public class ModificarUsuario extends HttpServlet {
     }
     private boolean esFormatoUrl(String url){
         String regexURL = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
-        return regexURL.matches(url);
+        if(!url.matches(regexURL)){
+            return false;
+        }
+        return true;
     }
 }
