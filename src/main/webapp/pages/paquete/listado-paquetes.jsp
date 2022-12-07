@@ -106,7 +106,7 @@
             let table_1 = document.getElementById("tabla");
             let all_tr = table_1.getElementsByTagName("tr");
             for(let i=0; i<all_tr.length; i++){
-                let name_column = all_tr[i].getElementsByTagName("td")[0];
+                let name_column = all_tr[i].getElementsByTagName("td")[1];
                 if(name_column){
                     let name_value = name_column.textContent || name_column.innerText;
                     name_value = name_value.toUpperCase();

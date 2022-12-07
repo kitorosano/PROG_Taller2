@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                         <% } %>
-                        <button id="submitBtn" type="button" onclick="enviarForm()">Registrarse!</button>
+                        <button id="submitBtn" type="button" onclick="enviarForm()">Actualizar</button>
                     </form>
                     <%-- AGREGAR COMPONENTES ARRIBA--%>
                 </div>
