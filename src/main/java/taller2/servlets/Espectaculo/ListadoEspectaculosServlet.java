@@ -60,10 +60,6 @@ public class ListadoEspectaculosServlet extends HttpServlet {
       // Si no hay sesión, redirigir a login
       boolean logueado = checkSession(request, response);
       try {
-            if(!logueado) {
-              response.sendRedirect("login");
-              return;
-            }
             Map<String, PlataformaDTO> todasPlataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
             Map<String, EspectaculoDTO> todosEspectaculos =  fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
             Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getMapPaquete();
@@ -80,13 +76,15 @@ public class ListadoEspectaculosServlet extends HttpServlet {
             Map<String, EspectaculoDTO> espectaculosFiltrados = new HashMap<>();
             Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = new HashMap<>();
             Map<String, EspectaculoDTO> espectaculos = new HashMap<>();
-
-            //Obtengo los espectaculos favoritos del usuario
-            HttpSession session = request.getSession();
-            String usuarioLogueadoNickname = ((UsuarioDTO) session.getAttribute("usuarioLogueado")).getNickname();
-
-            Map<String, String> espectaculosFavoritos = fetch.Set("/usuarios/findEspectaculosFavoritos?nickname="+usuarioLogueadoNickname).Get().getMapEspectaculosFavoritos();
-            request.setAttribute("espectaculosFavoritos", espectaculosFavoritos);
+  
+            if(logueado) {
+              //Obtengo los espectaculos favoritos del usuario
+              HttpSession session = request.getSession();
+              String usuarioLogueadoNickname = ((UsuarioDTO) session.getAttribute("usuarioLogueado")).getNickname();
+  
+              Map<String, String> espectaculosFavoritos = fetch.Set("/usuarios/findEspectaculosFavoritos?nickname="+usuarioLogueadoNickname).Get().getMapEspectaculosFavoritos();
+              request.setAttribute("espectaculosFavoritos", espectaculosFavoritos);
+            }
 
             // Si se llega con un filtrado vacio
             if(filtroPlataforma.isEmpty() && filtroCategoria.isEmpty()) {

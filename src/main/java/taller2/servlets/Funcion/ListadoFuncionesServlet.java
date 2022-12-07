@@ -57,12 +57,7 @@ public class ListadoFuncionesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Si no hay sesión, redirigir a login
       // Si no hay sesión, redirigir a login
-      boolean logueado = checkSession(request, response);
       try {
-        if(!logueado) {
-          response.sendRedirect("login");
-          return;
-        }
             Map<String, PlataformaDTO> todasPlataformas =  fetch.Set("/plataformas/findAll").Get().getMapPlataforma();
             Map<String, EspectaculoDTO> todosEspectaculos =  fetch.Set("/espectaculos/findAll").Get().getMapEspectaculo();
             Map<String, PaqueteDTO> todosPaquetes = fetch.Set("/paquetes/findAll/").Get().getMapPaquete();

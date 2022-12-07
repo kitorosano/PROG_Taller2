@@ -14,28 +14,30 @@
         </div>
         <div class="header__right" onclick="toggleMenu()">
             <div class="vertical">|</div>
-            <p><%= usuarioLogueado.getNickname() %></p>
+            <p><%= usuarioLogueado != null ? usuarioLogueado.getNickname() : "Invitado"%></p>
             <span>&#9660;</span>
-            <img src="<%= usuarioLogueado.getImagen()%>" alt="user_img">
+            <img src="<%= usuarioLogueado != null ? usuarioLogueado.getImagen() : "https://i.imgur.com/e4W1PV0.png"%>" alt="user_img">
         </div>
         <div class="header__right__submenu_wrap">
             <div class="header__right__submenu">
                 <div class="header__right__submenu__userinfo">
-                    <img src="<%= usuarioLogueado.getImagen()%>" alt="user_img">
+                    <img src="<%= usuarioLogueado != null ? usuarioLogueado.getImagen() : "https://i.imgur.com/e4W1PV0.png"%>" alt="user_img">
                     <div class="header__right__submenu__userinfo__text">
                         <h3><%= session.getAttribute("esArtista") != null && (boolean)session.getAttribute("esArtista") ? "Artista" : "Usuario" %></h3>
                         <hr>
-                        <span><%= usuarioLogueado.getCorreo() %></span>
+                        <span><%= usuarioLogueado != null ? usuarioLogueado.getCorreo() : "" %></span>
                     </div>
                 </div>
+                <% if(usuarioLogueado != null) { %>
                 <hr>
                 <%-- PERFIL USUARIO --%>
                 <div class="header__right__submenu__options">
                     <a href="perfil">Mi perfil</a>
                     <span>></span>
                 </div>
+                <% } %>
+    
                 <hr>
-                
                 <% if(session.getAttribute("esArtista") != null && (boolean)session.getAttribute("esArtista")){ %>
                     <%-- ALTA ESPECTACULO (ARTISTA) --%>
                     <div class="header__right__submenu__options">
@@ -57,7 +59,7 @@
                         <a href="registro-espectaculo-a-paquete">Registrar espectaculo a paquete</a>
                         <span>></span>
                     </div>
-                <% } else { %>
+                <% } else if(session.getAttribute("esEspectador") != null && (boolean)session.getAttribute("esEspectador")) { %>
                     <%-- REGISTRARSE A UNA FUNCION (ESPECTADOR) --%>
                     <div class="header__right__submenu__options">
                         <a href="registro-espectadores-a-funcion">Registrarse a funcion</a>
@@ -65,15 +67,23 @@
                     </div>
                 <% } %>
     
-                <hr>
-                <%-- CERRAR SESION --%>
-                <div class="header__right__submenu__options">
-                    <p onclick="cerrarSesion()">Cerrar sesion</p>
-                    <span>></span>
-                </div>
-                <form id="cerrarSesionForm" method="POST" action="home" hidden>
-                    <button type="submit"></button>
-                </form>
+                <% if(usuarioLogueado != null) { %>
+                    <hr>
+                    <%-- CERRAR SESION --%>
+                    <div class="header__right__submenu__options">
+                        <p onclick="cerrarSesion()">Cerrar sesion</p>
+                        <span>></span>
+                    </div>
+                    <form id="cerrarSesionForm" method="POST" action="home" hidden>
+                        <button type="submit"></button>
+                    </form>
+                <% } else { %>
+                    <%-- INICIAR SESION --%>
+                    <div class="header__right__submenu__options">
+                        <a href="login">Iniciar sesion</a>
+                        <span>></span>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>

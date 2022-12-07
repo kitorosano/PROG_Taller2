@@ -55,6 +55,8 @@
                     <button id="submitBtn" type="button" onclick="enviarForm()">INGRESAR </button>
                 </form>
                 <a href="registro">No tienes una cuenta? Registrarte!</a>
+                <br>
+                <a href="home">Volver como invitado</a>
             </div>
         </div>
     </div>

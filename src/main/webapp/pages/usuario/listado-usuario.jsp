@@ -9,7 +9,6 @@
     
     String message = request.getAttribute("message") instanceof String ? (String) request.getAttribute("message") : "";
     String messageType = request.getAttribute("messageType") instanceof String ? (String) request.getAttribute("messageType") : "";
-    
 %>
 <!DOCTYPE html>
 <html>

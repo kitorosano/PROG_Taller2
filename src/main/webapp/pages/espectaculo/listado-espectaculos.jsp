@@ -23,7 +23,7 @@
   String filtroCategoria = request.getParameter("filtroCategoria") != null ? request.getParameter("filtroCategoria") : "";
   Map<String, EspectaculoDTO> espectaculosFiltrados = request.getAttribute("espectaculosFiltrados") != null ? (Map<String, EspectaculoDTO>) request.getAttribute("espectaculosFiltrados") : new HashMap<>();
   Map<String, Map<String, CategoriaDTO>> categoriasEspectaculosFiltrados = request.getAttribute("categoriasEspectaculosFiltrados") != null ? (Map<String, Map<String, CategoriaDTO>>) request.getAttribute("categoriasEspectaculosFiltrados") : new HashMap<>();
-  Map<String, String> espectaculosFavoritos = (Map<String, String>) request.getAttribute("espectaculosFavoritos");
+  Map<String, String> espectaculosFavoritos = usuarioLogueado != null ? (Map<String, String>) request.getAttribute("espectaculosFavoritos") : new HashMap<>();
 %>
 
 <!DOCTYPE html>
