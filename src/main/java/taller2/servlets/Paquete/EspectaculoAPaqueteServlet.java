@@ -111,7 +111,7 @@ public class EspectaculoAPaqueteServlet extends HttpServlet {
                     try {
                         AltaEspectaculoAPaqueteDTO altaEspectaculoAPaqueteDTO = new AltaEspectaculoAPaqueteDTO();
                         altaEspectaculoAPaqueteDTO.setNombrePaquete(nombrepaquete);
-                        altaEspectaculoAPaqueteDTO.setNombreEspectaculo(nuevo);
+                        altaEspectaculoAPaqueteDTO.setNombreEspectaculo(espectaculosPaq.get(nuevo).getNombre());
                         altaEspectaculoAPaqueteDTO.setNombrePlataforma(espectaculosPaq.get(nuevo).getPlataforma().getNombre());
                         
                         fetch.Set("/paquetes/createEspectaculoAPaquete", altaEspectaculoAPaqueteDTO).Post();

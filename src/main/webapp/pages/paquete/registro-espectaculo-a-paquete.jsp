@@ -63,7 +63,7 @@
                           <button type="button" id="btnAgregar">Agregar espectaculo</button>
                         </div>
                 
-                      <form id="idform" name="formEspectaculosPaquete" method="POST" action="espectaculoAPaquete">
+                      <form id="idform" name="formEspectaculosPaquete" method="POST" action="registro-espectaculo-a-paquete">
                           <p>Espectaculos agregados</p>
                             <input type="hidden" value="<%=request.getParameter("paquete")%>" name="paquete">
                             <select multiple name="espectaculosAagregar" id="espectaculosAagregar" style="width: 300px; height: 200px; padding: 5px">
