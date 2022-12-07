@@ -4,24 +4,25 @@ package taller2.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import taller2.DTOs.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -99,6 +100,33 @@ public class Fetch {
     }
   
     //this.content = inputLine;
+    return this;
+  }
+  
+  public Fetch PostImage(FileInputStream imagen) {
+    try {
+      CloseableHttpClient client = HttpClients.createDefault();
+      HttpPost httpPost = new HttpPost("https://upload-image-to-imgur.vercel.app/upload");
+    
+      byte[] imagen_bytes = imagen.readAllBytes();
+    
+      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+      builder.addBinaryBody(
+          "file",  imagen_bytes, ContentType.APPLICATION_OCTET_STREAM, "imagen.png");
+    
+      HttpEntity multipart = builder.build();
+      httpPost.setEntity(multipart);
+    
+      CloseableHttpResponse response = client.execute(httpPost);
+      client.close();
+      String responseString = new BasicResponseHandler().handleResponse(response);
+  
+      String url = responseString.substring(responseString.indexOf("https://i.imgur.com/"));
+      this.content = url.substring(0, url.indexOf("\""));
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+      throw new RuntimeException("Error al guardar la imagen", e);
+    }
     return this;
   }
   

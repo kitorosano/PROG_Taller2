@@ -13,6 +13,7 @@ import taller2.DTOs.UsuarioDTO;
 import taller2.utils.Fetch;
 
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -114,7 +115,7 @@ public class AltaUsuarioServlet extends HttpServlet {
     try {
       if (part.getSize() != 0) {
         InputStream inputImagen = part.getInputStream();
-        urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
+        urlImagen= fetch.PostImage((FileInputStream) inputImagen).getContent();
         //urlImagen = Fabrica.getInstance().getIDatabase().guardarImagen((FileInputStream) inputImagen);
       }
     } catch (RuntimeException e) {
