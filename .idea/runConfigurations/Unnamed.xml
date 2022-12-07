@@ -19,7 +19,7 @@
         <option name="version" value="10.0.27.0" />
       </TomcatInfo>
     </option>
-    <option name="vmOptions" value="-DAPI_URL=http://100.91.229.19:8081/api" />
+    <option name="vmOptions" value="-DAPI_URL=http://localhost:8081/api" />
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="LaunchBrowser.Before.Run" />

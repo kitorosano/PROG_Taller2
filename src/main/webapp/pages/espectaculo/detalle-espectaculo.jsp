@@ -119,6 +119,10 @@
                                                 <tr>
                                                     <th onClick="location.href='detalle-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=espectaculo.getNombre()%>&plataforma=<%=espectaculo.getPlataforma().getNombre()%>'"> <%=funcion.getNombre()%>   </th>
                                                 </tr>
+                                    <%      } else { %>
+                                                <tr>
+                                                    <th>No existen funciones proximas</th>
+                                                </tr>
                                     <%      }
                                         }   %>
                                     </tbody>
