@@ -9,6 +9,7 @@ import taller2.DTOs.*;
 import taller2.E_EstadoEspectaculo;
 import taller2.utils.Fetch;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -164,7 +165,7 @@ public class AltaEspectaculoServlet extends HttpServlet {
             if(part.getSize()!=0){
                 InputStream inputImagen=part.getInputStream();
                 //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
-                urlImagen= fetch.Set("/database/createImage",inputImagen).Post().getString();
+                urlImagen= fetch.PostImage((FileInputStream) inputImagen).getContent();
             }
         } catch (RuntimeException e) {
             e.printStackTrace();

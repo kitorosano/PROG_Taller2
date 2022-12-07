@@ -11,6 +11,7 @@ import taller2.DTOs.*;
 import taller2.E_EstadoEspectaculo;
 import taller2.utils.Fetch;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -167,7 +168,7 @@ public class AltaFuncionServlet extends HttpServlet {
         LocalDateTime fechahora= LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(hora));
         if(part.getSize()!=0){
             InputStream inputImagen=part.getInputStream();
-            urlImagen= fetch.Set("/database/createImage",inputImagen).Get().getString();
+            urlImagen= fetch.PostImage((FileInputStream) inputImagen).getContent();
             //urlImagen=fabrica.getIDatabase().guardarImagen((FileInputStream) inputImagen);
         }
         FuncionDTO nueva=new FuncionDTO();
