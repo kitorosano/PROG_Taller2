@@ -47,7 +47,7 @@
                     <%  if(respuesta != "Paquete Adquirido" && esEspectador.equals(true) ){ %>
                             <form class="form" action="detalle-paquete" method="POST">
                                 <input type="hidden" name="nombre" value="<%=paquete.getNombre()%>">
-                                <button class="btn2">Comprar Paquete</button>
+                                <button class="btn2">Comprar</button>
                             </form>
                     <%  }else if((respuesta == "Paquete Adquirido") || (respuesta=="Paquete no encontrado")) { %>
                             <h4 class="respuesta"><%=respuesta%></h4>

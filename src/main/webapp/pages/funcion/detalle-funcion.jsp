@@ -41,7 +41,7 @@
                         <h4 style="margin-top: 10px">Espectaculo: <span class="notbold"> <%=funcion.getEspectaculo().getNombre()%></span></h4>
                     <% if((Boolean) session.getAttribute("esEspectador") && registro==null){
                             if(contador +1 <= funcion.getEspectaculo().getMaxEspectadores()){ %>
-                                <button class="btn" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
+                                <button class="btn2" onClick="location.href='registro-espectadores-a-funcion?nombre=<%=funcion.getNombre()%>&espectaculo=<%=funcion.getEspectaculo().getNombre()%>&plataforma=<%=funcion.getEspectaculo().getPlataforma().getNombre()%>'">Registrarme a función</button>
                     <%      }else { %>
                                 <h4>Funcion llena</h4>
                     <%      }
